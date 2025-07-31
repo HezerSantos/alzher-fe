@@ -31,7 +31,7 @@ function App() {
 
   return (
     <>
-      {isLoading && (
+      {!isLoading && (
         <Outlet />
       )}
     </>

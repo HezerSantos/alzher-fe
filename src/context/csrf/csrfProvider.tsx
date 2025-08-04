@@ -1,7 +1,6 @@
 import { ReactNode, useState } from "react";
 import CsrfContext from "./csrfContext";
 import { jwtDecode } from 'jwt-decode'
-import axios from "axios";
 import api from "../../app.config";
 
 interface CsrfProviderProps {
@@ -73,7 +72,7 @@ const CsrfProvider:React.FC<CsrfProviderProps> = ({children}) => {
 
     const getCsrf = async() => {
         try{
-            await axios.get(`${api.url}/api/csrf`)
+            await api.get(`/api/csrf`)
             const btoa = 'X19TZWN1cmUtYXV0aC5jc3Jm' //__Secure-auth.csrf
             const newCsrf = decodeCookie(atob(btoa))
             return newCsrf

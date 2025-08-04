@@ -30,6 +30,9 @@ button{
   cursor: pointer;
 }
 
+a{
+  text-decoration: none;
+}
 .page-section{
   display: flex;
   justify-content: center;
@@ -117,8 +120,6 @@ button{
 
 .index-mini-nav{
   position: fixed;
-  display: none;
-  height: 5rem;
   padding-top: 5rem;
   height: 100svh;
   max-height: 67.5rem;

@@ -1,4 +1,101 @@
-h1{
-    font-family: var(--f-main);
-    color: black;
+.home-header{
+    position: relative;
+    height: 31rem;
+    background: url('../../images/header-hero.jpg') no-repeat center/cover;
+
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    & > * {
+        position: relative;
+        z-index: 2;
+    }
+    &::after{
+        position: absolute;
+        content: '';
+        inset: 0;
+        background-color: black;
+        opacity: 10%;
+    }
+}
+
+
+
+.home-header__info{
+    width: 30rem;
+    aspect-ratio: 1 / .8;
+    justify-self: end;
+    align-self: center;
+    position: relative;
+    padding-inline: 2rem;
+    padding-block: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    & > * {
+        position: relative;
+        z-index: 2;
+    }
+
+    & > h1, & > p, & > a{
+        font-family: var(--f-main);
+    }
+
+    & > h1{
+        font-weight: normal;
+        font-size: clamp(1.2rem, 5vw, 2rem);
+    }
+
+    & > p{
+        font-weight: bold;
+        font-size: clamp(.8rem, 4vw, 1rem);
+    }
+
+    & > a{
+        color: white;
+        font-weight: bold;
+        padding: 1rem 1.8rem 1rem 1.8rem;
+        background-color: var(--c-main);
+        width: max-content;
+
+    }
+    &::after{
+        position: absolute;
+        content: '';
+        inset: 0;
+        background-color: var(--c-basic);
+        opacity: 95%;
+    }
+}
+
+@media (max-width: 980px){
+    .home-header-wrapper{
+        height: 43rem;
+    }
+
+    .home-header{
+        display: block;
+    }
+
+    .home-header__info{
+        width: clamp(18rem, 85vw, 45rem);
+        aspect-ratio: none;
+        height: 23rem;
+        position: absolute;
+        align-self: auto;
+        justify-self: auto;
+        left: 50%;
+        padding-block: 4rem;
+        transform: translate(-50%, 75%);
+        padding-inline: 1rem;
+        align-items: center;
+
+        & > h1, & > p{
+            text-align: center;
+        }
+
+        &::after{
+            opacity: 1;
+        }
+    }
 }

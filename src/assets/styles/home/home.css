@@ -2,7 +2,6 @@
     position: relative;
     height: 31rem;
     background: url('../../images/header-hero.jpg') no-repeat center/cover;
-    margin-top: 5rem;
 
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -19,6 +18,9 @@
     }
 }
 
+.home-header-wrapper{
+    margin-top: 5rem;
+}
 
 
 .home-header__info{

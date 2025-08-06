@@ -46,7 +46,7 @@ a{
 }
 
 .index-nav{
-  position: relative;
+  position: fixed;
   z-index: 4;
   background-color: #F6F9FF;
   height: 5rem;
@@ -123,6 +123,7 @@ a{
   padding-top: 5rem;
   height: 100svh;
   max-height: 55rem;
+  min-height: fit-content;
   z-index: 3;
   background-color: #F6F9FF;
   padding-inline: clamp(1rem, 15vw, 20rem);

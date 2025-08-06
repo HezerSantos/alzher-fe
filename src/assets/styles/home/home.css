@@ -2,7 +2,7 @@
     position: relative;
     height: 31rem;
     background: url('../../images/header-hero.jpg') no-repeat center/cover;
-
+    margin-top: 5rem;
 
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -96,6 +96,67 @@
 
         &::after{
             opacity: 1;
+        }
+    }
+}
+
+.home-features{
+    padding-block: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    border-bottom: 1px solid var(--c-secondary);
+    & > h1{
+        font-family: var(--f-main);
+        color: var(--tc-secondary);
+        font-size: 2rem;
+    }
+}
+.home-features__container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 5vw, 5rem);
+    & > div:nth-of-type(2){
+        padding-inline: clamp(1rem, 5vw, 5rem);
+        border-left: 1px solid var(--c-secondary);
+        border-right: 1px solid var(--c-secondary);
+    }
+}
+
+.home-feature{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    & > svg{
+        width: 4rem;
+        height: 4rem;
+        fill: var(--c-secondary);
+    }
+
+    & > p{
+        color: var(--tc-secondary);
+        font-family: var(--f-secondary);
+        font-weight: 500;
+        font-size: clamp(.8rem, 2.5vw, 1.5rem);
+        text-align: center;
+    }
+}
+
+@media (max-width: 650px){
+    .home-feature{
+        & > svg{
+            width: 3.5rem;
+            height: 3.5rem;
+        }
+
+        & > p{
+            font-size: .8rem;
         }
     }
 }

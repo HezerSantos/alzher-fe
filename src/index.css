@@ -47,7 +47,7 @@ a{
 
 .index-nav{
   position: relative;
-  z-index: 2;
+  z-index: 4;
   background-color: #F6F9FF;
   height: 5rem;
   padding-block: .5rem;
@@ -122,10 +122,13 @@ a{
   position: fixed;
   padding-top: 5rem;
   height: 100svh;
-  max-height: 67.5rem;
+  max-height: 55rem;
+  z-index: 3;
+  background-color: #F6F9FF;
   padding-inline: clamp(1rem, 15vw, 20rem);
   transform: translateY(-100%);
   transition: transform .5s linear;
+  display: none;
   & > ul{
     padding-top: 2rem;
     list-style-type: none;

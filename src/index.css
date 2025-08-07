@@ -47,7 +47,7 @@ a{
 
 .index-nav{
   position: fixed;
-  z-index: 4;
+  z-index: 11;
   background-color: #F6F9FF;
   height: 5rem;
   padding-block: .5rem;
@@ -124,7 +124,7 @@ a{
   height: 100svh;
   max-height: 55rem;
   min-height: fit-content;
-  z-index: 3;
+  z-index: 10;
   background-color: #F6F9FF;
   padding-inline: clamp(1rem, 15vw, 20rem);
   transform: translateY(-100%);

@@ -1,7 +1,7 @@
 .home-header{
     position: relative;
     height: 31rem;
-    background: url('../../images/header-hero.jpg') no-repeat center/cover;
+    background: url('../../images/header-hero.webp') no-repeat center/cover;
 
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -213,4 +213,95 @@
     }
 
 
+}
+
+
+.home-information{
+    display: flex;
+    flex-direction: column;
+}
+
+.home-information__element{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    & > div{
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / .8;
+
+        & > img{
+            width: 85%;
+        }
+
+        & > h1, & > p{
+            position: relative;
+            z-index: 3;
+            color: white;
+            text-align: center;
+        }
+
+        & > h1{
+            font-family: var(--f-main);
+            font-size: clamp(1.5rem, 5vw, 2rem);
+        }
+
+        & > p{
+            font-family: var(--f-secondary);
+            width: 75%;
+            font-size: clamp(.8rem, 5vw, 1.5rem);
+        }
+    }
+}
+
+.home-information__element-image::after{
+    position: absolute;
+    content: '';
+    inset: 0;
+    background-color: black;
+    opacity: 75%;
+}
+
+.home-information__element-image{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.home-information__element-chart{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.responsive-chart-image{
+    display: none;
+}
+@media (max-width: 850px){
+    .home-information__element{
+        grid-template-columns: 1fr;
+        & > div{
+           aspect-ratio: 0;
+        }
+        & > div > img{
+            width: 75%;
+        }
+    }
+    .responsive-chart-image{
+        z-index: 3;
+        display: block;
+        background-color: #F6F9FF;
+        padding: .5rem;
+    }
+    .home-information__element-image{
+        padding-block: 3rem;
+        grid-row: 1 / 2;
+        grid-column: 1 / 2;
+    }
+
+    .home-information__element-chart{
+        display: none;
+    }
 }

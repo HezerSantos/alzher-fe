@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import logo from '../../../../public/favicon.svg'
+import logo from '/favicon.svg'
 const Footer: React.FC = () => {
     return(
         <>

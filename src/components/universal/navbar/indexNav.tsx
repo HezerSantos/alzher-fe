@@ -26,7 +26,7 @@ const IndexNav: React.FC = () => {
                         <img src="/favicon.svg" alt="alzher logo" />
                         <ul>
                             <li>
-                                <Link to={""}>My Dashboard</Link>
+                                <Link to={"/dashboard"}>My Dashboard</Link>
                             </li>
                             <li>
                                 <Link to={""}>Terms and Service</Link>

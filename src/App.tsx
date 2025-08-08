@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import CsrfContext from './context/csrf/csrfContext'
 import api from './app.config'
+import DashboardProvider from './context/dashboard/dashboardProvider'
 function App() {
   const csrfContext = useContext(CsrfContext)
   const [ isLoading, setIsLoading ] = useState(true)
@@ -32,7 +33,9 @@ function App() {
   return (
     <>
       {!isLoading && (
-        <Outlet />
+        <DashboardProvider>
+          <Outlet />
+        </DashboardProvider>
       )}
     </>
   )

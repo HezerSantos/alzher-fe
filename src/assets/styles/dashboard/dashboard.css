@@ -12,6 +12,7 @@
     box-shadow: 5px 0 10px rgb(185, 185, 185);
 }
 
+
 .dashboard-nav-container{
     height: 100svh;
     max-height: 67.5rem;
@@ -34,16 +35,17 @@
         width: 50px;
         height: 50px;
     }
+}
 
-    & > button{
-        background-color: transparent;
-        border: none;
-        padding: 1rem;
-        & > svg{
-            height: 35px;
-            width: 35px;
-            stroke: var(--c-main);
-        }
+.d-nav__button{
+    background-color: transparent;
+    border: none;
+    padding: 1rem;
+    transition: .25s ease-in-out;
+    & > svg{
+        height: 35px;
+        width: 35px;
+        stroke: var(--c-main);
     }
 }
 
@@ -85,6 +87,7 @@
     content: '';
     inset: 0;
     border-left: .3rem solid var(--c-main);
+    transform: translateX(-1.5rem);
 }
 
 .d-nav__footer{
@@ -93,4 +96,27 @@
         font-family: var(--f-main);
         font-size: 1rem;
     }
+}
+
+.d-nav__padding-reset{
+    padding: 0rem;
+    align-self: center;
+    justify-content: center;
+}
+
+.d-nav__hidden{
+    display: none;
+}
+
+.d-nav__shrink{
+    width: 5rem;
+}
+
+.d-nav__rotate{
+    transform: rotate(180deg);
+    transition: .25s ease-in-out;
+}
+
+.d-nav__grid-reset{
+    grid-template-columns: 5rem 1fr;
 }

@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react"
+import React, { ReactElement, useContext } from "react"
 import logo from '/favicon.svg'
 import { IoChevronBackCircleOutline } from "react-icons/io5";
 import { MdOutlineAnalytics } from "react-icons/md";
@@ -12,17 +12,37 @@ import { FaClipboardList } from "react-icons/fa";
 import { HiInformationCircle } from "react-icons/hi";
 import { IoIosLogOut } from "react-icons/io";
 import { FaGear } from "react-icons/fa6";
-const DNavHeader: React.FC = () => {
+import DashboardContext from "../../../context/dashboard/dashboardContext";
+
+type toggleDashboardNavType = (dashboardContext: DashboardContextType | null) => void
+
+const toggleDashboardNav: toggleDashboardNavType = (dashboardContext) => {
+    dashboardContext?.setIsHidden(prev => !prev)
+}
+
+interface DNavHeaderProps {
+    dashboardContext: DashboardContextType | null
+}
+
+const DNavHeader: React.FC<DNavHeaderProps> = ({dashboardContext}) => {
     return(
         <>
-            <div className="d-nav__header d-nav__child">
-                <img src={logo} alt="" />
-                <button>
+            <div className={`d-nav__header d-nav__child ${dashboardContext?.isHidden? "d-nav__padding-reset" : ""}`}>
+                <img src={logo} alt="" className={`${dashboardContext?.isHidden? "d-nav__hidden" : ""}`} />
+                <button 
+                    onClick={() => toggleDashboardNav(dashboardContext)} 
+                    className={`d-nav__button ${dashboardContext?.isHidden? "d-nav__padding-reset d-nav__rotate" : ""}`}
+                >
                     <IoChevronBackCircleOutline />
                 </button>
             </div>
         </>
     )
+}
+
+interface DashboardContextType {
+    isHidden: boolean,
+    setIsHidden: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface DNavSectionProps {
@@ -32,22 +52,26 @@ interface DNavSectionProps {
         path: string,
         name: string
     }[],
-    location: Location
+    location: Location,
+    dashboardContext: DashboardContextType | null
 }
-const DNavSection: React.FC<DNavSectionProps> = ({header, sectionChildren, location}) => {
+const DNavSection: React.FC<DNavSectionProps> = ({header, sectionChildren, location, dashboardContext}) => {
     return(
         <>
             <div className="d-nav__section">
-                <h1>{header}</h1>
+                <h1 className={`${dashboardContext?.isHidden? "d-nav__hidden" : ""}`}>{header}</h1>
                 {sectionChildren.map((child, index) => {
                     return(
                         <Link
                             to={child.path}
                             key={`S${index}`}
-                            className= {`d-nav__section-child ${location.pathname === child.path? "d-nav__selected" : ""}`}
+                            className= 
+                            {
+                                `d-nav__section-child ${location.pathname === child.path? "d-nav__selected" : ""} ${dashboardContext?.isHidden? "d-nav__padding-reset" : ""}`
+                            }
                         >
                             {child.image}
-                            <p>{child.name}</p>
+                            <p className={`${dashboardContext?.isHidden? "d-nav__hidden" : ""}`}>{child.name}</p>
                         </Link>
                     )
                 })}
@@ -112,25 +136,31 @@ const systemTabs = [
 
 const DashboardNav: React.FC = () => {
     const location = useLocation()
+    const dashboardContext = useContext(DashboardContext)
     return(
         <>
-            <nav className="dashboard-nav">
+            <nav className={`dashboard-nav ${dashboardContext?.isHidden? "d-nav__shrink" : ""}`}>
                 <div className="dashboard-nav-container">
-                       <DNavHeader /> 
+                       <DNavHeader 
+                        dashboardContext={dashboardContext}
+                       /> 
                         <DNavSection 
                             header="Dashboard"
                             sectionChildren={dashboardTabs}
                             location={location}
+                            dashboardContext={dashboardContext}
                         />
                         <DNavSection 
                             header="General"
                             sectionChildren={generalTabs}
                             location={location}
+                            dashboardContext={dashboardContext}
                         />
                         <DNavSection 
                             header="System"
                             sectionChildren={systemTabs}
                             location={location}
+                            dashboardContext={dashboardContext}
                         />
                         
                 </div>

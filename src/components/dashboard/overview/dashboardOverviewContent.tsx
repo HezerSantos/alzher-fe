@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 import { IoCloseOutline } from "react-icons/io5";
+import OverviewChart from "../charts/overviewChart";
+import { BsArrowsAngleExpand } from "react-icons/bs";
 interface DashboardOverviewDetailsProps {
     header: string,
     price: number,
@@ -110,7 +112,11 @@ const MonthItem: React.FC<MonthItemProps> = ({month, year, lowestCategory, highe
                 <div>
                     <p>{month} {year}</p>
                     <button onClick={() => setIsOpen(prev => !prev)}>
-                        <IoCloseOutline />
+                        {isOpen? (
+                            <IoCloseOutline />
+                        ) : (
+                            <BsArrowsAngleExpand />
+                        )}
                     </button>
                 </div>
                 <ul className={`${isOpen? "" : "hide-month-item"}`}>
@@ -142,7 +148,7 @@ const MonthItem: React.FC<MonthItemProps> = ({month, year, lowestCategory, highe
 }
 
 
-const monthItemDemo = [
+const monthItemDemo = [ //DELETE AFTER
     {
         month: "January",
         year: 2025,
@@ -188,6 +194,38 @@ const monthItemDemo = [
 ];
 
 
+const testData = [ //DELETE AFTER
+    {
+        month: "January",
+        ['2024']: 1732,
+        ['2025']: 2874
+    },
+    {
+        month: "February",
+        ['2024']: 1196,
+        ['2025']: 3451
+    },
+    {
+        month: "March",
+        ['2024']: 1608,
+        ['2025']: 2253
+    },
+    {
+        month: "April",
+        ['2024']: 1421,
+        ['2025']: 3932
+    },
+    {
+        month: "May",
+        ['2024']: 1887,
+        ['2025']: 2765
+    },
+    {
+        month: "June",
+        ['2024']: 1344,
+        ['2025']: 3629
+    }
+];
 
 const DashboardOverviewContent: React.FC = () => {
     return(
@@ -225,6 +263,14 @@ const DashboardOverviewContent: React.FC = () => {
                                 />
                             )
                         })}
+                    </div>
+                    <div className="do__chart-chart">
+                        <h1>2025 & 2024 Overview</h1>
+                        <OverviewChart 
+                            overviewData={testData}
+                            yearOne="2024"
+                            yearTwo={"2025"}
+                        />
                     </div>
                 </section>
             </main>

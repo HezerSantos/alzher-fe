@@ -11,10 +11,21 @@ interface YearlyLineChartDataType {
 }
 
 interface YearlyLineChartProps {
-    yearlyData: YearlyLineChartDataType[]
+    yearlyData: YearlyLineChartDataType[] | null
 }
 
 const YearlyLineChart: React.FC<YearlyLineChartProps> = ({yearlyData}) => {
+
+    if(!yearlyData){
+      return(
+          <>
+              <div className='empty-chart'>
+                  <p>No Data Avaliable</p>
+              </div>
+          </>
+      )
+  }
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart

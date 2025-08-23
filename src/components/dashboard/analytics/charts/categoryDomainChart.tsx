@@ -11,10 +11,22 @@ interface CategoryDomainChartDataType {
 }
 
 interface CategoryDomainChartProps {
-    categoryData: CategoryDomainChartDataType[]
+    categoryData: CategoryDomainChartDataType[] | null
 }
 
 const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData}) => {
+
+      if(!categoryData){
+        return(
+            <>
+                <div className='empty-chart'>
+                    <p>No Data Avaliable</p>
+                </div>
+            </>
+        )
+    }
+
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={categoryData}>

@@ -7,12 +7,23 @@ interface OverviewDataType {
 }
 
 interface OverviewChartProps {
-    overviewData: OverviewDataType[],
+    overviewData: OverviewDataType[] | null,
     yearOne: string,
     yearTwo: string | boolean
 }
 
 const OverviewChart: React.FC<OverviewChartProps> = ({overviewData, yearOne, yearTwo}) => {
+
+    if(!overviewData){
+    return(
+        <>
+            <div className='empty-chart'>
+                <p>No Data Avaliable</p>
+            </div>
+        </>
+    )
+  }
+  
   return (
     <ResponsiveContainer width="100%" height="100%" className={"dashboard-chart"}>
       <BarChart

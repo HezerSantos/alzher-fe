@@ -5,6 +5,7 @@ import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
 import DashboardAnalyticsHeader from '../../components/dashboard/analytics/dashboardAnalyticsHeader'
 import DashboardAnalyticsInfo from '../../components/dashboard/analytics/dashboardAnalyticsInfo'
+import DashboardAnalyticsCharts from '../../components/dashboard/analytics/dashboardAnalyticsCharts'
 const DashboardAnalytics: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     return(
@@ -16,6 +17,7 @@ const DashboardAnalytics: React.FC = () => {
                     <div className='dashboard__analytics-container'>
                         <DashboardAnalyticsHeader />
                         <DashboardAnalyticsInfo />
+                        <DashboardAnalyticsCharts />
                     </div>
                 </div>
             </div>

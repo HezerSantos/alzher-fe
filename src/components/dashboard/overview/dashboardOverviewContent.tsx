@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { IoCloseOutline } from "react-icons/io5";
-import OverviewChart from "../charts/overviewChart";
+import OverviewChart from "./charts/overviewChart";
 import { BsArrowsAngleExpand } from "react-icons/bs";
 interface DashboardOverviewDetailsProps {
     header: string,

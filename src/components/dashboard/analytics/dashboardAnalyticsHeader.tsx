@@ -1,11 +1,11 @@
 const DashboardAnalyticsHeader: React.FC = () => {
     return(
         <>
-        <div className="analytics-header">
+        <header className="analytics-header">
             <h1>
                 Analytics
             </h1>
-        </div>
+        </header>
 
         </>
     )

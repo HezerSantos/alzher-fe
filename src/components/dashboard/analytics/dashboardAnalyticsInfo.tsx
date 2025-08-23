@@ -78,7 +78,7 @@ const DashboardAnalyticsInfoItem: React.FC<DashboardAnalyticsInfoItemProps> = (p
 const DashboardAnalyticsInfo: React.FC = () => {
     return(
         <>
-            <div className="analytics-info">
+            <section className="analytics-info">
                 {dashboardAnalytics.map((item, index) => {
                     return(
                         <DashboardAnalyticsInfoItem 
@@ -92,7 +92,7 @@ const DashboardAnalyticsInfo: React.FC = () => {
                         />
                     )
                 })}
-            </div>
+            </section>
         </>
     )
 }

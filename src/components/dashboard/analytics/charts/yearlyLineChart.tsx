@@ -16,14 +16,14 @@ interface YearlyLineChartProps {
 
 const YearlyLineChart: React.FC<YearlyLineChartProps> = ({yearlyData}) => {
 
-    if(!yearlyData){
-      return(
-          <>
-              <div className='empty-chart'>
-                  <p>No Data Avaliable</p>
-              </div>
-          </>
-      )
+  if(!yearlyData){
+    return(
+        <>
+            <div className='empty-chart'>
+                <p>No Data Avaliable</p>
+            </div>
+        </>
+    )
   }
 
   return (

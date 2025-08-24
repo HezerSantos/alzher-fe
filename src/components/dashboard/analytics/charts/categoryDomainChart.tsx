@@ -16,7 +16,7 @@ interface CategoryDomainChartProps {
 
 const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData}) => {
 
-      if(!categoryData){
+    if(!categoryData){
         return(
             <>
                 <div className='empty-chart'>

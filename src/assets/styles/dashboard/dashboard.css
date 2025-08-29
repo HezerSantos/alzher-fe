@@ -833,7 +833,7 @@
 .transaction-item{
     width: 100%;
     display: grid;
-    grid-template-columns: .5fr .5fr 1fr .5fr .5fr;
+    grid-template-columns: .5fr .5fr 25rem .5fr .5fr;
     padding: 1rem;
     font-size: 1rem;
     border: none;

@@ -1,4 +1,4 @@
-import React, { SetStateAction, useContext, useState, useRef } from 'react'
+import React, { SetStateAction, useContext, useState, useRef, useEffect } from 'react'
 import '../../assets/styles/dashboard/dashboard.css'
 import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
@@ -122,28 +122,24 @@ const TransactionItem: React.FC<TransactionItemProps> = ({transactionId, categor
 
 interface TransactionContainerProps {
     setSelectedTransactionItem: React.Dispatch<SetStateAction<SelectedTransactionItemType | null>>,
-    setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>
+    setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>,
+    transactionData: SelectedTransactionItemType[]
 }
 
-const TransactionContainer: React.FC<TransactionContainerProps> = ({setSelectedTransactionItem, setIsExpandedOpen}) => {
-    const test = []
-
-    for(let i = 0; i < 111; i++){
-        test.push(i)
-    }
+const TransactionContainer: React.FC<TransactionContainerProps> = ({setSelectedTransactionItem, setIsExpandedOpen, transactionData}) => {
     return(
         <>
             <form className='transaction-container'>
                 <TransactionContainerHeader />
-                {test.map(item => {
+                {transactionData.map((transaction) => {
                     return(
                         <TransactionItem 
-                            key={item}
-                            transactionId='DO0001'
-                            category='Dining'
-                            description='McDonalds Quarter Cheese Pounder Pounder'
-                            transactionDate='07/12/25'
-                            transactionAmount={14.52}
+                            key={transaction.transactionId}
+                            transactionId={transaction.transactionId}
+                            category={transaction.category}
+                            description={transaction.description}
+                            transactionDate={transaction.transactionDate}
+                            transactionAmount={transaction.transactionAmount}
                             setSelectedTransactionItem={setSelectedTransactionItem}
                             setIsExpandedOpen={setIsExpandedOpen}
                         />
@@ -161,6 +157,86 @@ interface SelectedTransactionItemType {
     transactionDate: string,
     transactionAmount: number
 }
+
+const exampleData = [
+    {
+        transactionId: "DO0001",
+        category: "Dining",
+        description: "McDonalds Quarter Cheese Pounder",
+        transactionDate: "07/12/25",
+        transactionAmount: 45.12
+    },
+    {
+        transactionId: "DO0002",
+        category: "Groceries",
+        description: "Whole Foods Market - Weekly Grocery",
+        transactionDate: "07/14/25",
+        transactionAmount: 123.45
+    },
+    {
+        transactionId: "DO0003",
+        category: "Transport",
+        description: "Uber ride to airport",
+        transactionDate: "07/15/25",
+        transactionAmount: 38.90
+    },
+    {
+        transactionId: "DO0004",
+        category: "Entertainment",
+        description: "Netflix monthly subscription",
+        transactionDate: "07/16/25",
+        transactionAmount: 15.99
+    },
+    {
+        transactionId: "DO0005",
+        category: "Dining",
+        description: "Starbucks - Iced Caramel Macchiato",
+        transactionDate: "07/17/25",
+        transactionAmount: 6.75
+    },    
+]
+
+const modifyClientSideTransaction = () => {
+
+}
+
+
+const clostExpandedTransaction = (e: React.MouseEvent<HTMLButtonElement>, setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>) => {
+    e.preventDefault()
+    setIsExpandedOpen(false)
+}
+
+type UpdateTransactionItemType = (
+    e: React.FormEvent<HTMLFormElement>,
+    setTransactionData: React.Dispatch<SetStateAction<Map<string, SelectedTransactionItemType> | null>>
+) => void
+
+const updateTransactionItem: UpdateTransactionItemType = (e, setTransactionData) => {
+    e.preventDefault()
+
+    const formElement = e.currentTarget
+    const formData = new FormData(formElement)
+    const transactionId = formData.get('transactionId')
+    const newCategory = formData.get('category')
+    const newDescription = formData.get('description')
+    const newDate = formData.get('date')
+    const newAmount = formData.get('amount') as number | null;
+
+    const updatedTransactionData = {
+        transactionId: transactionId,
+        category: newCategory,
+        description: newDescription,
+        transactionDate: newDate,
+        transactionAmount: newAmount
+    }
+
+    setTransactionData(prev => {
+        const newData = new Map(prev)
+        newData?.set(transactionId as string, updatedTransactionData as SelectedTransactionItemType)
+        return newData
+    })
+}
+
 const DashboardActivity: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     const [ filterToggle, setFilterToggle ] = useState(false)
@@ -168,6 +244,24 @@ const DashboardActivity: React.FC = () => {
     const toggleFiltersButton = useRef<HTMLButtonElement>(null)
 
     const [isExpandedOpen, setIsExpandedOpen] = useState<boolean>(false)
+    
+    const [ transactionData, setTransactionData ] = useState<Map<string, SelectedTransactionItemType> | null>(null)
+
+
+    useEffect(() => {
+        //fetchData as SelectedTransactionItemType[]
+        //then pass to 
+        // const newTransactionData = fetchedData.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
+        // const newTransactionDataMap = new Map(newTransactionData)
+        // console.log(newTransactionDataMap)
+        // setTransactionData(newTransactionDataMap)
+    })
+    useEffect(() => {
+        const newTransactionData = exampleData.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
+        const newTransactionDataMap = new Map(newTransactionData)
+
+        setTransactionData(newTransactionDataMap)
+    }, [])
 
     return(
         <>
@@ -176,31 +270,34 @@ const DashboardActivity: React.FC = () => {
                     <DashboardNav />
                     <DashboardMiniNav />
                     <div className='dashboard__activity-container'>
-                        <div className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`}>
-                            <button onClick={() => setIsExpandedOpen(false)}>close</button>
-                            <p>Transaction: {selectedTransactionItem?.transactionId}</p>
+                        <form className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`} onSubmit={(e) => updateTransactionItem(e, setTransactionData)}>
+                            <button onClick={(e) => clostExpandedTransaction(e, setIsExpandedOpen)}>close</button>
                             <div>
-                                <label htmlFor="edit-category">Category</label>
-                                <input type="text" id='edit-category' defaultValue={selectedTransactionItem? selectedTransactionItem.category : ""}/>
+                                <label htmlFor="edit-id">Transaction ID:</label>
+                            <input name="transactionId" id="edit-id" type='text' readOnly value={selectedTransactionItem?.transactionId} />
                             </div>
                             <div>
-                                <label htmlFor="edit-category">Description</label>
-                                <textarea id='edit-description' defaultValue={selectedTransactionItem? selectedTransactionItem.description : ""}>
+                                <label htmlFor="edit-category">Category</label>
+                                <input name='category' type="text" id='edit-category' value={selectedTransactionItem? selectedTransactionItem.category : ""}/>
+                            </div>
+                            <div>
+                                <label htmlFor="edit-description">Description</label>
+                                <textarea name='description' id='edit-description' value={selectedTransactionItem? selectedTransactionItem.description : ""}>
                                     
                                 </textarea>
                             </div>
                             <div>
-                                <label htmlFor="edit-category">Date</label>
-                                <input type="text" id='edit-category' defaultValue={selectedTransactionItem? selectedTransactionItem.transactionDate : ""}/>
+                                <label htmlFor="edit-date">Date</label>
+                                <input name='date' type="text" id='edit-date' value={selectedTransactionItem? selectedTransactionItem.transactionDate : ""}/>
                             </div>
                             <div>
-                                <label htmlFor="edit-category">Amount</label>
-                                <input type="text" id='edit-category' defaultValue={selectedTransactionItem? selectedTransactionItem.transactionAmount : ""}/>
+                                <label htmlFor="edit-amount">Amount</label>
+                                <input name='amount' type="text" id='edit-amount' value={selectedTransactionItem? selectedTransactionItem.transactionAmount : ""}/>
                             </div>
-                            <button>
+                            <button type='submit'>
                                 Save Changes
                             </button>
-                        </div>
+                        </form>
                         <div className='activity-header'>
                             <h1>
                                 Activity
@@ -237,6 +334,7 @@ const DashboardActivity: React.FC = () => {
                         <TransactionContainer 
                             setSelectedTransactionItem={setSelectedTransactionItem}
                             setIsExpandedOpen={setIsExpandedOpen}
+                            transactionData={transactionData? [...transactionData.values()] : []}
                         />
                     </div>
                 </div>

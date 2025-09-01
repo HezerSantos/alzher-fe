@@ -38,13 +38,34 @@ const toggleFilter: ToggleFilterType = (e, setFilterToggle) => {
 }
 
 
+
+//Transaction header props
+
+interface TransactionHeaderProps {
+    transactionContainerRef: React.RefObject<HTMLFormElement | null>;
+}
+
+type selectAllTransactionType = (e: React.ChangeEvent<HTMLInputElement>) => void
 //Transaction Container Header Component
-const TransactionContainerHeader: React.FC = () => {
+const TransactionContainerHeader: React.FC<TransactionHeaderProps> = ({transactionContainerRef}) => {
+    const selectAllTransaction: selectAllTransactionType = (e) => {
+        const allTransactions = transactionContainerRef.current?.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')
+        allTransactions?.forEach(transaction => {
+            if(e.target === transaction){
+                return
+            }
+            if (e.target.checked){
+                transaction.checked = true
+            } else {
+                transaction.checked = false
+            }
+        })
+    }
     return(
         <>
         <div className='transaction-item-container transaction-container__header'>
             <div className='transaction-checkbox'>
-                <input type='checkbox'></input>
+                <input type='checkbox' onChange={(e) => selectAllTransaction(e)} />
             </div>
             <div className='transaction-item'>
                 <div className='transaction-hidden-detail'>
@@ -141,14 +162,17 @@ const TransactionItem: React.FC<TransactionItemProps> = ({transactionId, categor
 interface TransactionContainerProps {
     setSelectedTransactionItem: React.Dispatch<SetStateAction<SelectedTransactionItemType | null>>,
     setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>,
-    transactionData: SelectedTransactionItemType[]
+    transactionData: SelectedTransactionItemType[],
+    transactionContainerRef: React.RefObject<HTMLFormElement | null>;
 }
 //Transaction Container Component
-const TransactionContainer: React.FC<TransactionContainerProps> = ({setSelectedTransactionItem, setIsExpandedOpen, transactionData}) => {
+const TransactionContainer: React.FC<TransactionContainerProps> = ({setSelectedTransactionItem, setIsExpandedOpen, transactionData, transactionContainerRef}) => {
     return(
         <>
-            <form className='transaction-container'>
-                <TransactionContainerHeader />
+            <form className='transaction-container' ref={transactionContainerRef}>
+                <TransactionContainerHeader 
+                    transactionContainerRef={transactionContainerRef}
+                />
                 {transactionData.map((transaction) => {
                     return(
                         <TransactionItem 
@@ -244,6 +268,28 @@ const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({
     )
 }
 
+//Delete transaction type
+type DeleteTransactionType = (
+    selectedTransactionItem: SelectedTransactionItemType | null,
+    setTransactionData: React.Dispatch<SetStateAction<Map<string, SelectedTransactionItemType> | null>>,
+    setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>,
+    e: React.MouseEvent<HTMLButtonElement>
+) => void
+
+//function to delete transaction for client
+const deleteTransaction: DeleteTransactionType = (selectedTransactionItem, setTransactionData, setIsExpandedOpen, e) => {
+    e.preventDefault()
+    const selectedItemId = selectedTransactionItem?.transactionId
+    setIsExpandedOpen(false)
+    setTransactionData(prev => {
+        const newTransactionMap = new Map(prev)
+        newTransactionMap.delete(String(selectedItemId))
+        return newTransactionMap
+    })
+}
+
+
+
 //Interface for the basis of the transaction object
 interface SelectedTransactionItemType {
     transactionId: string,
@@ -297,12 +343,9 @@ const DashboardActivity: React.FC = () => {
     const [ filterToggle, setFilterToggle ] = useState(false)
     const [ selectedTransactionItem, setSelectedTransactionItem ] = useState<SelectedTransactionItemType | null>(null)
     const toggleFiltersButton = useRef<HTMLButtonElement>(null)
-
     const [isExpandedOpen, setIsExpandedOpen] = useState<boolean>(false)
-    
     const [ transactionData, setTransactionData ] = useState<Map<string, SelectedTransactionItemType> | null>(null)
-
-
+    const transactionContainerRef = useRef<HTMLFormElement>(null);
     useEffect(() => {
         //fetchData as SelectedTransactionItemType[]
         //then pass to 
@@ -314,13 +357,15 @@ const DashboardActivity: React.FC = () => {
     useEffect(() => {
         const newTransactionData = exampleData.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
         const newTransactionDataMap = new Map(newTransactionData)
-
         setTransactionData(newTransactionDataMap)
     }, [])
 
 
     return(
         <>
+            {/* <button onClick={() => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen)}>
+                Delete Transaction
+            </button> */}
             <div className="page-section">
                 <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                     <DashboardNav />
@@ -363,6 +408,9 @@ const DashboardActivity: React.FC = () => {
                             <button type='submit'>
                                 Save Changes
                             </button>
+                            <button onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e)}>
+                                Delete Transaction
+                            </button>
                         </form>
                         <div className='activity-header'>
                             <h1>
@@ -401,6 +449,7 @@ const DashboardActivity: React.FC = () => {
                             setSelectedTransactionItem={setSelectedTransactionItem}
                             setIsExpandedOpen={setIsExpandedOpen}
                             transactionData={transactionData? [...transactionData.values()] : []}
+                            transactionContainerRef={transactionContainerRef}
                         />
                     </div>
                 </div>

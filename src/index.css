@@ -233,3 +233,16 @@ a{
   }
   
 }
+
+.button-loading{
+  width: .9rem;
+  height: .9rem;
+
+  animation: buttonLoading 1s infinite linear;
+}
+
+@keyframes buttonLoading {
+  to {
+    transform: rotate(360deg);
+  }
+}

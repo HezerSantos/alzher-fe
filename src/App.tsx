@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import CsrfContext from './context/csrf/csrfContext'
 import api from './app.config'
 import DashboardProvider from './context/dashboard/dashboardProvider'
+import CsrfProvider from './context/csrf/csrfProvider'
 function App() {
   const csrfContext = useContext(CsrfContext)
   const [ isLoading, setIsLoading ] = useState(true)
@@ -26,16 +27,15 @@ function App() {
         console.error(e)
       }
     }
-
     getCredentials()
   }, [])
 
   return (
     <>
       {!isLoading && (
-        <DashboardProvider>
-          <Outlet />
-        </DashboardProvider>
+          <DashboardProvider>
+            <Outlet />
+          </DashboardProvider>
       )}
     </>
   )

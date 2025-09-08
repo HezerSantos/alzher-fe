@@ -4,6 +4,8 @@ import DashboardOverview from "./pages/dashboard/dashboardOverview";
 import DashboardAnalytics from "./pages/dashboard/dashboardAnalytics";
 import DashboardActivity from "./pages/dashboard/dashboardActivity";
 import DashboardScan from "./pages/dashboard/dashboardScan";
+import Login from "./pages/auth/loginPage";
+import Signup from "./pages/auth/signupPage";
 const routes = [
     {
         path: "/",
@@ -29,6 +31,14 @@ const routes = [
             {
                 path: "/dashboard/scan",
                 element: <DashboardScan />
+            },
+            {
+                path: "/login",
+                element: <Login />
+            },
+            {
+                path: "/signup",
+                element: <Signup />
             }
         ]
     }

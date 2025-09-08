@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import CsrfContext from "./csrfContext";
 import { jwtDecode } from 'jwt-decode'
 import api from "../../app.config";
@@ -55,9 +55,9 @@ const CsrfProvider:React.FC<CsrfProviderProps> = ({children}) => {
         const cookies: string[] = document.cookie.split(";")
         const cookieMap: Map<string, string> = new Map(
         cookies
-            .map(cookie => cookie.split("=").map(str => str.trim())) // Split and trim
-            .filter(([key, value]) => key && value) // Ensure both key and value are present
-            .map(([key, value]) => [key, value] as [string, string]) // Type cast to [string, string] for safety
+            .map(cookie => cookie.split("=").map(str => str.trim()))
+            .filter(([key, value]) => key && value)
+            .map(([key, value]) => [key, value] as [string, string]) 
         );
         return cookieMap.get(cookie)
     }

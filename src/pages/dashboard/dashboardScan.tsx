@@ -25,40 +25,46 @@ const handleDragOver:HandleDragEventType  = (e) => {
 
 type HandleDropType = (
     e: React.DragEvent<HTMLLabelElement>,
-        setFileList: React.Dispatch<SetStateAction<File[]>>
+        setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
 ) => void
 
 const handleDrop: HandleDropType = (e, setFileList) => {
     e.preventDefault()
     e.stopPropagation()
     const newFile = e.dataTransfer.files[0]
+    if(newFile.type !== "application/pdf"){
+        return
+    }
+    setFileList(prevMap => {
+        const newMap = new Map(prevMap)
+        newMap.set(newFile.name, newFile)
 
-    setFileList(prevList => {
-        const newList = [...prevList]
-        newList.push(newFile)
-
-        return newList
+        return newMap
     })
 }
 
 interface ScanFormProps {
-    setFileList: React.Dispatch<SetStateAction<File[]>>
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
 }
 
 type HandleManualUploadType = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setFileList: React.Dispatch<SetStateAction<File[]>>
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
 ) => void
 const handleManualUpload: HandleManualUploadType = (e, setFileList) => {
     const inputFileList = e.target.files
 
     if(inputFileList){
         const newFile = inputFileList[0]
-        setFileList(prevList => {
-            const newList = [...prevList]
-            newList.push(newFile)
+        if(newFile.type !== "application/pdf"){
+            return
+        }
 
-            return newList
+        setFileList(prevMap => {
+            const newMap = new Map(prevMap)
+            newMap.set(newFile.name, newFile)
+
+            return newMap
         })
     }
 }
@@ -85,36 +91,71 @@ const ScanForm: React.FC<ScanFormProps> = ({setFileList}) => {
 }
 
 interface FileContainerProps {
-    fileList: File[]
+    fileList: Map<string, File>,
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
 }
 
-const FileContainer: React.FC<FileContainerProps> = ({fileList}) => {
+type SubmitFilesType = (fileList: Map<string, File>) => void
+
+const submitFiles: SubmitFilesType = (fileList) => {
+    console.log(fileList)
+}
+const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList}) => {
     return(
         <div className='file-container'>
-            {fileList.map((file, index) => {
+            {[...fileList.values()].map((file, index) => {
                 return(
                     <FileItem 
                         key={index}
                         fileName={file.name}
-                        fileSize={file.size}
+                        fileSize={Math.floor(file.size / 1024)}
+                        setFileList={setFileList}
                     />
                 )
             })}
+            {fileList.size !== 0 && (
+                <>
+                    <button className='file-submit' onClick={() => submitFiles(fileList)}>
+                        Scan Files
+                    </button>
+                </>
+            )}
         </div>
     )
 }
 
 interface FileItemProps {
     fileSize: number,
-    fileName: string
+    fileName: string,
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
 }
 
-const FileItem: React.FC<FileItemProps> = ({fileSize, fileName}) => {
+type DeleteFileType = (
+    fileName: string,
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
+) => void
+
+
+const deleteFile: DeleteFileType = (fileName, setFileList) => {
+    setFileList(prevMap => {
+        const newMap = new Map(prevMap)
+
+        newMap.delete(fileName)
+
+        return newMap
+    })
+}
+const FileItem: React.FC<FileItemProps> = ({fileSize, fileName, setFileList}) => {
     return(
         <>
             <div className='file-item'>
-                <p>{fileSize}</p>
                 <p>{fileName}</p>
+                <div>
+                    <p>{fileSize} KB</p>
+                    <button onClick={() => deleteFile(fileName, setFileList)}>
+                        delete
+                    </button>
+                </div>
             </div>
         </>
     )
@@ -122,11 +163,8 @@ const FileItem: React.FC<FileItemProps> = ({fileSize, fileName}) => {
 
 const DashboardScan: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
-    const [ fileList, setFileList ] = useState<File[]>([])
+    const [ fileList, setFileList ] = useState<Map<string, File>>(new Map())
 
-    useEffect(() => {
-        console.log(fileList)
-    }, [fileList])
     return(
         <>
             <div className="page-section">
@@ -136,10 +174,11 @@ const DashboardScan: React.FC = () => {
                     <div className='scan-container'>
                         <ScanHeader />
                         <ScanForm setFileList={setFileList}/>
+                        <FileContainer 
+                            fileList={fileList}
+                            setFileList={setFileList}
+                        />
                     </div>
-                    <FileContainer 
-                        fileList={fileList}
-                    />
                 </div>
             </div>
         </>

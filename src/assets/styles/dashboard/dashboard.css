@@ -833,7 +833,7 @@
 .transaction-item{
     width: 100%;
     display: grid;
-    grid-template-columns: .5fr .5fr 25rem .5fr .5fr;
+    grid-template-columns: .5fr .75fr 25rem .5fr .5fr;
     padding: 1rem;
     font-size: 1rem;
     border: none;
@@ -883,7 +883,7 @@
     
 } */
 
-.transaction-description{
+.transaction-description, .transaction-category{
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -970,4 +970,43 @@
         font-family: var(--f-main);
         text-align: center;
     }
+}
+
+.file-container{
+    margin-top: 3rem;
+}
+
+.file-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    & p{
+        font-family: var(--f-main);
+        color: grey;
+    }
+    & > div{
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        & > button{
+            padding: .5rem 1rem;
+            font-family: var(--f-secondary);
+            color: white;
+            background-color: var(--c-main);
+            border: none;
+            border-radius: .5rem;
+        }
+    }
+}
+
+.file-submit{
+    padding: .5rem 1rem;
+    font-family: var(--f-secondary);
+    color: white;
+    background-color: var(--c-main);
+    border: none;
+    border-radius: .5rem;
 }

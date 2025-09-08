@@ -138,7 +138,9 @@ const TransactionItem: React.FC<TransactionItemProps> = ({transactionId, categor
                         {transactionId}
                     </div>
                     <div>
-                        {category}
+                        <p className='transaction-category'>
+                            {category}
+                        </p>
                     </div>
                     <div className='transaction-hidden-detail transaction-description-container'>
                         <p className='transaction-description'>{description}</p>
@@ -324,7 +326,7 @@ const exampleData = [
     },
     {
         transactionId: "DO0004",
-        category: "Entertainment",
+        category: "Leisure",
         description: "Netflix monthly subscription",
         transactionDate: "07/16/25",
         transactionAmount: 15.99

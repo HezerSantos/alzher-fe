@@ -8,6 +8,8 @@ import CsrfContext from "../../context/csrf/csrfContext"
 import { AxiosError } from "axios"
 import { AiOutlineLoading } from "react-icons/ai";
 import handleRequestError from "../../app.config.error"
+import { Link } from "react-router-dom"
+import AuthFooter from "../../components/auth/authFooter"
 interface CsrfContextType {
     csrfToken: string | null
     decodeCookie: (cookie: string) => void
@@ -85,16 +87,19 @@ const Signup: React.FC = () => {
                             inputName="email"
                             inputPlaceHolder="Email Address"
                             inputId="email"
+                            type="text"
                         />
                         <AuthItem 
                             inputName="password"
                             inputPlaceHolder="Password"
                             inputId="password"
+                            type="password"
                         />
                         <AuthItem 
                             inputName="confirmPassword"
                             inputPlaceHolder="Confirm Password"
                             inputId="confirmPassword"
+                            type="password"
                         />
                         <button className="auth-form__button" type="submit" disabled={isLoading}>
                             {!isLoading? (
@@ -105,6 +110,11 @@ const Signup: React.FC = () => {
                                 <AiOutlineLoading className="button-loading"/>
                             )}
                         </button>
+                        <AuthFooter 
+                            footerText="Already on alzher?"
+                            redirect="/login"
+                            redirectText="Login"
+                        />
                     </div>
                 </form>
             </main>

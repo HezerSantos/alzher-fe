@@ -1,15 +1,16 @@
 interface AuthItemProps {
     inputName: string,
     inputPlaceHolder: string,
-    inputId: string
+    inputId: string,
+    type: string
 }
 
-const AuthItem: React.FC<AuthItemProps> = ({inputName, inputPlaceHolder, inputId}) => {
+const AuthItem: React.FC<AuthItemProps> = ({inputName, inputPlaceHolder, inputId, type}) => {
     return(
         <>
             <div className="auth-item">
                 <input 
-                    type="text" 
+                    type={type}
                     id={inputId} 
                     placeholder={inputPlaceHolder} 
                     name={inputName}

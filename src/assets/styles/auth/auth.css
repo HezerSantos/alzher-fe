@@ -60,3 +60,22 @@
     border-radius: .5rem;
     padding: 1rem;
 }
+
+.auth-form__footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    & > p, & > a{
+        font-family: var(--f-secondary);
+    }
+
+    & > a{
+        color: var(--tc-main);
+
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+}

@@ -8,23 +8,30 @@ import CsrfContext from "../../context/csrf/csrfContext"
 import { AxiosError } from "axios"
 import { AiOutlineLoading } from "react-icons/ai";
 import handleRequestError from "../../app.config.error"
-import { Link } from "react-router-dom"
 import AuthFooter from "../../components/auth/authFooter"
+import AuthErrors from "../../components/auth/authErrors"
 interface CsrfContextType {
     csrfToken: string | null
     decodeCookie: (cookie: string) => void
     getCsrf: () => Promise<string | undefined>
 }
 
+interface ErrorType {
+    msg: string,
+    isError: boolean
+}
 type HandleSignupType = (
     e: React.FormEvent<HTMLFormElement>,
     csrfContext: CsrfContextType | null,
     retry: boolean,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
+    setEmailError?: React.Dispatch<SetStateAction< ErrorType | null>>,
+    setPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>,
+    setConfirmPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>
 ) => void
 
-const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading, newCsrf) => {
+const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
     e.preventDefault()
     setIsLoading(true)
     try{
@@ -52,11 +59,24 @@ const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading
         console.log(res)
     } catch(error) {
         const axiosError = error as AxiosError
-
-        await handleRequestError(csrfContext, axiosError.status, retry,
+        await handleRequestError(axiosError, csrfContext, axiosError.status, retry,
             [
                 () => handleSignup(e, csrfContext, true, setIsLoading),
                 (newCsrf: string) => handleSignup(e, csrfContext, false, setIsLoading, newCsrf)
+            ],
+            [
+                {
+                    errorName: "email",
+                    setState: setEmailError
+                },
+                {
+                    errorName: "password",
+                    setState: setPasswordError
+                },
+                {
+                    errorName: "confirmPassword",
+                    setState: setConfirmPasswordError
+                }
             ]
         )
     } finally {
@@ -69,6 +89,9 @@ const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading
 const Signup: React.FC = () => {
     const csrfContext = useContext(CsrfContext)
     const [ isLoading, setIsLoading ] = useState(false)
+    const [ emailError, setEmailError ] = useState<ErrorType | null>(null)
+    const [ passwordError, setPasswordError ] = useState<ErrorType | null>(null)
+    const [ confirmPasswordError, setConfirmPasswordError ] = useState<ErrorType | null>(null)
     return(
         <>
             <header>
@@ -77,9 +100,12 @@ const Signup: React.FC = () => {
             <main className="page-section auth-section">
                 <form
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleSignup(e, csrfContext, true, setIsLoading)}
+                    onSubmit={(e) => handleSignup(e, csrfContext, true, setIsLoading, null, setEmailError, setPasswordError, setConfirmPasswordError)}
                 >
                     <div className="auth-form">
+                        <AuthErrors 
+                            errors={[emailError, passwordError, confirmPasswordError]}
+                        />
                         <AuthHeader 
                             headerText="Sign Up"
                         />
@@ -88,18 +114,21 @@ const Signup: React.FC = () => {
                             inputPlaceHolder="Email Address"
                             inputId="email"
                             type="text"
+                            className={emailError? "input-error" : ""}
                         />
                         <AuthItem 
                             inputName="password"
                             inputPlaceHolder="Password"
                             inputId="password"
                             type="password"
+                            className={passwordError? "input-error" : ""}
                         />
                         <AuthItem 
                             inputName="confirmPassword"
                             inputPlaceHolder="Confirm Password"
                             inputId="confirmPassword"
                             type="password"
+                            className={confirmPasswordError? "input-error" : ""}
                         />
                         <button className="auth-form__button" type="submit" disabled={isLoading}>
                             {!isLoading? (

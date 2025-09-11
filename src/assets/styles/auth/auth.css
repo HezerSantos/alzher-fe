@@ -48,6 +48,7 @@
         font-size: 1rem;
         &:focus{
             outline: 2px solid var(--c-main);
+            border: none !important;
         }
     }
 }
@@ -82,4 +83,14 @@
 
 .input-error{
     border: 1px solid red !important;
+}
+
+.auth-form__errors{
+    padding: 1rem;
+    border: .05rem solid red;
+    background-color: rgb(255, 216, 216);
+    color: rgb(177, 1, 1);
+    font-family: var(--f-secondary);
+    font-size: .8rem;
+    border-radius: 1rem;
 }

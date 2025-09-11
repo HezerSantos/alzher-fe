@@ -2,7 +2,7 @@ import IndexNav from "../../components/universal/navbar/indexNav"
 import '../../assets/styles/auth/auth.css'
 import AuthItem from "../../components/auth/authItem"
 import AuthHeader from "../../components/auth/authHeader"
-import React, { SetStateAction, useContext, useState } from "react"
+import React, { SetStateAction, useContext, useEffect, useState } from "react"
 import api from "../../app.config"
 import CsrfContext from "../../context/csrf/csrfContext"
 import { AxiosError } from "axios"
@@ -10,6 +10,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import handleRequestError from "../../app.config.error"
 import AuthFooter from "../../components/auth/authFooter"
 import AuthErrors from "../../components/auth/authErrors"
+import AlzherMessage from "../../components/universal/alzherMessage"
 interface CsrfContextType {
     csrfToken: string | null
     decodeCookie: (cookie: string) => void
@@ -25,13 +26,14 @@ type HandleSignupType = (
     csrfContext: CsrfContextType | null,
     retry: boolean,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
+    setIsSuccess: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
     setEmailError?: React.Dispatch<SetStateAction< ErrorType | null>>,
     setPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>,
     setConfirmPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>
 ) => void
 
-const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
+const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
     e.preventDefault()
     setIsLoading(true)
     try{
@@ -46,7 +48,7 @@ const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading
         const confirmPasswordInput = form.elements.namedItem("confirmPassword") as HTMLInputElement;
         const confirmPassword = confirmPasswordInput.value;
 
-        const res = await api.post("/api/auth/secure/signup", {
+        await api.post("/api/auth/secure/signup", {
             email: email,
             password: password,
             confirmPassword: confirmPassword
@@ -56,13 +58,24 @@ const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading
             }
         })
 
-        console.log(res)
+        if(setEmailError){
+            setEmailError(null)
+        }
+        if(setPasswordError){
+            setPasswordError(null)
+        }
+        if(setConfirmPasswordError){
+            setConfirmPasswordError(null)
+        }
+
+        form.reset()
+        setIsSuccess(true)
     } catch(error) {
         const axiosError = error as AxiosError
         await handleRequestError(axiosError, csrfContext, axiosError.status, retry,
             [
-                () => handleSignup(e, csrfContext, true, setIsLoading),
-                (newCsrf: string) => handleSignup(e, csrfContext, false, setIsLoading, newCsrf)
+                () => handleSignup(e, csrfContext, true, setIsLoading, setIsSuccess),
+                (newCsrf: string) => handleSignup(e, csrfContext, false, setIsLoading, setIsSuccess, newCsrf)
             ],
             [
                 {
@@ -92,6 +105,17 @@ const Signup: React.FC = () => {
     const [ emailError, setEmailError ] = useState<ErrorType | null>(null)
     const [ passwordError, setPasswordError ] = useState<ErrorType | null>(null)
     const [ confirmPasswordError, setConfirmPasswordError ] = useState<ErrorType | null>(null)
+    const [ isSuccess, setIsSuccess ] = useState(false)
+
+    useEffect(() => {
+        if(isSuccess){
+            const inteveral = setTimeout(() => {
+                setIsSuccess(false)
+            }, 5000)
+
+            return () => clearTimeout(inteveral)
+        }
+    }, [isSuccess])
     return(
         <>
             <header>
@@ -100,15 +124,22 @@ const Signup: React.FC = () => {
             <main className="page-section auth-section">
                 <form
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleSignup(e, csrfContext, true, setIsLoading, null, setEmailError, setPasswordError, setConfirmPasswordError)}
+                    onSubmit={(e) => handleSignup(e, csrfContext, true, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError)}
                 >
-                    <div className="auth-form">
-                        <AuthErrors 
-                            errors={[emailError, passwordError, confirmPasswordError]}
+                    {isSuccess && (
+                        <AlzherMessage 
+                            msg="Your account has been created successfully!"
                         />
+                    )}
+                    <div className="auth-form">
                         <AuthHeader 
                             headerText="Sign Up"
                         />
+                        {(emailError?.isError || passwordError?.isError || confirmPasswordError?.isError) && (
+                            <AuthErrors 
+                                errors={[emailError, passwordError, confirmPasswordError]}
+                            />
+                        )}
                         <AuthItem 
                             inputName="email"
                             inputPlaceHolder="Email Address"

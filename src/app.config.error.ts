@@ -55,13 +55,12 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
     if(status === 400){
         const data = axiosError.response?.data as CustomErrorType
         const errors = data.errors
-
         const errorMap = new Map(
             errors.map(error => {
                 return [ error.path, error.msg]
             })
         )
-
+        
         setStateErrors.forEach(error => {
             if(errorMap.has(error.errorName)){
                 const msg = errorMap.get(error.errorName)
@@ -70,6 +69,10 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
                         msg,
                         isError: true
                     })
+                }
+            } else {
+                if(error.setState){
+                    error.setState(null)
                 }
             }
         })

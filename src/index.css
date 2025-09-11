@@ -34,6 +34,7 @@ a{
   text-decoration: none;
 }
 .page-section{
+  position: relative;
   display: flex;
   justify-content: center;
   min-width: 20rem;
@@ -244,5 +245,32 @@ a{
 @keyframes buttonLoading {
   to {
     transform: rotate(360deg);
+  }
+}
+
+.alzher-message{
+  position: fixed;
+  top: 5rem;
+  right: 0;
+  z-index: 15;
+  padding: 1rem;
+  background-color: var(--c-main);
+  color: white;
+  border-radius: .5rem 0 0 .5rem;
+  font-family: var(--f-main);
+  transform: translateX(100%);
+
+  animation: alzher-message 5s ease-in forwards;
+}
+
+@keyframes alzher-message {
+  10%{
+    transform: translateX(0);
+  }
+  90%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(100%);
   }
 }

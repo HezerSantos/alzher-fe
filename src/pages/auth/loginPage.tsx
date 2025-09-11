@@ -129,7 +129,7 @@ const Login: React.FC = () => {
                         <button className="auth-form__button" type="submit" disabled={isLoading}>
                             {!isLoading? (
                                 <>
-                                    Sign up
+                                    Login
                                 </>
                             ) : (
                                 <AiOutlineLoading className="button-loading"/>

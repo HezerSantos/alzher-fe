@@ -1,11 +1,21 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import '../../assets/styles/dashboard/dashboard.css'
 import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
 import DashboardOverviewContent from '../../components/dashboard/overview/dashboardOverviewContent'
 import DashboardMiniNav from '../../components/universal/navbar/dashboardMiniNav'
+import api from '../../app.config'
 const DashboardOverview: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
+
+    useEffect(() => {
+        const fetchData = async() => {
+            const res = await api.get("/protected")
+            console.log(res)
+        }
+
+        fetchData()
+    })
     return(
         <>
             <div className="page-section">

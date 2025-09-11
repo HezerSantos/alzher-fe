@@ -37,8 +37,26 @@ interface CustomErrorType {
     errors: ValidationErrorType[]
 }
 
+interface CustomLoginError {
+    errors: {
+        msg: string
+    }[]
+}
+
 const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext, status, retry, callback, setStateErrors) => {
     if(status === 401 ) {
+        const res = axiosError.response?.data as CustomLoginError
+        if(res && res.errors[0].msg === "Invalid Username or Password"){
+            setStateErrors.forEach(error => {
+                if(error.setState){
+                    error.setState({
+                        msg: "Invalid Username or Password",
+                        isError: true
+                    })
+                }
+            })
+            return
+        }
         await api.get(`/api/auth/public`)
         if(retry){
             callback[0]()
@@ -60,7 +78,6 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
                 return [ error.path, error.msg]
             })
         )
-        
         setStateErrors.forEach(error => {
             if(errorMap.has(error.errorName)){
                 const msg = errorMap.get(error.errorName)

@@ -1,11 +1,9 @@
-import { createContext, SetStateAction } from "react";
+import React, { createContext, SetStateAction } from "react";
 
 interface AuthContextType {
-    isAuth: boolean,
-    setIsAuth: React.Dispatch<SetStateAction<boolean>>,
     refresh: (retry: boolean, newCsrf?: string | null) => void,
-    isAuthLoading: boolean,
-    setIsAuthLoading: React.Dispatch<SetStateAction<boolean>>
+    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
+    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
 }
 
 

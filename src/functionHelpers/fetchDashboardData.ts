@@ -19,12 +19,11 @@ interface CsrfContextType {
 }
 
 interface AuthContextType {
-    isAuth: boolean,
-    setIsAuth: React.Dispatch<SetStateAction<boolean>>,
     refresh: (retry: boolean, newCsrf?: string | null) => void,
-    isAuthLoading: boolean,
-    setIsAuthLoading: React.Dispatch<SetStateAction<boolean>>
+    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
+    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
 }
+
 
 const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, retry, newCsrf) => {
     try{
@@ -34,7 +33,7 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             }
         })
         console.log(res)
-        authContext?.setIsAuth(true)
+        authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
     } catch(error) {
         const axiosError = error as AxiosError
         console.log(axiosError)
@@ -46,8 +45,6 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             [],
             authContext
         )
-    } finally {
-        authContext?.setIsAuthLoading(false)
     }
 }
 

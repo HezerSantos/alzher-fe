@@ -19,14 +19,13 @@ const DashboardOverview: React.FC = () => {
 
     useEffect(() => {
         fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true)
-        console.log(authContext?.isAuth)
     }, [])
     return(
         <>
-        {authContext?.isAuthLoading? (
+        {authContext?.isAuthState.isAuthLoading? (
             <LoadingScreen />
         ) : (
-            authContext?.isAuth? (
+            authContext?.isAuthState.isAuth? (
             <div className="page-section">
                 <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                     <DashboardMiniNav />

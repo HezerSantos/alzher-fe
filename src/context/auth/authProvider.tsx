@@ -16,36 +16,30 @@ type RefreshType = (retry: boolean, newCsrf?: string | null) => void
 
 const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const csrfContext = useContext(CsrfContext)
-    const [ isAuth, setIsAuth ] = useState(false)
-    const [ isAuthLoading, setIsAuthLoading ] = useState(true)
-
+    const [ isAuthState, setIsAuthState ] = useState({isAuth: false, isAuthLoading: true})
     const refresh: RefreshType = useCallback(async (retry, newCsrf) => {
-        console.log("refresh")
         try {
-            setIsAuthLoading(true)
-            const res = await api.get("/api/auth/secure/refresh", {
+            setIsAuthState({isAuth: false, isAuthLoading: true})
+            await api.get("/api/auth/secure/refresh", {
                 headers: {
                     csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
                 }
             });
-            console.log(res)
-            setIsAuth(true)
+            setIsAuthState({isAuth: true, isAuthLoading: false})
         } catch (error) {
             const axiosError = error as AxiosError
-            setIsAuth(false)
+            setIsAuthState({isAuth: false, isAuthLoading: false})
             handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
                 [
                     () => refresh(true),
                     (newCsrf: string) => refresh(false, newCsrf)
                 ]
             )
-        } finally {
-            setIsAuthLoading(false)
         }
     }, []);
 
     return(
-        <AuthContext.Provider value={{isAuth, setIsAuth, refresh, isAuthLoading, setIsAuthLoading}}>
+        <AuthContext.Provider value={{refresh, isAuthState, setIsAuthState}}>
             {children}
         </AuthContext.Provider>
     )

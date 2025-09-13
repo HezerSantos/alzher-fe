@@ -4,8 +4,6 @@ import DashboardMiniNav from '../../components/universal/navbar/dashboardMiniNav
 import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
 import { IoIosArrowDown } from "react-icons/io";
-import api from '../../app.config'
-import CsrfContext from '../../context/csrf/csrfContext'
 import AuthContext from '../../context/auth/authContext'
 import LoadingScreen from '../helpers/loadingScreen'
 import NotLoggedIn from '../helpers/notLoggedIn'
@@ -168,17 +166,13 @@ const FileItem: React.FC<FileItemProps> = ({fileSize, fileName, setFileList}) =>
 
 const DashboardScan: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
-    const csrfContext = useContext(CsrfContext)
     const authContext = useContext(AuthContext)
     const [ fileList, setFileList ] = useState<Map<string, File>>(new Map())
 
 
     useEffect(() => {
         const fetchData = async() => {
-            await authContext?.refresh(true)
-
-
-            
+            await authContext?.refresh(true) 
         }
 
         fetchData()
@@ -188,12 +182,12 @@ const DashboardScan: React.FC = () => {
 
     return(
         <>
-            {authContext?.isAuthLoading? (
+            {authContext?.isAuthState.isAuthLoading? (
                 <>
                     <LoadingScreen />
                 </>
             ) : (
-                authContext?.isAuth? (
+                authContext?.isAuthState.isAuth? (
                     <div className="page-section">
                         <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                             <DashboardNav />

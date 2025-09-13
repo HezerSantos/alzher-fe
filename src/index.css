@@ -274,3 +274,17 @@ a{
     transform: translateX(100%);
   }
 }
+
+.loading-page{
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: alzher-loading 1s ease-in-out infinite;
+}
+
+@keyframes alzher-loading {
+  to {
+    transform: rotate(360deg);
+  }
+}

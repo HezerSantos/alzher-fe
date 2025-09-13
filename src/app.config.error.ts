@@ -19,7 +19,7 @@ type HandleRequestErrorType  =(
     status: number | undefined,
     retry: boolean,
     callback: any[],
-    setStateErrors: {
+    setStateErrors?: {
                         errorName: string,
                         setState: React.Dispatch<SetStateAction< ErrorType | null>> | undefined
                     }[]
@@ -37,17 +37,18 @@ interface CustomErrorType {
     errors: ValidationErrorType[]
 }
 
-interface CustomLoginError {
+interface UnauthorizedError {
     errors: {
-        msg: string
-    }[]
+        msg: string,
+        code: string
+    }
 }
 
 const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext, status, retry, callback, setStateErrors) => {
     if(status === 401 ) {
-        const res = axiosError.response?.data as CustomLoginError
-        if(res && res.errors[0].msg === "Invalid Username or Password"){
-            setStateErrors.forEach(error => {
+        const res = axiosError.response?.data as UnauthorizedError
+        if(res.errors.code === "AUTH_INVALID_CREDENTIALS"){
+            setStateErrors?.forEach(error => {
                 if(error.setState){
                     error.setState({
                         msg: "Invalid Username or Password",
@@ -57,8 +58,14 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
             })
             return
         }
-        await api.get(`/api/auth/public`)
+
+        if(res.errors.code === "AUTH_INVALID_TOKEN"){
+            
+            return
+        }
+        
         if(retry){
+            await api.get(`/api/auth/public`)
             callback[0]()
         }
         return
@@ -78,7 +85,7 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
                 return [ error.path, error.msg]
             })
         )
-        setStateErrors.forEach(error => {
+        setStateErrors?.forEach(error => {
             if(errorMap.has(error.errorName)){
                 const msg = errorMap.get(error.errorName)
                 if(msg && error.setState){

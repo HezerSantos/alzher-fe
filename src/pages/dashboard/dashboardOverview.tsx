@@ -10,21 +10,15 @@ const DashboardOverview: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     const authContext = useContext(AuthContext)
 
-    if(!authContext?.isAuth){
-        return(
-            <>
-                Not Logged In
-            </>
-        )
-    }
-    useEffect(() => {
-        const fetchData = async() => {
-            const res = await api.get("/protected")
-            console.log(res)
-        }
 
-        fetchData()
-    })
+    // if(!authContext?.isAuth){
+    //     return(
+    //         <>
+    //             Not Logged In
+    //         </>
+    //     )
+    // }
+
     return(
         <>
             <div className="page-section">

@@ -8,6 +8,7 @@ import api from '../../app.config'
 import CsrfContext from '../../context/csrf/csrfContext'
 import AuthContext from '../../context/auth/authContext'
 import LoadingScreen from '../helpers/loadingScreen'
+import NotLoggedIn from '../helpers/notLoggedIn'
 const ScanHeader: React.FC = () => {
     return(
         <div className='scan-header'>
@@ -209,7 +210,7 @@ const DashboardScan: React.FC = () => {
                     </div>
                 ) : (
                     <>
-                        Not logged In
+                        <NotLoggedIn />
                     </>
                 )
             )}

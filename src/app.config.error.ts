@@ -22,10 +22,17 @@ type HandleRequestErrorType  =(
     setStateErrors?: {
                         errorName: string,
                         setState: React.Dispatch<SetStateAction< ErrorType | null>> | undefined
-                    }[]
+                    }[],
+    authContext?: AuthContextType | null
 ) => void
 
-
+interface AuthContextType {
+    isAuth: boolean,
+    setIsAuth: React.Dispatch<SetStateAction<boolean>>,
+    refresh: (retry: boolean, newCsrf?: string | null) => void,
+    isAuthLoading: boolean,
+    setIsAuthLoading: React.Dispatch<SetStateAction<boolean>>
+}
 interface ValidationErrorType {
     type: string,
     value: string,
@@ -44,7 +51,7 @@ interface UnauthorizedError {
     }
 }
 
-const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext, status, retry, callback, setStateErrors) => {
+const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext, status, retry, callback, setStateErrors, authContext) => {
     if(status === 401 ) {
         const res = axiosError.response?.data as UnauthorizedError
         if(res.errors.code === "AUTH_INVALID_CREDENTIALS"){
@@ -60,7 +67,11 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
         }
 
         if(res.errors.code === "AUTH_INVALID_TOKEN"){
-            
+            return
+        }
+
+        if(res.errors.code === "INVALID_ACCESS_TOKEN"){
+            await authContext?.refresh(true)
             return
         }
         

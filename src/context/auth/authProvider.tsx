@@ -1,4 +1,4 @@
-import React, { ReactNode, SetStateAction, useCallback, useContext, useEffect, useState } from "react"
+import React, { ReactNode, useCallback, useContext, useState } from "react"
 import AuthContext from "./authContext"
 import api from "../../app.config"
 import CsrfContext from "../csrf/csrfContext"
@@ -20,6 +20,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const [ isAuthLoading, setIsAuthLoading ] = useState(true)
 
     const refresh: RefreshType = useCallback(async (retry, newCsrf) => {
+        console.log("refresh")
         try {
             setIsAuthLoading(true)
             const res = await api.get("/api/auth/secure/refresh", {
@@ -44,7 +45,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }, []);
 
     return(
-        <AuthContext.Provider value={{isAuth, setIsAuth, refresh, isAuthLoading}}>
+        <AuthContext.Provider value={{isAuth, setIsAuth, refresh, isAuthLoading, setIsAuthLoading}}>
             {children}
         </AuthContext.Provider>
     )

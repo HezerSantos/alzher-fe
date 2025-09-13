@@ -288,3 +288,27 @@ a{
     transform: rotate(360deg);
   }
 }
+
+.not-logged-in{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100svh - 5rem);
+  min-height: 20rem;
+  flex-direction: column;
+  gap: 1rem;
+
+  font-family: var(--f-main);
+  color: var(--tc-main);
+
+  & > p > a{
+    color: var(--tc-main);
+    text-decoration: underline;
+  }
+
+  & > svg{
+    width: 5rem;
+    height: 5rem;
+    fill: var(--c-main);
+  }
+}

@@ -71,6 +71,7 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
 
         if(res.errors.code === "INVALID_ACCESS_TOKEN"){
             await authContext?.refresh(true)
+            await callback[2]()
             return
         }
         
@@ -83,7 +84,7 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
     if(status === 403 ) {
         const newCsrf = await csrfContext?.getCsrf()
         if(retry){
-            callback[1](newCsrf)
+            await callback[1](newCsrf)
         }
         return
     }

@@ -7,6 +7,10 @@ import { IoIosArrowDown } from "react-icons/io";
 import AuthContext from '../../context/auth/authContext'
 import LoadingScreen from '../helpers/loadingScreen'
 import NotLoggedIn from '../helpers/notLoggedIn'
+import api from '../../app.config'
+import { AxiosError } from 'axios'
+import handleRequestError from '../../app.config.error'
+import CsrfContext from '../../context/csrf/csrfContext'
 const ScanHeader: React.FC = () => {
     return(
         <div className='scan-header'>
@@ -47,7 +51,7 @@ const handleDrop: HandleDropType = (e, setFileList) => {
 }
 
 interface ScanFormProps {
-    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>,
 }
 
 type HandleManualUploadType = (
@@ -95,15 +99,61 @@ const ScanForm: React.FC<ScanFormProps> = ({setFileList}) => {
 
 interface FileContainerProps {
     fileList: Map<string, File>,
-    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>,
+    csrfContext: CsrfContextType | null,
+    authContext: AuthContextType
 }
 
-type SubmitFilesType = (fileList: Map<string, File>) => void
-
-const submitFiles: SubmitFilesType = (fileList) => {
-    console.log(fileList)
+interface CsrfContextType {
+    csrfToken: string | null
+    decodeCookie: (cookie: string) => void
+    getCsrf: () => Promise<string | undefined>
 }
-const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList}) => {
+
+interface AuthContextType {
+    refresh: (retry: boolean, newCsrf?: string | null) => void,
+    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
+    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
+}
+
+
+
+type SubmitFilesType = (fileList: Map<string, File>, csrfContext: CsrfContextType | null, authContext: AuthContextType, retry: boolean, newCsrf?: string) => void
+
+const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, retry, newCsrf) => {
+    const formData = new FormData()
+
+
+    const filesArray = [...fileList.values()];
+    filesArray.forEach(file => {
+        formData.append('files', file)
+    });
+
+    try {
+        const res = await api.post("/api/dashboard/scan", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+            }
+        })
+        console.log("success")
+    } catch(error) {
+        const axiosError = error as AxiosError
+
+        handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
+            [
+                () => submitFiles(fileList, csrfContext, authContext, true),
+                (newCsrf: string) => submitFiles(fileList, csrfContext, authContext, false, newCsrf),
+                () => submitFiles(fileList, csrfContext, authContext, true)
+            ],
+            [],
+            authContext
+        )
+    }
+}
+
+
+const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csrfContext, authContext}) => {
     return(
         <div className='file-container'>
             {[...fileList.values()].map((file, index) => {
@@ -118,7 +168,7 @@ const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList}) =>
             })}
             {fileList.size !== 0 && (
                 <>
-                    <button className='file-submit' onClick={() => submitFiles(fileList)}>
+                    <button className='file-submit' onClick={() => submitFiles(fileList, csrfContext, authContext, true)}>
                         Scan Files
                     </button>
                 </>
@@ -167,6 +217,7 @@ const FileItem: React.FC<FileItemProps> = ({fileSize, fileName, setFileList}) =>
 const DashboardScan: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     const authContext = useContext(AuthContext)
+    const csrfContext = useContext(CsrfContext)
     const [ fileList, setFileList ] = useState<Map<string, File>>(new Map())
 
 
@@ -198,6 +249,8 @@ const DashboardScan: React.FC = () => {
                                 <FileContainer 
                                     fileList={fileList}
                                     setFileList={setFileList}
+                                    csrfContext={csrfContext}
+                                    authContext={authContext}
                                 />
                             </div>
                         </div>

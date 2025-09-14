@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { CiUser } from "react-icons/ci";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import AuthContext from "../../../context/auth/authContext";
 
 type ToggleMiniNavType = (miniNav: HTMLDivElement | null) => void
 const toggleMiniNav: ToggleMiniNavType = (miniNav) => {
@@ -10,6 +11,7 @@ const toggleMiniNav: ToggleMiniNavType = (miniNav) => {
 }
 const IndexNav: React.FC = () => {
     const miniNav = useRef<HTMLDivElement | null>(null)
+    const authContext = useContext(AuthContext)
     return(
         <>
             <nav className="page-section index-nav-wrapper"> 
@@ -26,7 +28,9 @@ const IndexNav: React.FC = () => {
                         <img src="/favicon.svg" alt="alzher logo" />
                         <ul>
                             <li>
-                                <Link to={"/dashboard"}>My Dashboard</Link>
+                                {authContext?.isAuthState.isAuth && (
+                                    <Link to={"/dashboard"}>My Dashboard</Link>
+                                )}
                             </li>
                             <li>
                                 <Link to={""}>Terms and Service</Link>
@@ -49,7 +53,9 @@ const IndexNav: React.FC = () => {
                 <div ref={miniNav} className="page-section__child index-mini-nav">
                     <ul>
                         <li>
-                            <Link to={""}>My Dashboard</Link>
+                                {authContext?.isAuthState.isAuth && (
+                                    <Link to={"/dashboard"}>My Dashboard</Link>
+                                )}
                         </li>
                         <li>
                             <Link to={""}>Terms and Service</Link>

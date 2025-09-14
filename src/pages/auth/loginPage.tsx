@@ -19,12 +19,11 @@ interface CsrfContextType {
 }
 
 interface AuthContextType {
-    isAuth: boolean,
-    setIsAuth: React.Dispatch<SetStateAction<boolean>>,
     refresh: (retry: boolean, newCsrf?: string | null) => void,
-    isAuthLoading: boolean,
-    setIsAuthLoading: React.Dispatch<SetStateAction<boolean>>
+    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
+    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
 }
+
 
 interface ErrorType {
     msg: string,
@@ -73,8 +72,7 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
             setPasswordError(null)
         }
         form.reset()
-        authContext?.setIsAuth(true)
-        authContext?.setIsAuthLoading(false)
+        authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
         navigate("/dashboard")
     } catch (error) {
         const axiosError = error as AxiosError

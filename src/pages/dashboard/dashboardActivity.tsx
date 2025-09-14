@@ -69,7 +69,7 @@ const TransactionContainerHeader: React.FC<TransactionHeaderProps> = ({transacti
             </div>
             <div className='transaction-item'>
                 <div className='transaction-hidden-detail'>
-                    Transaction ID
+                    TID
                 </div>
                 <div>
                     Category
@@ -355,7 +355,7 @@ const DashboardActivity: React.FC = () => {
         // const newTransactionDataMap = new Map(newTransactionData)
         // console.log(newTransactionDataMap)
         // setTransactionData(newTransactionDataMap)
-    })
+    }, [])
     useEffect(() => {
         const newTransactionData = exampleData.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
         const newTransactionDataMap = new Map(newTransactionData)
@@ -373,10 +373,11 @@ const DashboardActivity: React.FC = () => {
                     <DashboardNav />
                     <DashboardMiniNav />
                     <div className='dashboard__activity-container'>
+                        {/* This is the little expanded dashboard form TODO: REFACTOR INTO COMPONENT */}
                         <form className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`} onSubmit={(e) => updateTransactionItem(e, setTransactionData)}>
                             <button onClick={(e) => clostExpandedTransaction(e, setIsExpandedOpen)}>close</button>
                             <div>
-                                <label htmlFor="edit-id">Transaction ID:</label>
+                                <label htmlFor="edit-id">TID:</label>
                                 <input name="transactionId" id="edit-id" type='text' readOnly defaultValue={selectedTransactionItem?.transactionId} />
                             </div>
                             <ExpandedTransactionElement 
@@ -414,6 +415,7 @@ const DashboardActivity: React.FC = () => {
                                 Delete Transaction
                             </button>
                         </form>
+                        {/* END OF FORM */}
                         <div className='activity-header'>
                             <h1>
                                 Activity

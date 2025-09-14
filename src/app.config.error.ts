@@ -71,13 +71,15 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
 
         if(res.errors.code === "INVALID_ACCESS_TOKEN"){
             await authContext?.refresh(true)
-            await callback[2]()
+            if(callback[2]){
+                await callback[2]()
+            }
             return
         }
         
         if(retry){
             await api.get(`/api/auth/public`)
-            callback[0]()
+            await callback[0]()
         }
         return
     }

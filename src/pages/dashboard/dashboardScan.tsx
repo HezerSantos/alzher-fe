@@ -11,6 +11,7 @@ import api from '../../app.config'
 import { AxiosError } from 'axios'
 import handleRequestError from '../../app.config.error'
 import CsrfContext from '../../context/csrf/csrfContext'
+import AlzherMessage from '../../components/universal/alzherMessage'
 const ScanHeader: React.FC = () => {
     return(
         <div className='scan-header'>
@@ -101,7 +102,8 @@ interface FileContainerProps {
     fileList: Map<string, File>,
     setFileList: React.Dispatch<SetStateAction<Map<string, File>>>,
     csrfContext: CsrfContextType | null,
-    authContext: AuthContextType
+    authContext: AuthContextType,
+    setIsError: React.Dispatch<SetStateAction<boolean>>
 }
 
 interface CsrfContextType {
@@ -118,9 +120,16 @@ interface AuthContextType {
 
 
 
-type SubmitFilesType = (fileList: Map<string, File>, csrfContext: CsrfContextType | null, authContext: AuthContextType, retry: boolean, newCsrf?: string) => void
+type SubmitFilesType = (
+    fileList: Map<string, File>, 
+    csrfContext: CsrfContextType | null, 
+    authContext: AuthContextType, 
+    retry: boolean, 
+    setIsError: React.Dispatch<SetStateAction<boolean>>,
+    newCsrf?: string
+) => void
 
-const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, retry, newCsrf) => {
+const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, retry, setIsError, newCsrf) => {
     const formData = new FormData()
 
 
@@ -139,21 +148,25 @@ const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, r
         console.log("success")
     } catch(error) {
         const axiosError = error as AxiosError
-
         handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
             [
-                () => submitFiles(fileList, csrfContext, authContext, true),
-                (newCsrf: string) => submitFiles(fileList, csrfContext, authContext, false, newCsrf),
-                () => submitFiles(fileList, csrfContext, authContext, true)
+                () => submitFiles(fileList, csrfContext, authContext, true, setIsError),
+                (newCsrf: string) => submitFiles(fileList, csrfContext, authContext, false, setIsError, newCsrf),
+                () => submitFiles(fileList, csrfContext, authContext, true, setIsError)
             ],
-            [],
+            [
+                {
+                    errorName: "invalidProcess",
+                    setMsgError: setIsError
+                }
+            ],
             authContext
         )
     }
 }
 
 
-const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csrfContext, authContext}) => {
+const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csrfContext, authContext, setIsError}) => {
     return(
         <div className='file-container'>
             {[...fileList.values()].map((file, index) => {
@@ -168,7 +181,7 @@ const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csr
             })}
             {fileList.size !== 0 && (
                 <>
-                    <button className='file-submit' onClick={() => submitFiles(fileList, csrfContext, authContext, true)}>
+                    <button className='file-submit' onClick={() => submitFiles(fileList, csrfContext, authContext, true, setIsError)}>
                         Scan Files
                     </button>
                 </>
@@ -219,7 +232,7 @@ const DashboardScan: React.FC = () => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     const [ fileList, setFileList ] = useState<Map<string, File>>(new Map())
-
+    const [ isError, setIsError ] = useState(false)
 
     useEffect(() => {
         const fetchData = async() => {
@@ -229,6 +242,13 @@ const DashboardScan: React.FC = () => {
         fetchData()
     }, [])
 
+    useEffect(() => {
+        if(isError){
+            const timeout = setTimeout(() => {
+                setIsError(false)
+            }, 5000)
+        }
+    }, [isError])
 
 
     return(
@@ -241,6 +261,9 @@ const DashboardScan: React.FC = () => {
                 authContext?.isAuthState.isAuth? (
                     <div className="page-section">
                         <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
+                            {isError && (
+                                <AlzherMessage msg='Unable to process statement' error={true}/>
+                            )}
                             <DashboardNav />
                             <DashboardMiniNav />
                             <div className='scan-container'>
@@ -251,6 +274,7 @@ const DashboardScan: React.FC = () => {
                                     setFileList={setFileList}
                                     csrfContext={csrfContext}
                                     authContext={authContext}
+                                    setIsError={setIsError}
                                 />
                             </div>
                         </div>

@@ -21,7 +21,8 @@ type HandleRequestErrorType  =(
     callback: any[],
     setStateErrors?: {
                         errorName: string,
-                        setState: React.Dispatch<SetStateAction< ErrorType | null>> | undefined
+                        setState?: React.Dispatch<SetStateAction< ErrorType | null >> | undefined,
+                        setMsgError?: React.Dispatch<SetStateAction<boolean>>
                     }[],
     authContext?: AuthContextType | null
 ) => void
@@ -91,6 +92,16 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
         return
     }
     if(status === 400){
+        const res = axiosError.response?.data as UnauthorizedError
+        if(res.errors.code === "INVALID_PROCESS"){
+            setStateErrors?.forEach(error => {
+                if(error.setMsgError){
+                    error.setMsgError(true)
+                }
+            })
+            return
+        }
+
         const data = axiosError.response?.data as CustomErrorType
         const errors = data.errors
         const errorMap = new Map(

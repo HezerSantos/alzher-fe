@@ -263,6 +263,14 @@ a{
   animation: alzher-message 5s ease-in forwards;
 }
 
+.alzher-error{
+  background-color: rgb(255, 198, 198);
+
+  & > p{
+    color: rgb(146, 0, 0);
+  }
+}
+
 @keyframes alzher-message {
   10%{
     transform: translateX(0);

@@ -33,12 +33,15 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             }
         })
         authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
+        console.log(res)
     } catch(error) {
+        console.error(error)
         const axiosError = error as AxiosError
         handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
             [
                 () => fetchDashboardData(csrfContext, authContext, setData, path, true),
-                (newCsrf: string) => fetchDashboardData(csrfContext, authContext, setData, path, false, newCsrf)
+                (newCsrf: string) => fetchDashboardData(csrfContext, authContext, setData, path, false, newCsrf),
+                () => fetchDashboardData(csrfContext, authContext, setData, path, true),
             ],
             [],
             authContext

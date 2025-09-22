@@ -52,7 +52,7 @@ const DashboardOverviewControl: React.FC = () => {
 
 const dashboardOverviewDetailsItems = [
     {
-        header: "Total Spent",
+        header: "Total Spent", //Per year
         price: 252912,
         details: [
             {
@@ -66,21 +66,7 @@ const dashboardOverviewDetailsItems = [
         ]
     },
     {
-    header: "Yearly Spent",
-    price: 52232,
-    details: [
-        {
-            heading: "Average Category",
-            value: "Utilities"
-        },
-        {
-            heading: "Highest Category",
-            value: "Entertainment"
-        } 
-    ]
-    },
-    {
-        header: "Monthly Spent",
+        header: "Monthly Average",
         price: 4532,
         details: [
             {
@@ -198,32 +184,32 @@ const testData = [ //DELETE AFTER
     {
         month: "January",
         ['2024']: 1732,
-        ['2025']: 2874
+        
     },
     {
         month: "February",
         ['2024']: 1196,
-        ['2025']: 3451
+        
     },
     {
         month: "March",
         ['2024']: 1608,
-        ['2025']: 2253
+        
     },
     {
         month: "April",
         ['2024']: 1421,
-        ['2025']: 3932
+        
     },
     {
         month: "May",
         ['2024']: 1887,
-        ['2025']: 2765
+        
     },
     {
         month: "June",
         ['2024']: 1344,
-        ['2025']: 3629
+        
     }
 ];
 
@@ -265,11 +251,11 @@ const DashboardOverviewContent: React.FC = () => {
                         })}
                     </div>
                     <div className="do__chart-chart">
-                        <h1>2025 & 2024 Overview</h1>
+                        <h1>2024 Overview</h1>
                         <OverviewChart 
                             overviewData={testData}
                             yearOne="2024"
-                            yearTwo={"2025"}
+                            yearTwo={false}
                         />
                     </div>
                 </section>

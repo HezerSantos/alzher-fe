@@ -143,7 +143,7 @@ const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, r
     });
     setIsLoading(true)
     try {
-        const res = await api.post("/api/dashboard/scan", formData, {
+        await api.post("/api/dashboard/scan", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken

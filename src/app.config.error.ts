@@ -22,7 +22,7 @@ type HandleRequestErrorType  =(
     setStateErrors?: {
                         errorName: string,
                         setState?: React.Dispatch<SetStateAction< ErrorType | null >> | undefined,
-                        setMsgError?: React.Dispatch<SetStateAction<boolean>>
+                        setMsgError?: React.Dispatch<SetStateAction<{error: boolean, ok: boolean}>>
                     }[],
     authContext?: AuthContextType | null
 ) => void
@@ -96,7 +96,7 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
         if(res.errors.code === "INVALID_PROCESS"){
             setStateErrors?.forEach(error => {
                 if(error.setMsgError){
-                    error.setMsgError(true)
+                    error.setMsgError({error: true, ok: false})
                 }
             })
             return

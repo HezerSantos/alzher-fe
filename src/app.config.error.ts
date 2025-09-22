@@ -102,6 +102,10 @@ const handleRequestError: HandleRequestErrorType = async(axiosError, csrfContext
             return
         }
 
+        if(res.errors.code === "INVALID_QUERY"){
+            return
+        }
+
         const data = axiosError.response?.data as CustomErrorType
         const errors = data.errors
         const errorMap = new Map(

@@ -18,7 +18,11 @@ const DashboardOverview: React.FC = () => {
     const [ dashboardData, setDashboardData ] = useState(null)
 
     useEffect(() => {
-        fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true)
+        const body = {
+            year: 2024,
+            semester: 2
+        }
+        fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body)
     }, [])
     return(
         <>

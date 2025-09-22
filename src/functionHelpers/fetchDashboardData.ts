@@ -9,6 +9,7 @@ type FetchDashboardDataType = (
     setData: React.Dispatch<SetStateAction<any>>,
     path: string,
     retry: boolean,
+    body?: any | null,
     newCsrf?: string | null
 ) => void
 
@@ -25,12 +26,14 @@ interface AuthContextType {
 }
 
 
-const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, retry, newCsrf) => {
+const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, retry, body, newCsrf) => {
     try{
+        console.log(body)
         const res = await api.get(`/api/dashboard/${path}`, {
             headers: {
                 csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
-            }
+            }, 
+            params: body
         })
         authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
         console.log(res)
@@ -39,9 +42,9 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
         const axiosError = error as AxiosError
         handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
             [
-                () => fetchDashboardData(csrfContext, authContext, setData, path, true),
-                (newCsrf: string) => fetchDashboardData(csrfContext, authContext, setData, path, false, newCsrf),
-                () => fetchDashboardData(csrfContext, authContext, setData, path, true),
+                () => fetchDashboardData(csrfContext, authContext, setData, path, true, body),
+                (newCsrf: string) => fetchDashboardData(csrfContext, authContext, setData, path, false, body, newCsrf),
+                () => fetchDashboardData(csrfContext, authContext, setData, path, true, body),
             ],
             [],
             authContext

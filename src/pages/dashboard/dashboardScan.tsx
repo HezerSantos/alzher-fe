@@ -253,13 +253,19 @@ const DashboardScan: React.FC = () => {
     }, [])
 
     useEffect(() => {
+        let timeout: NodeJS.Timeout
+
         if(isMessage.error || isMessage.ok){
-            const timeout = setTimeout(() => {
+            timeout = setTimeout(() => {
                 setIsMessage({error: false, ok: false})
             }, 5000)
         }
         if(isMessage.ok){
             setFileList(new Map())
+        }
+
+        return () => {
+            if (timeout) clearTimeout(timeout)
         }
     }, [isMessage])
 

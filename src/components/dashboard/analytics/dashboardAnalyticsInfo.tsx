@@ -13,38 +13,38 @@ interface DashboardAnalyticsInfoItemProps {
 
 const dashboardAnalytics = [
   {
-    header: "Total Spent",
-    amountSpent: 252912,
-    primarySubHeader: "Average Category",
-    primarySubValue: "Utilities",
-    secondarySubHeader: "Highest Category",
-    secondarySubValue: "Dining",
+    header: 'Total Spent',
+    amountSpent: 5814.599999999994,
+    primarySubHeader: 'Frequent Category',
+    primarySubValue: 'Dining',
+    secondarySubHeader: 'Largest Expense',
+    secondarySubValue: 'Leisure'
   },
   {
-    header: "2024 Yearly Spent",
-    amountSpent: 52232,
-    primarySubHeader: "Highest Category",
-    primarySubValue: "Entertainment",
-    secondarySubHeader: "Peak Month",
-    secondarySubValue: "December",
+    header: 'Yearly Average',
+    amountSpent: 2907.2999999999993,
+    primarySubHeader: 'Peak Month',
+    primarySubValue: 'Dec',
+    secondarySubHeader: null,
+    secondarySubValue: null
   },
   {
-    header: "Monthly Spent",
-    amountSpent: 4532,
-    primarySubHeader: "Highest Day",
-    primarySubValue: "16th of the month",
-    secondarySubHeader: "Lowest Day",
-    secondarySubValue: "27th of the month",
+    header: 'Monthly Average',
+    amountSpent: 528.5999999999999,
+    primarySubHeader: 'Highest Day',
+    primarySubValue: '13 of the month',
+    secondarySubHeader: 'Lowest Day',
+    secondarySubValue: '31 of the month'
   },
   {
-    header: "Total Transactions",
-    amountSpent: 123234,
+    header: 'Total Transactions',
+    amountSpent: 284,
     primarySubHeader: null,
     primarySubValue: null,
     secondarySubHeader: null,
-    secondarySubValue: null,
-  },
-];
+    secondarySubValue: null
+  }
+]
 
 
 const DashboardAnalyticsInfoItem: React.FC<DashboardAnalyticsInfoItemProps> = (props) => {
@@ -54,7 +54,7 @@ const DashboardAnalyticsInfoItem: React.FC<DashboardAnalyticsInfoItemProps> = (p
                 <p>{props.header}</p>
                 <p>
                     {props.header === "Total Transactions"? "" : "$"}
-                    {props.amountSpent}
+                    {props.amountSpent.toFixed(2)}
                 </p>
                 {props.primarySubValue && (
                     <div>

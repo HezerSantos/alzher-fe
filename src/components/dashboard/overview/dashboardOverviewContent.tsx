@@ -1,11 +1,14 @@
-import React, { useState } from "react"
+import React, { SetStateAction, useContext, useEffect, useState } from "react"
 import { IoCloseOutline } from "react-icons/io5";
 import OverviewChart from "./charts/overviewChart";
 import { BsArrowsAngleExpand } from "react-icons/bs";
+import AuthContext from "../../../context/auth/authContext";
+import CsrfContext from "../../../context/csrf/csrfContext";
+import fetchDashboardData from "../../../functionHelpers/fetchDashboardData";
 interface DashboardOverviewDetailsProps {
     header: string,
     price: number,
-    details: {
+    details?: {
         heading: string,
         value: string
     }[]
@@ -17,7 +20,7 @@ const DashboardOverviewDetails: React.FC<DashboardOverviewDetailsProps> = ({head
             <div className="dashboard-overview__details-item">
                 <h1>{header}</h1>
                 <p className="do__details-item__price">$ {price}</p>
-                {details.map((detail, index) => {
+                {details?.map((detail, index) => {
                     return(
                         <p
                         key={index}
@@ -32,54 +35,86 @@ const DashboardOverviewDetails: React.FC<DashboardOverviewDetailsProps> = ({head
     )
 }
 
-const DashboardOverviewControl: React.FC = () => {
+interface CsrfContextType {
+    csrfToken: string | null
+    decodeCookie: (cookie: string) => void
+    getCsrf: () => Promise<string | undefined>
+}
+
+interface AuthContextType {
+    refresh: (retry: boolean, newCsrf?: string | null) => void,
+    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
+    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
+}
+
+interface DashboardOverviewControlProps {
+    yearList: string[] | undefined,
+    csrfContext: CsrfContextType | null,
+    authContext: AuthContextType | null,
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+}
+
+type HandleDashboardOverviewType = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    queryDetails: {year: string | null, semester: number},
+    setQueryDetails: React.Dispatch<SetStateAction<{year: string | null, semester: number}>>,
+    csrfContext: CsrfContextType | null,
+    authContext: AuthContextType | null,
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+) => void
+
+type HandleDashboardOverviewClickType = (
+    semester: number,
+    queryDetails: {year: string | null, semester: number},
+    setQueryDetails: React.Dispatch<SetStateAction<{year: string | null, semester: number}>>,
+    csrfContext: CsrfContextType | null,
+    authContext: AuthContextType | null,
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+) => void
+
+const handleDashboardOverview: HandleDashboardOverviewType = async(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData) => {
+    const newYear = e.target.value
+    const body = {
+        year: newYear,
+        semester: queryDetails.semester
+    }
+
+    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body)
+    setQueryDetails(body)
+}
+
+const handleDashboardOverviewClick:HandleDashboardOverviewClickType = async(semester, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData) => {
+    const body = {
+        year: queryDetails.year,
+        semester: semester
+    }
+
+    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body)
+    setQueryDetails(body)
+} 
+const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({yearList, csrfContext, authContext, setDashboardData}) => {
+    const [ queryDetails, setQueryDetails ] = useState({year: yearList? yearList[0] : null, semester: 1})
+
     return(
         <>
-            <div className="dashboard-overview__control">
-                <button>
-                    Year: 2024
-                </button>
-                <button>
-                    First Six Months
-                </button>
-                <button>
-                    Last Six Months
-                </button>
-            </div>
+            {yearList&& (
+                <div className="dashboard-overview__control">
+                    <select onChange={(e) => handleDashboardOverview(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData)}>
+                        {yearList.map((year, index) => {
+                            return <option key={index} value={year}>{year}</option>
+                        })}
+                    </select>
+                    <button onClick={() => handleDashboardOverviewClick(1, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData)}>
+                        First Six Months
+                    </button>
+                    <button onClick={() => handleDashboardOverviewClick(2, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData)}>
+                        Last Six Months
+                    </button>
+                </div>
+            )}
         </>
     )
 }
-
-const dashboardOverviewDetailsItems = [
-    {
-        header: "Total Spent", //Per year
-        price: 252912,
-        details: [
-            {
-                heading: "Peak Month",
-                value: "December"
-            },
-            {
-                heading: "Highest Category",
-                value: "Dining"
-            } 
-        ]
-    },
-    {
-        header: "Monthly Average",
-        price: 4532,
-        details: [
-            {
-                heading: "Highest Day",
-                value: "16th of the month"
-            },
-            {
-                heading: "Lowest Day",
-                value: "27th of the month"
-            } 
-        ]
-    }
-]
 
 
 interface MonthItemProps {
@@ -133,87 +168,61 @@ const MonthItem: React.FC<MonthItemProps> = ({month, year, lowestCategory, highe
     )
 }
 
-
-const monthItemDemo = [ //DELETE AFTER
-    {
-        month: "January",
-        year: 2025,
-        lowestCategory: "Entertainment",
-        highestCategory: "Dining",
-        totalSpent: 20342
-    },
-    {
-        month: "February",
-        year: 2025,
-        lowestCategory: "Travel",
-        highestCategory: "Groceries",
-        totalSpent: 18560
-    },
-    {
-        month: "March",
-        year: 2025,
-        lowestCategory: "Subscriptions",
-        highestCategory: "Rent",
-        totalSpent: 22010
-    },
-    {
-        month: "April",
-        year: 2025,
-        lowestCategory: "Health",
-        highestCategory: "Dining",
-        totalSpent: 19750
-    },
-    {
-        month: "May",
-        year: 2025,
-        lowestCategory: "Utilities",
-        highestCategory: "Entertainment",
-        totalSpent: 21025
-    },
-    {
-        month: "June",
-        year: 2025,
-        lowestCategory: "Groceries",
-        highestCategory: "Travel",
-        totalSpent: 23330
-    }
-];
+const EmptyMonthItem: React.FC = () => {
+    return(
+        <>
+            <div className="do-month-item do-month-item-empty">
+                No Data Availiable
+            </div>
+        </>
+    )
+}
 
 
-const testData = [ //DELETE AFTER
-    {
-        month: "January",
-        ['2024']: 1732,
-        
-    },
-    {
-        month: "February",
-        ['2024']: 1196,
-        
-    },
-    {
-        month: "March",
-        ['2024']: 1608,
-        
-    },
-    {
-        month: "April",
-        ['2024']: 1421,
-        
-    },
-    {
-        month: "May",
-        ['2024']: 1887,
-        
-    },
-    {
-        month: "June",
-        ['2024']: 1344,
-        
-    }
-];
+interface OverviewDetailsItemsType {
+    header: string,
+    price: number,
+    details?: {
+        heading: string,
+        value: string
+    }[]
+}
 
-const DashboardOverviewContent: React.FC = () => {
+interface ChartDataType {
+    month: string,
+    [year: `${number}`]: number | string;
+}
+
+interface MonthItemsType {
+    month: string,
+    year: number,
+    lowestCategory: string,
+    highestCategory: string,
+    totalSpent: number
+}
+
+interface DashboardOverviewContentType {
+    year: string | undefined,
+    overviewDetailsItems: OverviewDetailsItemsType[] | undefined,
+    chartData: ChartDataType[] | undefined,
+    monthItems: MonthItemsType[] | undefined,
+    yearList: string[] | undefined,
+}
+
+interface DashboardOverviewContentProps {
+    year: string | undefined,
+    overviewDetailsItems: OverviewDetailsItemsType[] | undefined,
+    chartData: ChartDataType[] | undefined,
+    monthItems: MonthItemsType[] | undefined,
+    yearList: string[] | undefined,
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+}
+
+
+
+const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData}) => {
+    const authContext = useContext(AuthContext)
+    const csrfContext = useContext(CsrfContext)
     return(
         <>
             <main className="dashboard-content-container dashboard-content__overview">
@@ -223,8 +232,13 @@ const DashboardOverviewContent: React.FC = () => {
                     </div>
                 </header>
                 <section className="dashboard-overview__details">
-                    <DashboardOverviewControl />
-                    {dashboardOverviewDetailsItems.map((item, index) => {
+                    <DashboardOverviewControl 
+                        yearList={yearList}
+                        authContext={authContext}
+                        csrfContext={csrfContext}
+                        setDashboardData={setDashboardData}
+                    />
+                    {overviewDetailsItems?.map((item, index) => {
                         return(
                             <DashboardOverviewDetails 
                                 header={item.header}
@@ -237,7 +251,7 @@ const DashboardOverviewContent: React.FC = () => {
                 </section>
                 <section className="dashboard-overview__chart-container">
                     <div className="do__chart-months">
-                        {monthItemDemo.map((monthItem, index) => {
+                        {monthItems? (monthItems.map((monthItem, index) => {
                             return(
                                 <MonthItem 
                                     key={index}
@@ -248,13 +262,15 @@ const DashboardOverviewContent: React.FC = () => {
                                     totalSpent={monthItem.totalSpent}
                                 />
                             )
-                        })}
+                        })) : (
+                            <EmptyMonthItem />
+                        )}
                     </div>
                     <div className="do__chart-chart">
-                        <h1>2024 Overview</h1>
+                        <h1>{year} Overview</h1>
                         <OverviewChart 
-                            overviewData={testData}
-                            yearOne="2024"
+                            overviewData={chartData? chartData : null}
+                            yearOne={year? year : ""}
                             yearTwo={false}
                         />
                     </div>

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { use, useContext, useEffect, useState } from 'react'
 import '../../assets/styles/dashboard/dashboard.css'
 import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
@@ -11,11 +11,43 @@ import fetchDashboardData from '../../functionHelpers/fetchDashboardData'
 import CsrfContext from '../../context/csrf/csrfContext'
 
 
+interface OverviewDetailsItemsType {
+    header: string,
+    price: number,
+    details?: {
+        heading: string,
+        value: string
+    }[]
+}
+
+interface ChartDataType {
+    month: string,
+    [year: `${number}`]: number | string;
+}
+
+interface MonthItemsType {
+    month: string,
+    year: number,
+    lowestCategory: string,
+    highestCategory: string,
+    totalSpent: number
+}
+
+
+interface DashboardOverviewContentProps {
+    year: string | undefined,
+    overviewDetailsItems: OverviewDetailsItemsType[] | undefined,
+    chartData: ChartDataType[] | undefined,
+    monthItems: MonthItemsType[] | undefined,
+    yearList: string[] | undefined
+}
+
+
 const DashboardOverview: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
-    const [ dashboardData, setDashboardData ] = useState(null)
+    const [ dashboardData, setDashboardData ] = useState<DashboardOverviewContentProps | null>(null)
 
     useEffect(() => {
         const body = {
@@ -24,6 +56,8 @@ const DashboardOverview: React.FC = () => {
         }
         fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body)
     }, [])
+
+
     return(
         <>
         {authContext?.isAuthState.isAuthLoading? (
@@ -34,7 +68,14 @@ const DashboardOverview: React.FC = () => {
                 <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                     <DashboardMiniNav />
                     <DashboardNav />
-                    <DashboardOverviewContent />
+                    <DashboardOverviewContent 
+                        year={dashboardData?.year}
+                        overviewDetailsItems={dashboardData?.overviewDetailsItems}
+                        chartData={dashboardData?.chartData}
+                        monthItems={dashboardData?.monthItems}
+                        yearList={dashboardData?.yearList}
+                        setDashboardData={setDashboardData}
+                    />
                 </div>
             </div>
             ) : (

@@ -28,7 +28,6 @@ interface AuthContextType {
 
 const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, retry, body, newCsrf) => {
     try{
-        console.log(body)
         const res = await api.get(`/api/dashboard/${path}`, {
             headers: {
                 csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
@@ -36,7 +35,7 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             params: body
         })
         authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
-        console.log(res)
+        setData(res.data)
     } catch(error) {
         console.error(error)
         const axiosError = error as AxiosError

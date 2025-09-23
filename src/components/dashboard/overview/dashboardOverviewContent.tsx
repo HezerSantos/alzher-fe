@@ -220,12 +220,13 @@ interface DashboardOverviewContentProps {
     monthItems: MonthItemsType[] | undefined,
     yearList: string[] | undefined,
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
-    setIsLoading: React.Dispatch<SetStateAction<boolean>>
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>,
+    isLoading: boolean
 }
 
 
 
-const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData, setIsLoading}) => {
+const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData, setIsLoading, isLoading}) => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     return(
@@ -236,6 +237,7 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                         <h1>Overview</h1>
                     </div>
                 </header>
+                
                 <section className="dashboard-overview__details">
                     <DashboardOverviewControl 
                         yearList={yearList}
@@ -255,32 +257,36 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                         )
                     })}
                 </section>
-                <section className="dashboard-overview__chart-container">
-                    <div className="do__chart-months">
-                        {monthItems? (monthItems.map((monthItem, index) => {
-                            return(
-                                <MonthItem 
-                                    key={index}
-                                    month={monthItem.month}
-                                    year={monthItem.year}
-                                    lowestCategory={monthItem.lowestCategory}
-                                    highestCategory={monthItem.highestCategory}
-                                    totalSpent={monthItem.totalSpent}
+                {!isLoading && (
+                        <>
+                        <section className="dashboard-overview__chart-container">
+                            <div className="do__chart-months">
+                                {monthItems? (monthItems.map((monthItem, index) => {
+                                    return(
+                                        <MonthItem 
+                                            key={index}
+                                            month={monthItem.month}
+                                            year={monthItem.year}
+                                            lowestCategory={monthItem.lowestCategory}
+                                            highestCategory={monthItem.highestCategory}
+                                            totalSpent={monthItem.totalSpent}
+                                        />
+                                    )
+                                })) : (
+                                    <EmptyMonthItem />
+                                )}
+                            </div>
+                            <div className="do__chart-chart">
+                                <h1>{year} Overview</h1>
+                                <OverviewChart 
+                                    overviewData={chartData? chartData : null}
+                                    yearOne={year? year : ""}
+                                    yearTwo={false}
                                 />
-                            )
-                        })) : (
-                            <EmptyMonthItem />
-                        )}
-                    </div>
-                    <div className="do__chart-chart">
-                        <h1>{year} Overview</h1>
-                        <OverviewChart 
-                            overviewData={chartData? chartData : null}
-                            yearOne={year? year : ""}
-                            yearTwo={false}
-                        />
-                    </div>
-                </section>
+                            </div>
+                        </section>
+                    </>
+                )}
             </main>
         </>
     )

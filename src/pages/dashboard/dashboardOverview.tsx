@@ -65,25 +65,22 @@ const DashboardOverview: React.FC = () => {
             <LoadingScreen />
         ) : (
             authContext?.isAuthState.isAuth? (
-                isLoading? (
-                    <LoadingScreen />
-                ) : (
-                    <div className="page-section">
-                        <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
-                            <DashboardMiniNav />
-                            <DashboardNav />
-                            <DashboardOverviewContent 
-                                year={dashboardData?.year}
-                                overviewDetailsItems={dashboardData?.overviewDetailsItems}
-                                chartData={dashboardData?.chartData}
-                                monthItems={dashboardData?.monthItems}
-                                yearList={dashboardData?.yearList}
-                                setDashboardData={setDashboardData}
-                                setIsLoading={setIsLoading}
-                            />
-                        </div>
+                <div className="page-section">
+                    <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
+                        <DashboardMiniNav />
+                        <DashboardNav />
+                        <DashboardOverviewContent 
+                            year={dashboardData?.year}
+                            overviewDetailsItems={dashboardData?.overviewDetailsItems}
+                            chartData={dashboardData?.chartData}
+                            monthItems={dashboardData?.monthItems}
+                            yearList={dashboardData?.yearList}
+                            setDashboardData={setDashboardData}
+                            setIsLoading={setIsLoading}
+                            isLoading={isLoading}
+                        />
                     </div>
-                )
+                </div>
             ) : (
                 <NotLoggedIn />
             )

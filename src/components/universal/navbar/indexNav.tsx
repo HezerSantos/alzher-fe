@@ -44,9 +44,9 @@ const IndexNav: React.FC = () => {
                         </ul>
                     </div>
                     <div>
-                        <Link to={""}> 
+                        <Link to={"/login"}> 
                             <CiUser />
-                            <p>Sign In</p>
+                            <p>Log In</p>
                         </Link>
                     </div>
                 </div>

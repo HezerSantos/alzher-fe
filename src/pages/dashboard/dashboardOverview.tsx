@@ -48,14 +48,15 @@ const DashboardOverview: React.FC = () => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     const [ dashboardData, setDashboardData ] = useState<DashboardOverviewContentProps | null>(null)
-
+    const [ isLoading, setIsLoading ] = useState(false)
     useEffect(() => {
         const body = {
             year: 2024,
             semester: 2
         }
-        fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body)
+        fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
     }, [])
+
 
 
     return(
@@ -64,20 +65,25 @@ const DashboardOverview: React.FC = () => {
             <LoadingScreen />
         ) : (
             authContext?.isAuthState.isAuth? (
-            <div className="page-section">
-                <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
-                    <DashboardMiniNav />
-                    <DashboardNav />
-                    <DashboardOverviewContent 
-                        year={dashboardData?.year}
-                        overviewDetailsItems={dashboardData?.overviewDetailsItems}
-                        chartData={dashboardData?.chartData}
-                        monthItems={dashboardData?.monthItems}
-                        yearList={dashboardData?.yearList}
-                        setDashboardData={setDashboardData}
-                    />
-                </div>
-            </div>
+                isLoading? (
+                    <LoadingScreen />
+                ) : (
+                    <div className="page-section">
+                        <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
+                            <DashboardMiniNav />
+                            <DashboardNav />
+                            <DashboardOverviewContent 
+                                year={dashboardData?.year}
+                                overviewDetailsItems={dashboardData?.overviewDetailsItems}
+                                chartData={dashboardData?.chartData}
+                                monthItems={dashboardData?.monthItems}
+                                yearList={dashboardData?.yearList}
+                                setDashboardData={setDashboardData}
+                                setIsLoading={setIsLoading}
+                            />
+                        </div>
+                    </div>
+                )
             ) : (
                 <NotLoggedIn />
             )

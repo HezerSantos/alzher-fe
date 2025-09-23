@@ -51,7 +51,8 @@ interface DashboardOverviewControlProps {
     yearList: string[] | undefined,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
-    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>
 }
 
 type HandleDashboardOverviewType = (
@@ -60,7 +61,8 @@ type HandleDashboardOverviewType = (
     setQueryDetails: React.Dispatch<SetStateAction<{year: string | null, semester: number}>>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
-    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>
 ) => void
 
 type HandleDashboardOverviewClickType = (
@@ -69,45 +71,47 @@ type HandleDashboardOverviewClickType = (
     setQueryDetails: React.Dispatch<SetStateAction<{year: string | null, semester: number}>>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
-    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>
 ) => void
 
-const handleDashboardOverview: HandleDashboardOverviewType = async(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData) => {
+const handleDashboardOverview: HandleDashboardOverviewType = async(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading) => {
     const newYear = e.target.value
     const body = {
         year: newYear,
         semester: queryDetails.semester
     }
 
-    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body)
+    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
     setQueryDetails(body)
 }
 
-const handleDashboardOverviewClick:HandleDashboardOverviewClickType = async(semester, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData) => {
+const handleDashboardOverviewClick:HandleDashboardOverviewClickType = async(semester, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading) => {
     const body = {
         year: queryDetails.year,
         semester: semester
     }
 
-    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body)
+    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
     setQueryDetails(body)
 } 
-const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({yearList, csrfContext, authContext, setDashboardData}) => {
+const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({yearList, csrfContext, authContext, setDashboardData, setIsLoading}) => {
+    
     const [ queryDetails, setQueryDetails ] = useState({year: yearList? yearList[0] : null, semester: 1})
 
     return(
         <>
             {yearList&& (
                 <div className="dashboard-overview__control">
-                    <select onChange={(e) => handleDashboardOverview(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData)}>
+                    <select onChange={(e) => handleDashboardOverview(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}>
                         {yearList.map((year, index) => {
                             return <option key={index} value={year}>{year}</option>
                         })}
                     </select>
-                    <button onClick={() => handleDashboardOverviewClick(1, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData)}>
+                    <button onClick={() => handleDashboardOverviewClick(1, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}>
                         First Six Months
                     </button>
-                    <button onClick={() => handleDashboardOverviewClick(2, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData)}>
+                    <button onClick={() => handleDashboardOverviewClick(2, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}>
                         Last Six Months
                     </button>
                 </div>
@@ -215,12 +219,13 @@ interface DashboardOverviewContentProps {
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
     yearList: string[] | undefined,
-    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>
+    setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>
 }
 
 
 
-const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData}) => {
+const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData, setIsLoading}) => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     return(
@@ -237,6 +242,7 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                         authContext={authContext}
                         csrfContext={csrfContext}
                         setDashboardData={setDashboardData}
+                        setIsLoading={setIsLoading}
                     />
                     {overviewDetailsItems?.map((item, index) => {
                         return(

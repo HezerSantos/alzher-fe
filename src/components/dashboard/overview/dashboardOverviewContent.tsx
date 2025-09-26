@@ -48,6 +48,8 @@ interface AuthContextType {
 }
 
 interface DashboardOverviewControlProps {
+    selectedYear: string | undefined,
+    selectedSemester: number | undefined,
     yearList: string[] | undefined,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
@@ -57,8 +59,8 @@ interface DashboardOverviewControlProps {
 
 type HandleDashboardOverviewType = (
     e: React.ChangeEvent<HTMLSelectElement>,
-    queryDetails: {year: string | null, semester: number},
-    setQueryDetails: React.Dispatch<SetStateAction<{year: string | null, semester: number}>>,
+    queryDetails: {year: string | undefined, semester: number},
+    setQueryDetails: React.Dispatch<SetStateAction<{year: string | undefined, semester: number}>>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
@@ -67,8 +69,8 @@ type HandleDashboardOverviewType = (
 
 type HandleDashboardOverviewClickType = (
     semester: number,
-    queryDetails: {year: string | null, semester: number},
-    setQueryDetails: React.Dispatch<SetStateAction<{year: string | null, semester: number}>>,
+    queryDetails: {year: string | undefined, semester: number},
+    setQueryDetails: React.Dispatch<SetStateAction<{year: string | undefined, semester: number}>>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
@@ -95,23 +97,39 @@ const handleDashboardOverviewClick:HandleDashboardOverviewClickType = async(seme
     await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
     setQueryDetails(body)
 } 
-const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({yearList, csrfContext, authContext, setDashboardData, setIsLoading}) => {
+const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({selectedYear, selectedSemester, yearList, csrfContext, authContext, setDashboardData, setIsLoading}) => {
     
-    const [ queryDetails, setQueryDetails ] = useState({year: yearList? yearList[0] : null, semester: 1})
+    const [ queryDetails, setQueryDetails ] = useState({year: selectedYear, semester: 1})
 
     return(
         <>
             {yearList&& (
                 <div className="dashboard-overview__control">
-                    <select onChange={(e) => handleDashboardOverview(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}>
+                    <select 
+                        onChange={(e) => handleDashboardOverview(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}
+                        value={selectedYear}
+                    >
                         {yearList.map((year, index) => {
-                            return <option key={index} value={year}>{year}</option>
+                            return <option 
+                                        key={index} 
+                                        value={year}
+                                    >
+                                        {year}
+                                    </option>
                         })}
                     </select>
-                    <button onClick={() => handleDashboardOverviewClick(1, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}>
+                    <button 
+                        onClick={() => handleDashboardOverviewClick(1, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}
+                        className={selectedSemester === 1? "selected-semester" : ""}
+                        disabled={selectedSemester === 1}
+                    >
                         First Six Months
                     </button>
-                    <button onClick={() => handleDashboardOverviewClick(2, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}>
+                    <button 
+                        onClick={() => handleDashboardOverviewClick(2, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}
+                        className={selectedSemester === 2? "selected-semester" : ""}
+                        disabled={selectedSemester === 2}
+                    >
                         Last Six Months
                     </button>
                 </div>
@@ -207,6 +225,7 @@ interface MonthItemsType {
 
 interface DashboardOverviewContentType {
     year: string | undefined,
+    semester: number | undefined,
     overviewDetailsItems: OverviewDetailsItemsType[] | undefined,
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
@@ -215,6 +234,7 @@ interface DashboardOverviewContentType {
 
 interface DashboardOverviewContentProps {
     year: string | undefined,
+    semester: number | undefined,
     overviewDetailsItems: OverviewDetailsItemsType[] | undefined,
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
@@ -226,7 +246,7 @@ interface DashboardOverviewContentProps {
 
 
 
-const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData, setIsLoading, isLoading}) => {
+const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, semester, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData, setIsLoading, isLoading}) => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     return(
@@ -237,28 +257,29 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                         <h1>Overview</h1>
                     </div>
                 </header>
-                
-                <section className="dashboard-overview__details">
-                    <DashboardOverviewControl 
-                        yearList={yearList}
-                        authContext={authContext}
-                        csrfContext={csrfContext}
-                        setDashboardData={setDashboardData}
-                        setIsLoading={setIsLoading}
-                    />
-                    {overviewDetailsItems?.map((item, index) => {
-                        return(
-                            <DashboardOverviewDetails 
-                                header={item.header}
-                                price={item.price}
-                                details={item.details}
-                                key={index}
-                            />
-                        )
-                    })}
-                </section>
                 {!isLoading && (
-                        <>
+                    <>
+                        <section className="dashboard-overview__details">
+                            <DashboardOverviewControl 
+                                selectedYear={year}
+                                selectedSemester={semester}
+                                yearList={yearList}
+                                authContext={authContext}
+                                csrfContext={csrfContext}
+                                setDashboardData={setDashboardData}
+                                setIsLoading={setIsLoading}
+                            />
+                            {overviewDetailsItems?.map((item, index) => {
+                                return(
+                                    <DashboardOverviewDetails 
+                                        header={item.header}
+                                        price={item.price}
+                                        details={item.details}
+                                        key={index}
+                                    />
+                                )
+                            })}
+                        </section>     
                         <section className="dashboard-overview__chart-container">
                             <div className="do__chart-months">
                                 {monthItems? (monthItems.map((monthItem, index) => {

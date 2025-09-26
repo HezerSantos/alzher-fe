@@ -1028,3 +1028,7 @@
     border: none;
     border-radius: .5rem;
 }
+
+.selected-semester{
+    text-decoration: .125rem underline var(--c-secondary);
+}

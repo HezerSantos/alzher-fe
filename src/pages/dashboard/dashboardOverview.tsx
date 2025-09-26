@@ -36,6 +36,7 @@ interface MonthItemsType {
 
 interface DashboardOverviewContentProps {
     year: string | undefined,
+    semester: number | undefined,
     overviewDetailsItems: OverviewDetailsItemsType[] | undefined,
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
@@ -52,7 +53,7 @@ const DashboardOverview: React.FC = () => {
     useEffect(() => {
         const body = {
             year: 2024,
-            semester: 2
+            semester: 1
         }
         fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
     }, [])
@@ -69,6 +70,7 @@ const DashboardOverview: React.FC = () => {
                         <DashboardNav />
                         <DashboardOverviewContent 
                             year={dashboardData?.year}
+                            semester={dashboardData?.semester}
                             overviewDetailsItems={dashboardData?.overviewDetailsItems}
                             chartData={dashboardData?.chartData}
                             monthItems={dashboardData?.monthItems}

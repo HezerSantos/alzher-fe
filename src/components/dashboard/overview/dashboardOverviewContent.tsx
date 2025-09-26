@@ -194,7 +194,7 @@ interface OverviewDetailsItemsType {
 
 interface ChartDataType {
     month: string,
-    [year: `${number}`]: number | string;
+    [year: `${number}`]: number | undefined;
 }
 
 interface MonthItemsType {

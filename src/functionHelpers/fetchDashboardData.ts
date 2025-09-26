@@ -45,15 +45,16 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
         const axiosError = error as AxiosError
         handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
             [
-                () => fetchDashboardData(csrfContext, authContext, setData, path, true, body),
-                (newCsrf: string) => fetchDashboardData(csrfContext, authContext, setData, path, false, body, newCsrf),
-                () => fetchDashboardData(csrfContext, authContext, setData, path, true, body),
+                () => fetchDashboardData(csrfContext, authContext, setData, path, true, body, null, setIsLoading),
+                (newCsrf: string) => fetchDashboardData(csrfContext, authContext, setData, path, false, body, newCsrf, setIsLoading),
+                () => fetchDashboardData(csrfContext, authContext, setData, path, true, body, null, setIsLoading),
             ],
             [],
             authContext
         )
     } finally {
         if(setIsLoading){
+            console.log('run')
             setIsLoading(false)
         }
     }

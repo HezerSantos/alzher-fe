@@ -3,7 +3,7 @@ import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 
 interface OverviewDataType {
     month: string;
-    [year: `${number}`]: number | string;
+    [year: `${number}`]: number | undefined;
 }
 
 interface OverviewChartProps {

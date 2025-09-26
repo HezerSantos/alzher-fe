@@ -22,7 +22,7 @@ interface OverviewDetailsItemsType {
 
 interface ChartDataType {
     month: string,
-    [year: `${number}`]: number | string;
+    [year: `${number}`]: number | undefined;
 }
 
 interface MonthItemsType {
@@ -56,8 +56,6 @@ const DashboardOverview: React.FC = () => {
         }
         fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
     }, [])
-
-
 
     return(
         <>

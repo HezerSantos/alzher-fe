@@ -76,7 +76,7 @@ const data2 = [
 const testData = [ //DELETE AFTER
     {
         month: "January",
-        ['2024']: 1732,
+        // ['2024']: 1732,
         ['2025']: 2874
     },
     {
@@ -86,7 +86,7 @@ const testData = [ //DELETE AFTER
     },
     {
         month: "March",
-        ['2024']: 1608,
+        // ['2024']: 1608,
         ['2025']: 2253
     },
     {
@@ -102,7 +102,7 @@ const testData = [ //DELETE AFTER
     {
         month: "June",
         ['2024']: 1344,
-        ['2025']: 3629
+        // ['2025']: 3629
     }
 ];
 

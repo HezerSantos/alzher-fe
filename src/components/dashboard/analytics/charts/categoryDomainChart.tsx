@@ -3,15 +3,15 @@ import { PolarAngleAxis, PolarRadiusAxis, Tooltip, Legend, ResponsiveContainer, 
 
 
 interface CategoryDomainChartDataType {
-    category: string,
-    ['Yearly Average']: number,
-    ['Monthly Average']: number,
-    ['Daily Average']: number,
-    total: number
+    category: string | undefined,
+    ['Yearly Average']: number | undefined,
+    ['Monthly Average']: number | undefined,
+    ['Daily Average']: number | undefined,
+    total: number | undefined
 }
 
 interface CategoryDomainChartProps {
-    categoryData: CategoryDomainChartDataType[] | null
+    categoryData: CategoryDomainChartDataType[] | undefined | null
 }
 
 const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData}) => {
@@ -33,7 +33,7 @@ const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData})
         <Tooltip />
         <PolarGrid />
         <PolarAngleAxis dataKey="category" />
-        <PolarRadiusAxis angle={50} domain={[0, 40000]}/>
+        <PolarRadiusAxis angle={50} domain={[0, 5000]}/>
         
         {/* Radar for Total */}
         <Radar

@@ -7,7 +7,7 @@ interface DailyScatterChartProps {
     scatterData: {
         dailyAverage: number,
         dateOfMonth: number
-    }[] | null
+    }[] | undefined | null
 }
 
 const DailyScatterChart: React.FC<DailyScatterChartProps> = ({scatterData}) => {
@@ -31,7 +31,7 @@ const DailyScatterChart: React.FC<DailyScatterChartProps> = ({scatterData}) => {
             }}
         >
             <CartesianGrid />
-            <YAxis type="number" dataKey="dailyAverage" name="average" unit="usd" />
+            <YAxis type="number" dataKey="dailyAverage" name="average" unit=" USD" />
             <XAxis type="number" dataKey="dateOfMonth" name="dateOfMonth" />
             <Tooltip cursor={{ strokeDasharray: '3 3' }} />
             <Scatter name="A school" data={scatterData} fill="#8884d8" />

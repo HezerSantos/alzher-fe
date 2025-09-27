@@ -6,12 +6,12 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line
 
 
 interface YearlyLineChartDataType {
-    year: number,
-    total: number
+    year: number | undefined,
+    total: number | undefined
 }
 
 interface YearlyLineChartProps {
-    yearlyData: YearlyLineChartDataType[] | null
+    yearlyData: YearlyLineChartDataType[] | undefined | null
 }
 
 const YearlyLineChart: React.FC<YearlyLineChartProps> = ({yearlyData}) => {

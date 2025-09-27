@@ -7,7 +7,7 @@ interface OverviewDataType {
 }
 
 interface OverviewChartProps {
-    overviewData: OverviewDataType[] | null,
+    overviewData: OverviewDataType[] | null | undefined,
     yearOne: string,
     yearTwo: string | boolean
 }

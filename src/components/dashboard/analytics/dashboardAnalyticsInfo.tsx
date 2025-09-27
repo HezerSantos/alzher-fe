@@ -3,49 +3,13 @@ import React from "react"
 
 
 interface DashboardAnalyticsInfoItemProps {
-    header: string,
-    amountSpent: number,
-    primarySubHeader: string | null,
-    primarySubValue: string | null,
-    secondarySubHeader: string | null,
-    secondarySubValue: string | null
+    header: string | undefined,
+    amountSpent: number | undefined,
+    primarySubHeader: string | null | undefined,
+    primarySubValue: string | null | undefined,
+    secondarySubHeader: string | null | undefined,
+    secondarySubValue: string | null | undefined
 }
-
-const dashboardAnalytics = [
-  {
-    header: 'Total Spent',
-    amountSpent: 5814.599999999994,
-    primarySubHeader: 'Frequent Category',
-    primarySubValue: 'Dining',
-    secondarySubHeader: 'Largest Expense',
-    secondarySubValue: 'Leisure'
-  },
-  {
-    header: 'Yearly Average',
-    amountSpent: 2907.2999999999993,
-    primarySubHeader: 'Peak Month',
-    primarySubValue: 'Dec',
-    secondarySubHeader: null,
-    secondarySubValue: null
-  },
-  {
-    header: 'Monthly Average',
-    amountSpent: 528.5999999999999,
-    primarySubHeader: 'Highest Day',
-    primarySubValue: '13 of the month',
-    secondarySubHeader: 'Lowest Day',
-    secondarySubValue: '31 of the month'
-  },
-  {
-    header: 'Total Transactions',
-    amountSpent: 284,
-    primarySubHeader: null,
-    primarySubValue: null,
-    secondarySubHeader: null,
-    secondarySubValue: null
-  }
-]
-
 
 const DashboardAnalyticsInfoItem: React.FC<DashboardAnalyticsInfoItemProps> = (props) => {
     return(
@@ -54,7 +18,7 @@ const DashboardAnalyticsInfoItem: React.FC<DashboardAnalyticsInfoItemProps> = (p
                 <p>{props.header}</p>
                 <p>
                     {props.header === "Total Transactions"? "" : "$"}
-                    {props.amountSpent.toFixed(2)}
+                    {props.amountSpent?.toFixed(2)}
                 </p>
                 {props.primarySubValue && (
                     <div>
@@ -75,11 +39,24 @@ const DashboardAnalyticsInfoItem: React.FC<DashboardAnalyticsInfoItemProps> = (p
     )
 }
 
-const DashboardAnalyticsInfo: React.FC = () => {
+interface DashboardAnalyticsInfoType {
+    header: string | undefined,
+    amountSpent: number | undefined,
+    primarySubHeader: string | null | undefined,
+    primarySubValue: string | null | undefined,
+    secondarySubHeader: string | null | undefined,
+    secondarySubValue: string | null | undefined
+}
+
+interface DashboardAnalyticsInfoProps {
+    dashboardAnalytics: DashboardAnalyticsInfoType[] | undefined
+}
+
+const DashboardAnalyticsInfo: React.FC<DashboardAnalyticsInfoProps> = ({dashboardAnalytics}) => {
     return(
         <>
             <section className="analytics-info">
-                {dashboardAnalytics.map((item, index) => {
+                {dashboardAnalytics?.map((item, index) => {
                     return(
                         <DashboardAnalyticsInfoItem 
                             key={index}

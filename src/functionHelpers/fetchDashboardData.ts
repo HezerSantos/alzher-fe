@@ -36,7 +36,7 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             headers: {
                 csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
             }, 
-            params: body
+            params: body? body : undefined
         })
         authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
         setData(res.data)
@@ -48,7 +48,7 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             [
                 () => fetchDashboardData(csrfContext, authContext, setData, path, true, body, null, setIsLoading),
                 (newCsrf: string) => fetchDashboardData(csrfContext, authContext, setData, path, false, body, newCsrf, setIsLoading),
-                () => fetchDashboardData(csrfContext, authContext, setData, path, false, body, null, setIsLoading),
+                () => fetchDashboardData(csrfContext, authContext, setData, path, true, body, null, setIsLoading),
             ],
             [],
             authContext

@@ -11,11 +11,6 @@ import handleRequestError from "../../app.config.error"
 import AuthFooter from "../../components/auth/authFooter"
 import AuthErrors from "../../components/auth/authErrors"
 import AlzherMessage from "../../components/universal/alzherMessage"
-interface CsrfContextType {
-    csrfToken: string | null
-    decodeCookie: (cookie: string) => void
-    getCsrf: () => Promise<string | undefined>
-}
 
 interface ErrorType {
     msg: string,

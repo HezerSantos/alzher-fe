@@ -12,17 +12,6 @@ import CsrfContext from "../../context/csrf/csrfContext"
 import AuthErrors from "../../components/auth/authErrors"
 import AuthContext from "../../context/auth/authContext"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-interface CsrfContextType {
-    csrfToken: string | null
-    decodeCookie: (cookie: string) => void
-    getCsrf: () => Promise<string | undefined>
-}
-
-interface AuthContextType {
-    refresh: (retry: boolean, newCsrf?: string | null) => void,
-    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
-    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
-}
 
 
 interface ErrorType {

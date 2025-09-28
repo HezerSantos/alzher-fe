@@ -35,18 +35,6 @@ const DashboardOverviewDetails: React.FC<DashboardOverviewDetailsProps> = ({head
     )
 }
 
-interface CsrfContextType {
-    csrfToken: string | null
-    decodeCookie: (cookie: string) => void
-    getCsrf: () => Promise<string | undefined>
-}
-
-interface AuthContextType {
-    refresh: (retry: boolean, newCsrf?: string | null) => void,
-    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
-    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
-}
-
 interface DashboardOverviewControlProps {
     selectedYear: string | undefined,
     selectedSemester: number | undefined,

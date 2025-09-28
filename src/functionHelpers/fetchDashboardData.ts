@@ -14,18 +14,6 @@ type FetchDashboardDataType = (
     setIsLoading?: React.Dispatch<SetStateAction<boolean>>
 ) => void
 
-interface CsrfContextType {
-    csrfToken: string | null
-    decodeCookie: (cookie: string) => void
-    getCsrf: () => Promise<string | undefined>
-}
-
-interface AuthContextType {
-    refresh: (retry: boolean, newCsrf?: string | null) => void,
-    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
-    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
-}
-
 
 const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, retry, body, newCsrf, setIsLoading) => {
     try{

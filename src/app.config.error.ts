@@ -80,7 +80,7 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                 case "INVALID_REFRESH_TOKEN":
                     parameters.authContext?.logout()
                     console.log("logged out")
-                    break
+                    return false
                 case "INVALID_ACCESS_TOKEN":
                     const retry = await parameters.authContext?.refresh()
                     if(!retry){

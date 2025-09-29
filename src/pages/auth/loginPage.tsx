@@ -24,14 +24,13 @@ type HandleLoginType = (
     navigate: NavigateFunction,
     authContext: AuthContextType | null,
     csrfContext: CsrfContextType | null,
-    retry: boolean,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
     setEmailError?: React.Dispatch<SetStateAction< ErrorType | null>>,
     setPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>,
 ) => void
 
-const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext, retry, setIsLoading, newCsrf, setEmailError, setPasswordError) => {
+const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext, setIsLoading, newCsrf, setEmailError, setPasswordError) => {
     e.preventDefault()
 
     try{
@@ -72,8 +71,8 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
             csrfContext: csrfContext,
             authContext: authContext,
             callbacks: {
-                handlePublicAuthRetry: () => handleLogin(e, navigate, authContext, csrfContext, retry, setIsLoading, null, setEmailError, setPasswordError),
-                handleCsrfRetry: (newCsrf) => handleLogin(e, navigate, authContext, csrfContext, retry, setIsLoading, newCsrf, setEmailError, setPasswordError)
+                handlePublicAuthRetry: () => handleLogin(e, navigate, authContext, csrfContext, setIsLoading, null, setEmailError, setPasswordError),
+                handleCsrfRetry: (newCsrf) => handleLogin(e, navigate, authContext, csrfContext, setIsLoading, newCsrf, setEmailError, setPasswordError)
             },
             setStateErrors: [
                 {
@@ -110,7 +109,7 @@ const Login: React.FC = () => {
             <main className="page-section auth-section">
                 <form 
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleLogin(e, navigate, authContext, csrfContext, true, setIsLoading, null, setEmailError, setPasswordError)}
+                    onSubmit={(e) => handleLogin(e, navigate, authContext, csrfContext, setIsLoading, null, setEmailError, setPasswordError)}
                 >
                     <div className="auth-form">
                         <AuthHeader 

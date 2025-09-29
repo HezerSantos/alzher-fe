@@ -55,7 +55,7 @@ const DashboardOverview: React.FC = () => {
             year: 2024,
             semester: 1
         }
-        fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
+        fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", body, null, setIsLoading)
     }, [])
 
     return(

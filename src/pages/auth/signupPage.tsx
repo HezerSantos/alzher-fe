@@ -19,7 +19,6 @@ interface ErrorType {
 type HandleSignupType = (
     e: React.FormEvent<HTMLFormElement>,
     csrfContext: CsrfContextType | null,
-    retry: boolean,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     setIsSuccess: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
@@ -28,7 +27,7 @@ type HandleSignupType = (
     setConfirmPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>
 ) => void
 
-const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
+const handleSignup: HandleSignupType = async(e, csrfContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
     e.preventDefault()
     setIsLoading(true)
     try{
@@ -74,8 +73,8 @@ const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading
             csrfContext: csrfContext,
             authContext: null,
             callbacks: {
-                handlePublicAuthRetry: () => handleSignup(e, csrfContext, retry, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError),
-                handleCsrfRetry: (newCsrf) => handleSignup(e, csrfContext, retry, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError)
+                handlePublicAuthRetry: () => handleSignup(e, csrfContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError),
+                handleCsrfRetry: (newCsrf) => handleSignup(e, csrfContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError)
             },
             setStateErrors: [
                 {
@@ -124,7 +123,7 @@ const Signup: React.FC = () => {
             <main className="page-section auth-section">
                 <form
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleSignup(e, csrfContext, true, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError)}
+                    onSubmit={(e) => handleSignup(e, csrfContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError)}
                 >
                     {isSuccess && (
                         <AlzherMessage 

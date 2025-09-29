@@ -8,14 +8,13 @@ type FetchDashboardDataType = (
     authContext: AuthContextType | null,
     setData: React.Dispatch<SetStateAction<any>>,
     path: string,
-    retry: boolean,
     body?: any | null,
     newCsrf?: string | null,
     setIsLoading?: React.Dispatch<SetStateAction<boolean>>
 ) => void
 
 
-const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, retry, body, newCsrf, setIsLoading) => {
+const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, body, newCsrf, setIsLoading) => {
     try{
         if(setIsLoading){
             setIsLoading(true)
@@ -38,9 +37,9 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             csrfContext: csrfContext,
             authContext: authContext,
             callbacks: {
-                handlePublicAuthRetry: () => fetchDashboardData(csrfContext, authContext, setData, path, retry, body, null, setIsLoading),
-                handleCsrfRetry: (newCsrf) => fetchDashboardData(csrfContext, authContext, setData, path, retry, body, newCsrf, setIsLoading),
-                handleSecureAuthRetry: () => fetchDashboardData(csrfContext, authContext, setData, path, retry, body, null, setIsLoading)
+                handlePublicAuthRetry: () => fetchDashboardData(csrfContext, authContext, setData, path, body, null, setIsLoading),
+                handleCsrfRetry: (newCsrf) => fetchDashboardData(csrfContext, authContext, setData, path, body, newCsrf, setIsLoading),
+                handleSecureAuthRetry: () => fetchDashboardData(csrfContext, authContext, setData, path, body, null, setIsLoading)
             }
         })
     } finally {

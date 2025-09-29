@@ -57,7 +57,7 @@ const DashboardAnalytics: React.FC = () => {
     const [ dashboardData, setDashboardData ] = useState<DashboardAnalyticsType | null>(null)
     const [ isLoading, setIsLoading ] = useState(false)
     useEffect(() => {
-        fetchDashboardData(csrfContext, authContext, setDashboardData, "analytics", true, null, null, setIsLoading)
+        fetchDashboardData(csrfContext, authContext, setDashboardData, "analytics", null, null, setIsLoading)
     }, [])
     return(
         <>

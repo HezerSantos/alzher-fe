@@ -9,7 +9,7 @@ import LoadingScreen from '../helpers/loadingScreen'
 import NotLoggedIn from '../helpers/notLoggedIn'
 import api from '../../app.config'
 import { AxiosError } from 'axios'
-import handleRequestError from '../../app.config.error'
+import handleApiError from '../../app.config.error'
 import CsrfContext from '../../context/csrf/csrfContext'
 import AlzherMessage from '../../components/universal/alzherMessage'
 import { AiOutlineLoading } from "react-icons/ai";
@@ -40,13 +40,14 @@ type HandleDropType = (
 const handleDrop: HandleDropType = (e, setFileList) => {
     e.preventDefault()
     e.stopPropagation()
-    const newFile = e.dataTransfer.files[0]
-    if(newFile.type !== "application/pdf"){
-        return
-    }
+    const fileList = e.dataTransfer.files
+
+    const filteredFileList = Array.from(fileList).filter(file => file.type === "application/pdf")
     setFileList(prevMap => {
         const newMap = new Map(prevMap)
-        newMap.set(newFile.name, newFile)
+        for (const file of filteredFileList){
+            newMap.set(file.name, file)
+        }
 
         return newMap
     })
@@ -109,31 +110,16 @@ interface FileContainerProps {
     isLoading: boolean
 }
 
-interface CsrfContextType {
-    csrfToken: string | null
-    decodeCookie: (cookie: string) => void
-    getCsrf: () => Promise<string | undefined>
-}
-
-interface AuthContextType {
-    refresh: (retry: boolean, newCsrf?: string | null) => void,
-    isAuthState: {isAuth: boolean, isAuthLoading: boolean},
-    setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
-}
-
-
-
 type SubmitFilesType = (
     fileList: Map<string, File>, 
     csrfContext: CsrfContextType | null, 
-    authContext: AuthContextType, 
-    retry: boolean, 
+    authContext: AuthContextType | null, 
     setIsMessage: React.Dispatch<SetStateAction<{error: boolean, ok: boolean}>>,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string
 ) => void
 
-const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, retry, setIsMessage, setIsLoading, newCsrf) => {
+const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, setIsMessage, setIsLoading, newCsrf) => {
     const formData = new FormData()
 
 
@@ -153,20 +139,20 @@ const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, r
         setIsMessage({error: false, ok: true})
     } catch(error) {
         const axiosError = error as AxiosError
-        handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
-            [
-                () => submitFiles(fileList, csrfContext, authContext, true, setIsMessage, setIsLoading),
-                (newCsrf: string) => submitFiles(fileList, csrfContext, authContext, false, setIsMessage, setIsLoading, newCsrf),
-                () => submitFiles(fileList, csrfContext, authContext, true, setIsMessage, setIsLoading)
-            ],
-            [
-                {
-                    errorName: "invalidProcess",
-                    setMsgError: setIsMessage
-                }
-            ],
-            authContext
-        )
+
+        handleApiError({
+            axiosError: axiosError,
+            status: axiosError.status,
+            csrfContext: csrfContext,
+            authContext: authContext,
+            callbacks: {
+                handlePublicAuthRetry: () => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading),
+                handleCsrfRetry: (newCsrf) => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading, newCsrf),
+                handleSecureAuthRetry: () => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading),
+            },
+            setFlashMessage: setIsMessage
+            
+        })
     } finally {
         setIsLoading(false)
     }
@@ -191,7 +177,7 @@ const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csr
                     <button 
                         disabled={isLoading}
                         className='file-submit' 
-                        onClick={() => submitFiles(fileList, csrfContext, authContext, true, setIsMessage, setIsLoading)}>
+                        onClick={() => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading)}>
                         {isLoading? <AiOutlineLoading className="button-loading"/> : "Scan Files"}
                     </button>
                 </>
@@ -246,7 +232,7 @@ const DashboardScan: React.FC = () => {
     const [ isLoading, setIsLoading ] = useState(false)
     useEffect(() => {
         const fetchData = async() => {
-            await authContext?.refresh(true) 
+            await authContext?.refresh() 
         }
 
         fetchData()

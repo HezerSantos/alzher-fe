@@ -72,7 +72,7 @@ const handleDashboardOverview: HandleDashboardOverviewType = async(e, queryDetai
         semester: queryDetails.semester
     }
 
-    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
+    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", body, null, setIsLoading)
     setQueryDetails(body)
 }
 
@@ -82,7 +82,7 @@ const handleDashboardOverviewClick:HandleDashboardOverviewClickType = async(seme
         semester: semester
     }
 
-    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", true, body, null, setIsLoading)
+    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", body, null, setIsLoading)
     setQueryDetails(body)
 } 
 const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({selectedYear, selectedSemester, yearList, csrfContext, authContext, setDashboardData, setIsLoading}) => {

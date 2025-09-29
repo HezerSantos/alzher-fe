@@ -4,6 +4,10 @@ import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
 import { IoIosArrowDropdown } from "react-icons/io";
 import DashboardMiniNav from '../../components/universal/navbar/dashboardMiniNav';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import fetchDashboardData from '../../functionHelpers/fetchDashboardData';
+import CsrfContext from '../../context/csrf/csrfContext';
+import AuthContext from '../../context/auth/authContext';
 
 //Filter Button Props
 interface FilterButtonProps {
@@ -68,9 +72,9 @@ const TransactionContainerHeader: React.FC<TransactionHeaderProps> = ({transacti
                 <input type='checkbox' onChange={(e) => selectAllTransaction(e)} />
             </div>
             <div className='transaction-item'>
-                <div className='transaction-hidden-detail'>
+                {/* <div className='transaction-hidden-detail'>
                     TID
-                </div>
+                </div> */}
                 <div>
                     Category
                 </div>
@@ -134,9 +138,9 @@ const TransactionItem: React.FC<TransactionItemProps> = ({transactionId, categor
                     <input type='checkbox' id={transactionId}></input>
                 </div>
                 <button className='transaction-item' onClick={(e) => openTransactionItem(e, setSelectedTransactionItem, selectedTransaction, setIsExpandedOpen)}>
-                    <div className='transaction-hidden-detail'>
+                    {/* <div className='transaction-hidden-detail'>
                         {transactionId}
-                    </div>
+                    </div> */}
                     <div>
                         <p className='transaction-category'>
                             {category}
@@ -310,58 +314,70 @@ const exampleData = [
         transactionDate: "07/12/25",
         transactionAmount: 45.12
     },
-    {
-        transactionId: "DO0002",
-        category: "Groceries",
-        description: "Whole Foods Market - Weekly Grocery",
-        transactionDate: "07/14/25",
-        transactionAmount: 123.45
-    },
-    {
-        transactionId: "DO0003",
-        category: "Transport",
-        description: "Uber ride to airport",
-        transactionDate: "07/15/25",
-        transactionAmount: 38.90
-    },
-    {
-        transactionId: "DO0004",
-        category: "Leisure",
-        description: "Netflix monthly subscription",
-        transactionDate: "07/16/25",
-        transactionAmount: 15.99
-    },
-    {
-        transactionId: "DO0005",
-        category: "Dining",
-        description: "Starbucks - Iced Caramel Macchiato",
-        transactionDate: "07/17/25",
-        transactionAmount: 6.75
-    },    
+    // {
+    //     transactionId: "DO0002",
+    //     category: "Groceries",
+    //     description: "Whole Foods Market - Weekly Grocery",
+    //     transactionDate: "07/14/25",
+    //     transactionAmount: 123.45
+    // },
+    // {
+    //     transactionId: "DO0003",
+    //     category: "Transport",
+    //     description: "Uber ride to airport",
+    //     transactionDate: "07/15/25",
+    //     transactionAmount: 38.90
+    // },
+    // {
+    //     transactionId: "DO0004",
+    //     category: "Leisure",
+    //     description: "Netflix monthly subscription",
+    //     transactionDate: "07/16/25",
+    //     transactionAmount: 15.99
+    // },
+    // {
+    //     transactionId: "DO0005",
+    //     category: "Dining",
+    //     description: "Starbucks - Iced Caramel Macchiato",
+    //     transactionDate: "07/17/25",
+    //     transactionAmount: 6.75
+    // },    
 ]
 
 const DashboardActivity: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
+    const csrfContext = useContext(CsrfContext)
+    const authContext = useContext(AuthContext)
     const [ filterToggle, setFilterToggle ] = useState(false)
     const [ selectedTransactionItem, setSelectedTransactionItem ] = useState<SelectedTransactionItemType | null>(null)
     const toggleFiltersButton = useRef<HTMLButtonElement>(null)
     const [isExpandedOpen, setIsExpandedOpen] = useState<boolean>(false)
     const [ transactionData, setTransactionData ] = useState<Map<string, SelectedTransactionItemType> | null>(null)
     const transactionContainerRef = useRef<HTMLFormElement>(null);
-    useEffect(() => {
-        //fetchData as SelectedTransactionItemType[]
-        //then pass to 
-        // const newTransactionData = fetchedData.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
-        // const newTransactionDataMap = new Map(newTransactionData)
-        // console.log(newTransactionDataMap)
-        // setTransactionData(newTransactionDataMap)
-    }, [])
+    const [searchParams ] = useSearchParams()
+    const navigate = useNavigate()
+    const [ dashboardData, setDashboardData ] = useState(null)
+
     useEffect(() => {
         const newTransactionData = exampleData.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
         const newTransactionDataMap = new Map(newTransactionData)
         setTransactionData(newTransactionDataMap)
     }, [])
 
+    useEffect(() => {
+        if(!searchParams.get("page") || !searchParams.get("pageSize")){
+            navigate("/dashboard/activity?page=1&pageSize=10")
+        }
+        const page = searchParams.get("page") || "1"
+        const pageSize = searchParams.get("pageSize") || "10"
+
+        const body = {
+            page,
+            pageSize
+        }
+
+        fetchDashboardData(csrfContext, authContext, setDashboardData, "/activity", body, null)
+    }, [])
 
     return(
         <>

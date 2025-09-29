@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback, useContext, useState } from "react"
 import AuthContext from "./authContext"
 import api from "../../app.config"
 import CsrfContext from "../csrf/csrfContext"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import handleApiError from "../../app.config.error"
 
 interface AuthProviderProps {

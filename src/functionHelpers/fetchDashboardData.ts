@@ -1,6 +1,6 @@
 import React, { SetStateAction } from "react"
 import api from "../app.config"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import handleApiError from "../app.config.error"
 
 type FetchDashboardDataType = (
@@ -27,7 +27,7 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
         })
         authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
         setData(res.data)
-        // console.log(res)
+        console.log(res)
     } catch(error) {
         // console.error(error)
         const axiosError = error as AxiosError

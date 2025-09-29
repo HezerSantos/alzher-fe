@@ -93,7 +93,7 @@ const dashboardTabs = [
     },
         {
         image: <TbActivityHeartbeat />,
-        path: "/dashboard/activity",
+        path: "/dashboard/activity?page=1&pageSize=10",
         name: "Activity"
     },
         {

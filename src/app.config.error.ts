@@ -2,23 +2,8 @@ import React, { SetStateAction } from "react"
 import api from "./app.config"
 import { AxiosError } from "axios"
 
-
-
-
-type HandleRequestErrorType = (
-    axiosError: AxiosError,
-    csrfContext: CsrfContextType | null,
-    status: number | undefined,
-    retry: boolean,
-) => void
-
-type HandlePublicAuthType = (
-
-) => void
-
-
 interface ApiCallbackType {
-    handlePublicAuthRetry: () => () => void,
+    handlePublicAuthRetry: () => void,
     handleCsrfRetry: (newCsrf: string | undefined) => void,
     handleSecureAuthRetry?: () => () => void
 }
@@ -31,12 +16,12 @@ interface ErrorType {
 
 interface SetStateErrorsType {
     errorName: string,
-    setState: React.Dispatch<SetStateAction< ErrorType | null >>,
+    setState: React.Dispatch<SetStateAction< ErrorType | null >> | undefined,
 }
 type HandleApiErrorType =  (
     parameters: {
         axiosError: AxiosError,
-        status: number,
+        status: number | undefined,
         csrfContext: CsrfContextType | null,
         authContext: AuthContextType | null,
         callbacks: ApiCallbackType,
@@ -49,11 +34,12 @@ type HandleApiErrorType =  (
 
 const handleApiError: HandleApiErrorType = async(parameters) => {
     const res = parameters.axiosError.response?.data as ApiErrorType
+    console.log(parameters.axiosError.response)
     switch (parameters.status){
         case 400:
-            switch (res.errors.code){
+            switch (res.code){
                 case "INVALID_CREDENTIALS":
-                    const validationErrors = res.errors.validationErrors
+                    const validationErrors = res.validationErrors
                     const errorMap = new Map(
                         validationErrors?.map(error => {
                             return [ error.path, error.msg]
@@ -85,7 +71,7 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
             }
             break
         case 401:
-            switch (res.errors.code){
+            switch (res.code){
                 case "INVALID_ENTRY_TOKEN":
                     await api.get(`/api/auth/public`)
                     await parameters.callbacks.handlePublicAuthRetry()
@@ -116,3 +102,5 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
             break
     }
 }
+
+export default handleApiError

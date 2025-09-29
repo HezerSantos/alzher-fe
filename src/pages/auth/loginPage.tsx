@@ -7,7 +7,7 @@ import AuthFooter from "../../components/auth/authFooter"
 import api from "../../app.config"
 import { AxiosError } from "axios"
 import { AiOutlineLoading } from "react-icons/ai";
-import handleRequestError from "../../app.config.error"
+import handleApiError from "../../app.config.error"
 import CsrfContext from "../../context/csrf/csrfContext"
 import AuthErrors from "../../components/auth/authErrors"
 import AuthContext from "../../context/auth/authContext"
@@ -66,12 +66,16 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
     } catch (error) {
         const axiosError = error as AxiosError
 
-        handleRequestError(axiosError, csrfContext, axiosError.status, retry, 
-            [
-                () => handleLogin(e, navigate, authContext, csrfContext, true, setIsLoading, newCsrf, setEmailError, setPasswordError),
-                (newCsrf: string) => handleLogin(e, navigate, authContext, csrfContext, false, setIsLoading, newCsrf, setEmailError, setPasswordError)
-            ],
-            [
+        await handleApiError({
+            axiosError: axiosError,
+            status: axiosError.status,
+            csrfContext: csrfContext,
+            authContext: authContext,
+            callbacks: {
+                handlePublicAuthRetry: () => handleLogin(e, navigate, authContext, csrfContext, retry, setIsLoading, null, setEmailError, setPasswordError),
+                handleCsrfRetry: (newCsrf) => handleLogin(e, navigate, authContext, csrfContext, retry, setIsLoading, newCsrf, setEmailError, setPasswordError)
+            },
+            setStateErrors: [
                 {
                     errorName: "email",
                     setState: setEmailError
@@ -81,8 +85,9 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
                     setState: setPasswordError
                 }
             ]
+        })
 
-        )
+        
     } finally {
         setIsLoading(false)
     }

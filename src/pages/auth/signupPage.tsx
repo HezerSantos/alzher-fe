@@ -67,12 +67,17 @@ const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading
         setIsSuccess(true)
     } catch(error) {
         const axiosError = error as AxiosError
-        await handleRequestError(axiosError, csrfContext, axiosError.status, retry,
-            [
-                () => handleSignup(e, csrfContext, true, setIsLoading, setIsSuccess),
-                (newCsrf: string) => handleSignup(e, csrfContext, false, setIsLoading, setIsSuccess, newCsrf)
-            ],
-            [
+
+        await handleRequestError({
+            axiosError: axiosError,
+            status: axiosError.status,
+            csrfContext: csrfContext,
+            authContext: null,
+            callbacks: {
+                handlePublicAuthRetry: () => handleSignup(e, csrfContext, retry, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError),
+                handleCsrfRetry: (newCsrf) => handleSignup(e, csrfContext, retry, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError)
+            },
+            setStateErrors: [
                 {
                     errorName: "email",
                     setState: setEmailError
@@ -86,7 +91,7 @@ const handleSignup: HandleSignupType = async(e, csrfContext, retry, setIsLoading
                     setState: setConfirmPasswordError
                 }
             ]
-        )
+        })
     } finally {
         setIsLoading(false)
     }

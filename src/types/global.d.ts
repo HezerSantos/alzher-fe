@@ -27,10 +27,8 @@ declare global {
 
 
     interface ApiErrorType {
-        errors: {
-            msg: string,
-            code: string,
-            validationErrors?: ValidationErrorType[]
-        }
+        msg: string,
+        code: string,
+        validationErrors?: ValidationErrorType[]
     }
 }

@@ -86,7 +86,6 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     if(!retry){
                         break
                     }
-                    console.log(retry)
                     if(parameters.callbacks.handleSecureAuthRetry){
                         await parameters.callbacks.handleSecureAuthRetry()
                     }
@@ -107,8 +106,7 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
             switch (res.code) {
                 case "INVALID_PERMISSIONS":
                     const newCsrf = await parameters.csrfContext?.getCsrf()
-                    await parameters.callbacks.handleCsrfRetry(newCsrf)
-                    break
+                    return await parameters.callbacks.handleCsrfRetry(newCsrf)
             }
     }
 }

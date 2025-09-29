@@ -10,7 +10,7 @@ interface AuthProviderProps {
 }
 
 
-type RefreshType = () => Promise<boolean | void>
+type RefreshType = (newCsrf?: string | null) => Promise<boolean | void>
 
 
 
@@ -23,34 +23,28 @@ const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     }, [])
 
 
-    const refresh: RefreshType = useCallback(async () => {
+    const refresh: RefreshType = useCallback(async (newCsrf) => {
         try {
             setIsAuthState({isAuth: false, isAuthLoading: true})
-            const newCsrf = await csrfContext?.getCsrf()
             await api.get("/api/auth/secure/refresh", {
                 headers: {
-                    csrftoken: newCsrf
+                    csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
                 }
             });
             setIsAuthState({isAuth: true, isAuthLoading: false})
             return true
         } catch (error) {
             const axiosError = error as AxiosError
-            const res = axiosError.response?.data as ApiErrorType
             setIsAuthState({isAuth: false, isAuthLoading: false})
-            if(res.code === "INVALID_ACCESS_TOKEN"){
-                console.log('hello')
-                return false
-            }
             //SIDE NOTE: I PROBABLY HAD TO RETURN THE ERROR HELPER AND STATE THE RETURN VALUE SO THAT THERE IS A RETURN VALUE FOR REFRESH
-            /*return*/handleApiError({
+            return handleApiError({
                 axiosError: axiosError,
                 status: axiosError.status,
                 csrfContext: csrfContext,
                 authContext: { refresh, isAuthState, setIsAuthState, logout },
                 callbacks: {
                     handlePublicAuthRetry: () => refresh(),
-                    handleCsrfRetry: () => {}
+                    handleCsrfRetry: (newCsrf) => refresh(newCsrf)
                 }
             })
         }

@@ -5,7 +5,7 @@ import { AxiosError } from "axios"
 interface ApiCallbackType {
     handlePublicAuthRetry: () => void,
     handleCsrfRetry: (newCsrf: string | undefined) => void,
-    handleSecureAuthRetry?: () => () => void
+    handleSecureAuthRetry?: () => void
 }
 
 
@@ -34,7 +34,8 @@ type HandleApiErrorType =  (
 
 const handleApiError: HandleApiErrorType = async(parameters) => {
     const res = parameters.axiosError.response?.data as ApiErrorType
-    console.log(parameters.axiosError.response)
+    // console.log(parameters.axiosError.response)
+    // console.log(res.code)
     switch (parameters.status){
         case 400:
             switch (res.code){
@@ -77,11 +78,17 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     await parameters.callbacks.handlePublicAuthRetry()
                     break
                 case "INVALID_REFRESH_TOKEN":
+                    parameters.authContext?.logout()
+                    console.log("logged out")
                     break
-                case "INVALID_AUTH_TOKEN":
-                    await parameters.authContext?.refresh(true)
+                case "INVALID_ACCESS_TOKEN":
+                    const retry = await parameters.authContext?.refresh()
+                    if(!retry){
+                        break
+                    }
+                    console.log(retry)
                     if(parameters.callbacks.handleSecureAuthRetry){
-                        parameters.callbacks.handleSecureAuthRetry()
+                        await parameters.callbacks.handleSecureAuthRetry()
                     }
                     break
                 case "INVALID_CREDENTIALS":
@@ -97,9 +104,12 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
             }
             break
         case 403:
-            const newCsrf = await parameters.csrfContext?.getCsrf()
-            await parameters.callbacks.handleCsrfRetry(newCsrf)
-            break
+            switch (res.code) {
+                case "INVALID_PERMISSIONS":
+                    const newCsrf = await parameters.csrfContext?.getCsrf()
+                    await parameters.callbacks.handleCsrfRetry(newCsrf)
+                    break
+            }
     }
 }
 

@@ -4,9 +4,10 @@ export {};
 declare global {
 
     interface AuthContextType {
-        refresh: (retry: boolean, newCsrf?: string | null) => void,
+        refresh: () => void,
         isAuthState: {isAuth: boolean, isAuthLoading: boolean},
-        setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>
+        setIsAuthState: React.Dispatch<SetStateAction<{isAuth: boolean, isAuthLoading: boolean}>>,
+        logout: () => void
     }
 
     interface CsrfContextType {

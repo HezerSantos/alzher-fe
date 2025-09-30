@@ -1,0 +1,45 @@
+import React, { useState, useEffect}  from "react"
+interface SelectedTransactionItemType {
+    transactionId: string,
+    category: string,
+    description: string,
+    transactionDate: string,
+    transactionAmount: number
+}
+
+//Interface for the elements in the expanded transaction
+interface ExpandedTransactionElementProps {
+    transactionProp: SelectedTransactionItemType | null
+    categoryName: string
+    id: string
+    isText: boolean
+    keyName: keyof SelectedTransactionItemType
+}
+
+//Component of expanded transaction
+const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({transactionProp, categoryName, id, isText, keyName}) => {
+    const [transactionValue, setTransactionValue ] = useState("")
+    useEffect(() => {
+        if(transactionProp){
+            setTransactionValue(String(transactionProp[keyName]))
+        }
+    }, [transactionProp])
+    return(
+        <div>
+            <label htmlFor={id}>{categoryName[0].toUpperCase() + categoryName.slice(1)}</label>
+            {!isText? (
+                <input 
+                    name={categoryName}
+                    type="text" 
+                    id={id} 
+                    value={transactionValue? transactionValue : ""}
+                    onChange={(e) => setTransactionValue(e.target.value)}
+                />
+            ) : (
+                <textarea name={categoryName} id={id} value={transactionValue} onChange={(e) => setTransactionValue(e.target.value)}></textarea>
+            )}
+        </div>
+    )
+}
+
+export default ExpandedTransactionElement

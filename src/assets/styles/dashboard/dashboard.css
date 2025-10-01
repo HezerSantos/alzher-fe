@@ -796,6 +796,9 @@
     & > button:nth-of-type(2){
         background-color: var(--c-main);
     }
+    & > button:nth-of-type(3){
+        width: 10rem;
+    }
 
     & > p:nth-of-type(1){
         font-size: 1.5rem;
@@ -1031,4 +1034,24 @@
 
 .selected-semester{
     text-decoration: .125rem underline var(--c-secondary);
+}
+
+
+.activity-button__container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+
+    & > button{
+        padding: .5rem 1rem;
+        border-radius: .25rem;
+        background-color: var(--c-main);
+        color: white;
+        border: none;
+        font-family: var(--f-secondary);
+    }
+}
+.activity-button__hidden{
+    display: none;
 }

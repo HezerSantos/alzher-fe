@@ -38,9 +38,6 @@ const openTransactionItem: OpenTransactionItemType = (e, setSelectedTransactionI
 
 //Transaction Item Component
 const TransactionItem: React.FC<TransactionItemProps> = ({transactionId, category, description, transactionDate, transactionAmount, setSelectedTransactionItem, setIsExpandedOpen}) => {
-    useEffect(() => {
-        console.log(typeof transactionAmount)
-    }, [transactionAmount])
     const selectedTransaction = {
         transactionId,
         category,

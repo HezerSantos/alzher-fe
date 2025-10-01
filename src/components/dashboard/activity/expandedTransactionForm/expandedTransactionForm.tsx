@@ -1,7 +1,10 @@
-import React, { SetStateAction } from "react"
+import React, { SetStateAction, useContext, useState } from "react"
 import updateTransactionItem from "./helpers/updateTransaction"
 import deleteTransaction from "./helpers/deleteTransaction"
 import ExpandedTransactionElement from "./expandedTransactionElement"
+import CsrfContext from "../../../../context/csrf/csrfContext"
+import AuthContext from "../../../../context/auth/authContext"
+import { AiOutlineLoading } from "react-icons/ai";
 interface SelectedTransactionItemType {
     transactionId: string,
     category: string,
@@ -25,6 +28,9 @@ const closeExpandedTransaction = (e: React.MouseEvent<HTMLButtonElement>, setIsE
 
 
 const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({selectedTransactionItem, isExpandedOpen, setIsExpandedOpen, setTransactionData}) => {
+    const csrfContext = useContext(CsrfContext)
+    const authContext = useContext(AuthContext)
+    const [ isLoading, setIsLoading ] = useState(false)
     return(
         <>
             <form className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`} onSubmit={(e) => updateTransactionItem(e, setTransactionData)}>
@@ -64,8 +70,8 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                 <button type='submit'>
                     Save Changes
                 </button>
-                <button onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e)}>
-                    Delete Transaction
+                <button disabled={isLoading} onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading)}>
+                    {!isLoading? "Delete Transaction" : <AiOutlineLoading className="button-loading"/>}
                 </button>
             </form>
         </>

@@ -1,4 +1,7 @@
 import React, { SetStateAction } from "react"
+import handleApiError from "../../../../../app.config.error"
+import { AxiosError } from "axios"
+import api from "../../../../../app.config"
 interface SelectedTransactionItemType {
     transactionId: string,
     category: string,
@@ -12,19 +15,51 @@ type DeleteTransactionType = (
     selectedTransactionItem: SelectedTransactionItemType | null,
     setTransactionData: React.Dispatch<SetStateAction<Map<string, SelectedTransactionItemType> | null>>,
     setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>,
-    e: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent<HTMLButtonElement>,
+    csrfContext: CsrfContextType | null,
+    authContext: AuthContextType | null,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>,
+    newCsrf?: string
 ) => void
 
 //function to delete transaction for client
-const deleteTransaction: DeleteTransactionType = (selectedTransactionItem, setTransactionData, setIsExpandedOpen, e) => {
-    e.preventDefault()
-    const selectedItemId = selectedTransactionItem?.transactionId
-    setIsExpandedOpen(false)
-    setTransactionData(prev => {
-        const newTransactionMap = new Map(prev)
-        newTransactionMap.delete(String(selectedItemId))
-        return newTransactionMap
-    })
+const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext,setIsLoading, newCsrf) => {
+    try{
+        setIsLoading(true)
+        e.preventDefault()
+        const selectedItemId = selectedTransactionItem?.transactionId
+
+        await api.delete('/api/dashboard/activity', {
+            data: {
+                transactionId: selectedItemId
+            },
+            headers: {
+                csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+            }
+        })
+        setIsExpandedOpen(false)
+        setTransactionData(prev => {
+            const newTransactionMap = new Map(prev)
+            newTransactionMap.delete(String(selectedItemId))
+            return newTransactionMap
+        })
+    } catch (error) {
+        console.log(error)
+        const axiosError = error as AxiosError
+        handleApiError({
+            axiosError: axiosError,
+            status: axiosError?.status,
+            csrfContext: csrfContext,
+            authContext: authContext,
+            callbacks: {
+                handlePublicAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading),
+                handleCsrfRetry: (newCsrf) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading, newCsrf),
+                handleSecureAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading)
+            }
+        })
+    } finally {
+        setIsLoading(false)
+    }
 }
 
 export default deleteTransaction

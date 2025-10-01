@@ -29,10 +29,7 @@ const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, 
         e.preventDefault()
         const selectedItemId = selectedTransactionItem?.transactionId
 
-        await api.delete('/api/dashboard/activity', {
-            data: {
-                transactionId: selectedItemId
-            },
+        await api.delete(`/api/dashboard/activity/${selectedItemId}`, {
             headers: {
                 csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
             }

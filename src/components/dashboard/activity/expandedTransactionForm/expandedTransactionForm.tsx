@@ -33,8 +33,8 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
     const [ isLoading, setIsLoading ] = useState(false)
     return(
         <>
-            <form className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`} onSubmit={(e) => updateTransactionItem(e, setTransactionData)}>
-                <button onClick={(e) => closeExpandedTransaction(e, setIsExpandedOpen)}>close</button>
+            <form className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`}>
+                <button type="button" onClick={(e) => closeExpandedTransaction(e, setIsExpandedOpen)}>close</button>
                 <div>
                     <label htmlFor="edit-id">TID:</label>
                     <input name="transactionId" id="edit-id" type='text' readOnly defaultValue={selectedTransactionItem?.transactionId} />
@@ -67,10 +67,10 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                     isText={false}
                     keyName='transactionAmount'
                 />
-                <button type='submit'>
+                <button type='submit' onClick={(e) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading)}>
                     Save Changes
                 </button>
-                <button disabled={isLoading} onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading)}>
+                <button type="button" disabled={isLoading} onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading)}>
                     {!isLoading? "Delete Transaction" : <AiOutlineLoading className="button-loading"/>}
                 </button>
             </form>

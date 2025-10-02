@@ -10,7 +10,8 @@ import AuthContext from '../../context/auth/authContext';
 import ActivityInputHeader from '../../components/dashboard/activity/activityInputHeader';
 import ExpandedTransactionForm from '../../components/dashboard/activity/expandedTransactionForm/expandedTransactionForm';
 import TransactionContainer from '../../components/dashboard/activity/transactionContainer';
-
+import LoadingScreen from '../helpers/loadingScreen';
+import NotLoggedIn from '../helpers/notLoggedIn'
 //Interface for the basis of the transaction object
 interface SelectedTransactionItemType {
     transactionId: string,
@@ -112,51 +113,57 @@ const DashboardActivity: React.FC = () => {
     }, [searchParams])
 
     return(
-        <>
-            <div className="page-section">
-                <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
-                    <DashboardNav />
-                    <DashboardMiniNav />
-                    <div className='dashboard__activity-container'>
-                        <ExpandedTransactionForm 
-                            selectedTransactionItem={selectedTransactionItem}
-                            isExpandedOpen={isExpandedOpen}
-                            setIsExpandedOpen={setIsExpandedOpen}
-                            setTransactionData={setTransactionData}
-                        />
-                        {/* END OF FORM */}
-                        <div className='activity-header'>
-                            <h1>
-                                Activity
-                            </h1>
-                        </div>
-                        {/* DONE */}
-                        <ActivityInputHeader 
-                            toggleFiltersButton={toggleFiltersButton}
-                            setFilterToggle={setFilterToggle}
-                            filterToggle={filterToggle}
-                        />
-                         {/* END */}
-                        <TransactionContainer 
-                            setSelectedTransactionItem={setSelectedTransactionItem}
-                            setIsExpandedOpen={setIsExpandedOpen}
-                            transactionData={transactionData? [...transactionData.values()] : []}
-                            transactionContainerRef={transactionContainerRef}
-                        />
-                        <div className='activity-button__container'>
-                            <ActivityNavigationButton 
-                                type='prev'
-                                isActive={dashboardData?.previousPageFlag || null}
-                            />
-                            <ActivityNavigationButton 
-                                type='next'
-                                isActive={dashboardData?.nextPageFlag || null}
-                            />
+        authContext?.isAuthState.isAuthLoading? (
+            <LoadingScreen />
+        ) : (
+            <>
+                {authContext?.isAuthState.isAuth? (
+                    <div className="page-section">
+                        <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
+                            <DashboardNav />
+                            <DashboardMiniNav />
+                            <div className='dashboard__activity-container'>
+                                <ExpandedTransactionForm 
+                                    selectedTransactionItem={selectedTransactionItem}
+                                    isExpandedOpen={isExpandedOpen}
+                                    setIsExpandedOpen={setIsExpandedOpen}
+                                    setTransactionData={setTransactionData}
+                                />
+                                <div className='activity-header'>
+                                    <h1>
+                                        Activity
+                                    </h1>
+                                </div>
+                                <ActivityInputHeader 
+                                    toggleFiltersButton={toggleFiltersButton}
+                                    setFilterToggle={setFilterToggle}
+                                    filterToggle={filterToggle}
+                                />
+                                <TransactionContainer 
+                                    setSelectedTransactionItem={setSelectedTransactionItem}
+                                    setIsExpandedOpen={setIsExpandedOpen}
+                                    transactionData={transactionData? [...transactionData.values()] : []}
+                                    transactionContainerRef={transactionContainerRef}
+                                />
+                                <div className='activity-button__container'>
+                                    <ActivityNavigationButton 
+                                        type='prev'
+                                        isActive={dashboardData?.previousPageFlag || null}
+                                    />
+                                    <ActivityNavigationButton 
+                                        type='next'
+                                        isActive={dashboardData?.nextPageFlag || null}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </>
+                ) : (
+                    <NotLoggedIn />
+                )}
+            </>
+        )
+
     )
 }
 

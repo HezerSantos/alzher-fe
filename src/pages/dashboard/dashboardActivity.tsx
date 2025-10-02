@@ -50,14 +50,16 @@ const ActivityNavigationButton: React.FC<ActivityNavigationButtonProps> = ({type
                 const page = Number(searchParams.get("page")) + 1
                 const pageSize = searchParams.get("pageSize")
                 const categoryFilter = searchParams.get("categoryFilter")
-                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}`)
+                const keyWord = searchParams.get("keyWord")
+                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
                 break
             }
             case "prev": {
                 const page = Number(searchParams.get("page")) - 1
                 const pageSize = searchParams.get("pageSize")
                 const categoryFilter = searchParams.get("categoryFilter")
-                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}`)
+                const keyWord = searchParams.get("keyWord")
+                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
                 break
             }
         }   
@@ -106,10 +108,12 @@ const DashboardActivity: React.FC = () => {
         const page = searchParams.get("page") || "1"
         const pageSize = searchParams.get("pageSize") || "10"
         const categoryFilter = searchParams.get("categoryFilter")
+        const keyWord = searchParams.get("keyWord")
         const body = {
             page,
             pageSize,
-            categoryFilter
+            categoryFilter,
+            keyWord
         }
 
         fetchDashboardData(csrfContext, authContext, setDashboardData, "/activity", body, null)

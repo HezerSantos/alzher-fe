@@ -1,6 +1,6 @@
-import React, { SetStateAction, useCallback, useEffect, useState } from "react"
+import React, { SetStateAction, useCallback, useEffect, useState, useRef } from "react"
 import { IoIosArrowDropdown } from "react-icons/io";
-import { Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 interface ActivityInputHeaderProps {
     toggleFiltersButton: React.RefObject<HTMLButtonElement | null>,
@@ -38,7 +38,7 @@ const FilterButton: React.FC<FilterButtonProps> = ({name, selectedCategory, setS
         const pageSize = searchParams.get("pageSize")
         setSelectedCategory(name)
 
-        navigate(`/dashboard/activity?page=1&pageSize=${pageSize}&categoryFilter=${name}`)
+        navigate(`/dashboard/activity?page=1&pageSize=${pageSize}&categoryFilter=${name}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
     }, [searchParams])
 
     return(
@@ -50,6 +50,37 @@ const FilterButton: React.FC<FilterButtonProps> = ({name, selectedCategory, setS
                 {name}
             </button>
         </li>
+    )
+}
+
+type HandleInputChangeType = (e: React.ChangeEvent<HTMLInputElement>) => void
+
+const SearchBar: React.FC = () => {
+    const [ input, setInput ] = useState("")
+    const [ searchParams, setSearchParams ] = useSearchParams()
+    const navigate = useNavigate()
+    const timeout = useRef<NodeJS.Timeout | null>(null)
+
+    const handleInputChange: HandleInputChangeType = ((e) => {
+        setInput(e.target.value)
+        if(timeout.current) clearTimeout(timeout.current)
+        timeout.current = setTimeout(() => {
+            if(!e.target.value.length) {
+                searchParams.delete('keyWord')
+                setSearchParams(searchParams)
+            }
+            navigate(`/dashboard/activity?page=1&pageSize=${searchParams.get('pageSize')}${searchParams.get('categoryFilter')? `&categoryFilter=${searchParams.get('categoryFilter')}` : ``}${e.target.value.length? `&keyWord=${e.target.value}` : ''}`)
+        }, 2000)
+    })
+    return(
+        <input 
+            type="text" 
+            placeholder='Search for order ID or name' 
+            name='searchInput' 
+            id='search-input'
+            value={input}
+            onChange={(e) => handleInputChange(e)}
+        />
     )
 }
 
@@ -72,13 +103,13 @@ const ActivityInputHeader: React.FC<ActivityInputHeaderProps> = ({toggleFiltersB
         searchParams.delete("categoryFilter")
         setSearchParams(searchParams)
         console.log(location.search)
-        navigate(`/dashboard/activity?page=${searchParams.get('page')}&pageSize=${searchParams.get("pageSize")}`)
+        navigate(`/dashboard/activity?page=${searchParams.get('page')}&pageSize=${searchParams.get("pageSize")}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
     }, [])
 
     return(
         <>
             <div className='activity-search'>
-                <input type="text" placeholder='Search for order ID or name' name='searchInput' id='search-input'/>
+                <SearchBar />
                 <div>
                     {(searchParams.get('categoryFilter') && categorySet.has(String(searchParams.get('categoryFilter')))) && (
                         <button className="filter-clear" onClick={() => clearFilter()}>

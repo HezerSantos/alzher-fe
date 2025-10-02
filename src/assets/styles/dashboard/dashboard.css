@@ -683,6 +683,11 @@
         }
     }
 
+    & > div{
+        display: flex;
+        gap: 1rem;
+    }
+
     @media (max-width: 515px){
         flex-direction: column;
         gap: 1rem;
@@ -693,6 +698,14 @@
     }
 }
 
+.filter-clear{
+    padding-inline: 2rem;
+    border-radius: .5rem;
+    color: var(--tc-main);
+    font-family: var(--f-secondary);
+    border: none;
+    background-color: var(--c-basic);
+}
 
 .activity-filters{
     width: 10rem;
@@ -736,16 +749,14 @@
         flex-direction: column;
         gap: 1rem;
 
-
-        & > li{
-            padding-inline: 2rem;
-            padding-block: .5rem;
-        }
         & > li:hover{
             background-color: var(--c-highlight);
         }
 
         & > li > button{
+            padding-inline: 2rem;
+            padding-block: .5rem;
+            width: 100%;
             background-color: transparent;
             color: var(--tc-main);
             font-family: var(--f-secondary);
@@ -767,6 +778,16 @@
     min-height: 10rem;
     border: .25rem solid var(--c-basic);
     border-radius: 1rem;
+}
+
+.transaction-container__empty{
+    width: 100%;
+    height: calc(100% - 3.625rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tc-main);
+    font-family: var(--f-secondary);
 }
 
 .transaction-expanded-item{
@@ -1054,4 +1075,8 @@
 }
 .activity-button__hidden{
     display: none;
+}
+
+.filter-selected{
+    background-color: var(--c-highlight) !important;
 }

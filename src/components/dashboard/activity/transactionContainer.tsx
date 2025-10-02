@@ -1,6 +1,6 @@
 import TransactionContainerHeader from "./transactionContainerHeader"
 import TransactionItem from "./transactionItem"
-import React, { SetStateAction } from "react"
+import React, { SetStateAction, useEffect } from "react"
 
 interface SelectedTransactionItemType {
     transactionId: string,
@@ -21,24 +21,32 @@ interface TransactionContainerProps {
 const TransactionContainer: React.FC<TransactionContainerProps> = ({setSelectedTransactionItem, setIsExpandedOpen, transactionData, transactionContainerRef}) => {
     return(
         <>
-            <form className='transaction-container' ref={transactionContainerRef}>
+            <form className={`transaction-container`} ref={transactionContainerRef}>
                 <TransactionContainerHeader 
                     transactionContainerRef={transactionContainerRef}
                 />
-                {transactionData.map((transaction) => {
-                    return(
-                        <TransactionItem 
-                            key={transaction.transactionId}
-                            transactionId={transaction.transactionId}
-                            category={transaction.category}
-                            description={transaction.description}
-                            transactionDate={transaction.transactionDate}
-                            transactionAmount={transaction.transactionAmount}
-                            setSelectedTransactionItem={setSelectedTransactionItem}
-                            setIsExpandedOpen={setIsExpandedOpen}
-                        />
-                    )
-                })}
+                {transactionData.length? (
+                    transactionData.map((transaction) => {
+                        return(
+                            <TransactionItem 
+                                key={transaction.transactionId}
+                                transactionId={transaction.transactionId}
+                                category={transaction.category}
+                                description={transaction.description}
+                                transactionDate={transaction.transactionDate}
+                                transactionAmount={transaction.transactionAmount}
+                                setSelectedTransactionItem={setSelectedTransactionItem}
+                                setIsExpandedOpen={setIsExpandedOpen}
+                            />
+                        )
+                    })
+                ) : (
+                    <>
+                        <p className="transaction-container__empty">
+                            No Data Availiable
+                        </p>
+                    </>
+                )}
             </form>
         </>
     )

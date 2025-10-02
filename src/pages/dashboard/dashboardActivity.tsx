@@ -49,13 +49,15 @@ const ActivityNavigationButton: React.FC<ActivityNavigationButtonProps> = ({type
             case "next": {
                 const page = Number(searchParams.get("page")) + 1
                 const pageSize = searchParams.get("pageSize")
-                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}`)
+                const categoryFilter = searchParams.get("categoryFilter")
+                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}`)
                 break
             }
             case "prev": {
                 const page = Number(searchParams.get("page")) - 1
                 const pageSize = searchParams.get("pageSize")
-                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}`)
+                const categoryFilter = searchParams.get("categoryFilter")
+                navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}`)
                 break
             }
         }   
@@ -92,7 +94,7 @@ const DashboardActivity: React.FC = () => {
 
 
     useEffect(() => {
-        const newTransactionData = dashboardData?.transactionData.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
+        const newTransactionData = dashboardData?.transactionData?.map(data => [data.transactionId, data] as [string, SelectedTransactionItemType])
         const newTransactionDataMap = new Map(newTransactionData)
         setTransactionData(newTransactionDataMap)
     }, [dashboardData])
@@ -103,10 +105,11 @@ const DashboardActivity: React.FC = () => {
         }
         const page = searchParams.get("page") || "1"
         const pageSize = searchParams.get("pageSize") || "10"
-
+        const categoryFilter = searchParams.get("categoryFilter")
         const body = {
             page,
-            pageSize
+            pageSize,
+            categoryFilter
         }
 
         fetchDashboardData(csrfContext, authContext, setDashboardData, "/activity", body, null)

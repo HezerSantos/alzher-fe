@@ -7,11 +7,30 @@
   overflow: hidden;
 }
 
-body{
-  background-color: #F6F9FF;
-}
+
 
 :root{
+  --c-main: #1E2A1E;       /* dark greenish background */
+  --c-secondary: #3A2E46;  /* muted purple accent */
+  --c-basic: #121212;      /* near-black base background */
+  --c-highlight: #2F4F2F;  /* deeper green highlight */
+  
+  --tc-basic: #EAEAEA;     /* default text, light gray */
+  --tc-offset: #0A0A0A;    /* inverse text on light elements */
+  --tc-main: #7ECF89;      /* accent text green */
+  --tc-secondary: #CBAEE0; /* accent text purple */
+  --tc-highlight: #AAAAAA; /* muted highlight text */
+
+  --c-background: rgb(0, 0, 0);
+  --f-main: "Noto Sans Thai", sans-serif;
+  --f-secondary: "Manrope", sans-serif;
+}
+
+body{
+  background-color: var(--c-background);
+}
+
+/*  
   --c-main: #4C9457;
   --c-secondary: #B59DC1;
   --c-basic: #E2E8F3;
@@ -21,10 +40,9 @@ body{
   --tc-main: #4C9457;
   --tc-secondary: #B59DC1;
   --tc-highlight: #999999;
-
-  --f-main: "Noto Sans Thai", sans-serif;
-  --f-secondary: "Manrope", sans-serif;
-}
+  --c-background: #F6F9FF;
+  
+*/
 
 button{
   cursor: pointer;

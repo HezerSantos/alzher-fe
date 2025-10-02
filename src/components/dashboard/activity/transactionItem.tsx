@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect } from "react"
+import React, { SetStateAction } from "react"
 
 interface SelectedTransactionItemType {
     transactionId: string,

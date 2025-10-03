@@ -9,15 +9,16 @@ interface SelectedTransactionItemType {
 
 //Interface for the elements in the expanded transaction
 interface ExpandedTransactionElementProps {
-    transactionProp: SelectedTransactionItemType | null
-    categoryName: string
-    id: string
-    isText: boolean
-    keyName: keyof SelectedTransactionItemType
+    transactionProp: SelectedTransactionItemType | null,
+    categoryName: string,
+    id: string,
+    isText: boolean,
+    keyName: keyof SelectedTransactionItemType,
+    error: {msg: string, isError:boolean} | null
 }
 
 //Component of expanded transaction
-const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({transactionProp, categoryName, id, isText, keyName}) => {
+const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({transactionProp, categoryName, id, isText, keyName, error}) => {
     const [transactionValue, setTransactionValue ] = useState("")
     useEffect(() => {
         if(transactionProp){
@@ -28,15 +29,37 @@ const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({
         <div>
             <label htmlFor={id}>{categoryName[0].toUpperCase() + categoryName.slice(1)}</label>
             {!isText? (
-                <input 
-                    name={categoryName}
-                    type="text" 
-                    id={id} 
-                    value={transactionValue? transactionValue : ""}
-                    onChange={(e) => setTransactionValue(e.target.value)}
-                />
+                <>
+                    <input 
+                        name={categoryName}
+                        type="text" 
+                        id={id} 
+                        value={transactionValue? transactionValue : ""}
+                        onChange={(e) => setTransactionValue(e.target.value)}
+                        className={error?.isError? "input-error" : ""}
+                    />
+                    {error?.isError && (
+                        <>
+                            <p className="validation-error">{error.msg}</p>
+                        </>
+                    )}
+                </>
             ) : (
-                <textarea name={categoryName} id={id} value={transactionValue} onChange={(e) => setTransactionValue(e.target.value)}></textarea>
+                <>
+                    <textarea 
+                        name={categoryName} 
+                        id={id} 
+                        value={transactionValue} 
+                        onChange={(e) => setTransactionValue(e.target.value)}
+                        className={error?.isError? "input-error" : ""}
+                    >
+                    </textarea>
+                    {error?.isError && (
+                        <>
+                            <p className="validation-error">{error.msg}</p>
+                        </>
+                    )}
+                </>
             )}
         </div>
     )

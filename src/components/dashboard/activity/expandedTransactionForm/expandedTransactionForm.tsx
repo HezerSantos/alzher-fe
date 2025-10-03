@@ -26,11 +26,21 @@ const closeExpandedTransaction = (e: React.MouseEvent<HTMLButtonElement>, setIsE
     setIsExpandedOpen(false)
 }
 
+interface ErrorType {
+    msg: string,
+    isError: boolean
+}
 
 const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({selectedTransactionItem, isExpandedOpen, setIsExpandedOpen, setTransactionData}) => {
     const csrfContext = useContext(CsrfContext)
     const authContext = useContext(AuthContext)
     const [ isLoading, setIsLoading ] = useState(false)
+
+    const [ categoryError, setCategoryError ] = useState<ErrorType | null>(null)
+    const [ descriptionError, setDescriptionError ] = useState<ErrorType | null>(null)
+    const [ transactionDateError, setTransactionDateError ] = useState<ErrorType | null>(null)
+    const [ transactionAmountError, setTransactionAmountError ] = useState<ErrorType | null>(null)
+
     return(
         <>
             <form className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`}>
@@ -45,6 +55,7 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                     id='edit-category'
                     isText={false}
                     keyName='category'
+                    error={categoryError}
                 />
                 <ExpandedTransactionElement 
                     transactionProp={selectedTransactionItem}
@@ -52,6 +63,7 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                     id='edit-description'
                     isText={true}
                     keyName='description'
+                    error={descriptionError}
                 />
                 <ExpandedTransactionElement 
                     transactionProp={selectedTransactionItem}
@@ -59,6 +71,7 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                     id='edit-date'
                     isText={false}
                     keyName='transactionDate'
+                    error={transactionDateError}
                 />
                 <ExpandedTransactionElement 
                     transactionProp={selectedTransactionItem}
@@ -66,9 +79,10 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                     id='edit-amount'
                     isText={false}
                     keyName='transactionAmount'
+                    error={transactionAmountError}
                 />
-                <button type='submit' onClick={(e) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading)}>
-                    Save Changes
+                <button type='submit' onClick={(e) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError)}>
+                    {!isLoading? "Save Changes" : <AiOutlineLoading className="button-loading"/>}
                 </button>
                 <button type="button" disabled={isLoading} onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading)}>
                     {!isLoading? "Delete Transaction" : <AiOutlineLoading className="button-loading"/>}

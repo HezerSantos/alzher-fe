@@ -62,6 +62,29 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                         }
                     })
                     break
+                case "INVALID_BODY":
+                    const bodyValidationErrors = res.validationErrors
+                    const bodyErrorMap = new Map(
+                        bodyValidationErrors?.map(error => {
+                            return [ error.path, error.msg]
+                        })
+                    )
+                    parameters.setStateErrors?.forEach(error => {
+                        if(bodyErrorMap.has(error.errorName)){
+                            const msg = bodyErrorMap.get(error.errorName)
+                            if(msg && error.setState){
+                                error.setState({
+                                    msg,
+                                    isError: true
+                                })
+                            }
+                        } else {
+                            if(error.setState){
+                                error.setState(null)
+                            }
+                        }
+                    })
+                    break
                 case "INVALID_QUERY":
                     break
                 case "INVALID_PROCESS":

@@ -339,3 +339,8 @@ a{
     fill: var(--c-main);
   }
 }
+
+.validation-error{
+  color: red;
+  font-family: var(--f-secondary);
+}

@@ -9,6 +9,10 @@ type UpdateTransactionItemType = (
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
+    setCategoryError: React.Dispatch<SetStateAction<{msg: string, isError: boolean} | null>>,
+    setDescriptionError: React.Dispatch<SetStateAction<{msg: string, isError: boolean} | null>>,
+    setTransactionDateError: React.Dispatch<SetStateAction<{msg: string, isError: boolean} | null>>,
+    setTransactionAmountError: React.Dispatch<SetStateAction<{msg: string, isError: boolean} | null>> ,
     newCsrf?: string
 
 ) => void
@@ -22,11 +26,12 @@ interface SelectedTransactionItemType {
 }
 
 
+
 //Update transaction Function
-const updateTransactionItem: UpdateTransactionItemType = async(e, setTransactionData, csrfContext, authContext, setIsLoading, newCsrf) => {
+const updateTransactionItem: UpdateTransactionItemType = async(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError, newCsrf) => {
     try{
         e.preventDefault()
-
+        setIsLoading(true)
         const buttonElement = e.target as HTMLElement
         const formElement = buttonElement.parentElement as HTMLFormElement
         const formData = new FormData(formElement)
@@ -43,7 +48,6 @@ const updateTransactionItem: UpdateTransactionItemType = async(e, setTransaction
             transactionDate: newDate,
             transactionAmount: newAmount
         }
-        console.log(updatedTransactionData)
         await api.patch(
             `/api/dashboard/activity/${transactionId}`,
             updatedTransactionData,
@@ -61,6 +65,21 @@ const updateTransactionItem: UpdateTransactionItemType = async(e, setTransaction
             newData?.set(transactionId as string, updatedTransactionData as SelectedTransactionItemType)
             return newData
         })
+
+
+        if(setCategoryError){
+            setCategoryError(null)
+        }
+        if(setDescriptionError){
+            setDescriptionError(null)
+        }
+        if(setTransactionDateError){
+            setTransactionDateError(null)
+        }
+        if(setTransactionAmountError){
+            setTransactionAmountError(null)
+        }
+
     } catch (error) {
         console.error(error)
         const axiosError = error as AxiosError
@@ -70,11 +89,31 @@ const updateTransactionItem: UpdateTransactionItemType = async(e, setTransaction
             csrfContext: csrfContext,
             authContext: authContext,
             callbacks: {
-                handlePublicAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading),
-                handleCsrfRetry: (newCsrf) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, newCsrf),
-                handleSecureAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading)
-            }
+                handlePublicAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError,),
+                handleCsrfRetry: (newCsrf) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError, newCsrf),
+                handleSecureAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError,)
+            },
+            setStateErrors: [
+                {
+                    errorName: "category",
+                    setState: setCategoryError
+                },
+                {
+                    errorName: "description",
+                    setState: setDescriptionError
+                },
+                {
+                    errorName: "transactionDate",
+                    setState: setTransactionDateError
+                },
+                {
+                    errorName: "transactionAmount",
+                    setState: setTransactionAmountError
+                }
+            ]
         })
+    } finally {
+        setIsLoading(false)
     }
 }
 

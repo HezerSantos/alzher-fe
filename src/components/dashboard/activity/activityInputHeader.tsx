@@ -1,11 +1,12 @@
-import React, { SetStateAction, useCallback, useEffect, useState, useRef } from "react"
+import React, { SetStateAction, useCallback, useState, useRef } from "react"
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 interface ActivityInputHeaderProps {
     toggleFiltersButton: React.RefObject<HTMLButtonElement | null>,
     setFilterToggle: React.Dispatch<SetStateAction<boolean>>,
-    filterToggle: boolean
+    filterToggle: boolean,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>
 }
 
 //Toggle Filter Type
@@ -53,15 +54,19 @@ const FilterButton: React.FC<FilterButtonProps> = ({name, selectedCategory, setS
     )
 }
 
-type HandleInputChangeType = (e: React.ChangeEvent<HTMLInputElement>) => void
+type HandleInputChangeType = (e: React.ChangeEvent<HTMLInputElement>, setIsLoading: React.Dispatch<SetStateAction<boolean>>) => void
 
-const SearchBar: React.FC = () => {
+interface SearchBarProps {
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>
+}
+const SearchBar: React.FC<SearchBarProps> = ({setIsLoading}) => {
     const [ input, setInput ] = useState("")
     const [ searchParams, setSearchParams ] = useSearchParams()
     const navigate = useNavigate()
     const timeout = useRef<NodeJS.Timeout | null>(null)
 
-    const handleInputChange: HandleInputChangeType = ((e) => {
+    const handleInputChange: HandleInputChangeType = ((e, setIsLoading) => {
+        setIsLoading(true)
         setInput(e.target.value)
         if(timeout.current) clearTimeout(timeout.current)
         timeout.current = setTimeout(() => {
@@ -79,7 +84,7 @@ const SearchBar: React.FC = () => {
             name='searchInput' 
             id='search-input'
             value={input}
-            onChange={(e) => handleInputChange(e)}
+            onChange={(e) => handleInputChange(e, setIsLoading)}
         />
     )
 }
@@ -94,7 +99,7 @@ const categorySet = new Set([
     "Transportation"
 ])
 
-const ActivityInputHeader: React.FC<ActivityInputHeaderProps> = ({toggleFiltersButton, setFilterToggle, filterToggle}) => {
+const ActivityInputHeader: React.FC<ActivityInputHeaderProps> = ({toggleFiltersButton, setFilterToggle, filterToggle, setIsLoading}) => {
     const [ selectedCategory, setSelectedCategory ] = useState<string | null>(null)
     const [ searchParams, setSearchParams ] = useSearchParams()
     const navigate = useNavigate()
@@ -102,14 +107,13 @@ const ActivityInputHeader: React.FC<ActivityInputHeaderProps> = ({toggleFiltersB
     const clearFilter = useCallback(() => {
         searchParams.delete("categoryFilter")
         setSearchParams(searchParams)
-        console.log(location.search)
         navigate(`/dashboard/activity?page=${searchParams.get('page')}&pageSize=${searchParams.get("pageSize")}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
     }, [])
 
     return(
         <>
             <div className='activity-search'>
-                <SearchBar />
+                <SearchBar setIsLoading={setIsLoading} />
                 <div>
                     {(searchParams.get('categoryFilter') && categorySet.has(String(searchParams.get('categoryFilter')))) && (
                         <button className="filter-clear" onClick={() => clearFilter()}>

@@ -50,7 +50,6 @@ const ActivityNavigationButton: React.FC<ActivityNavigationButtonProps> = ({type
                 const page = Number(searchParams.get("page")) + 1
                 const pageSize = searchParams.get("pageSize")
                 const categoryFilter = searchParams.get("categoryFilter")
-                const keyWord = searchParams.get("keyWord")
                 navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
                 break
             }
@@ -58,7 +57,6 @@ const ActivityNavigationButton: React.FC<ActivityNavigationButtonProps> = ({type
                 const page = Number(searchParams.get("page")) - 1
                 const pageSize = searchParams.get("pageSize")
                 const categoryFilter = searchParams.get("categoryFilter")
-                const keyWord = searchParams.get("keyWord")
                 navigate(`/dashboard/activity?page=${page}&pageSize=${pageSize}${categoryFilter? `&categoryFilter=${categoryFilter}` : ""}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
                 break
             }
@@ -87,6 +85,7 @@ const DashboardActivity: React.FC = () => {
     const [isExpandedOpen, setIsExpandedOpen] = useState<boolean>(false)
     const [ transactionData, setTransactionData ] = useState<Map<string, SelectedTransactionItemType> | null>(null)
     const [ dashboardData, setDashboardData ] = useState<ActivityDataType | null>(null)
+    const [ isLoading, setIsLoading ] = useState(false)
 
     const transactionContainerRef = useRef<HTMLFormElement>(null);
     const toggleFiltersButton = useRef<HTMLButtonElement>(null)
@@ -116,7 +115,7 @@ const DashboardActivity: React.FC = () => {
             keyWord
         }
 
-        fetchDashboardData(csrfContext, authContext, setDashboardData, "/activity", body, null)
+        fetchDashboardData(csrfContext, authContext, setDashboardData, "/activity", body, null, setIsLoading)
     }, [searchParams])
 
     return(
@@ -145,12 +144,14 @@ const DashboardActivity: React.FC = () => {
                                     toggleFiltersButton={toggleFiltersButton}
                                     setFilterToggle={setFilterToggle}
                                     filterToggle={filterToggle}
+                                    setIsLoading={setIsLoading}
                                 />
                                 <TransactionContainer 
                                     setSelectedTransactionItem={setSelectedTransactionItem}
                                     setIsExpandedOpen={setIsExpandedOpen}
                                     transactionData={transactionData? [...transactionData.values()] : []}
                                     transactionContainerRef={transactionContainerRef}
+                                    isLoading={isLoading}
                                 />
                                 <div className='activity-button__container'>
                                     <ActivityNavigationButton 

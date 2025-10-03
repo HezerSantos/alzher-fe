@@ -1,6 +1,7 @@
 import TransactionContainerHeader from "./transactionContainerHeader"
 import TransactionItem from "./transactionItem"
 import React, { SetStateAction } from "react"
+import TransactionItemLoading from "./transactionItemLoading";
 
 interface SelectedTransactionItemType {
     transactionId: string,
@@ -16,37 +17,49 @@ interface TransactionContainerProps {
     setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>,
     transactionData: SelectedTransactionItemType[],
     transactionContainerRef: React.RefObject<HTMLFormElement | null>;
+    isLoading: boolean
 }
 //Transaction Container Component
-const TransactionContainer: React.FC<TransactionContainerProps> = ({setSelectedTransactionItem, setIsExpandedOpen, transactionData, transactionContainerRef}) => {
+const TransactionContainer: React.FC<TransactionContainerProps> = ({setSelectedTransactionItem, setIsExpandedOpen, transactionData, transactionContainerRef, isLoading}) => {
     return(
         <>
             <form className={`transaction-container`} ref={transactionContainerRef}>
                 <TransactionContainerHeader 
                     transactionContainerRef={transactionContainerRef}
                 />
-                {transactionData.length? (
-                    transactionData.map((transaction) => {
-                        return(
-                            <TransactionItem 
-                                key={transaction.transactionId}
-                                transactionId={transaction.transactionId}
-                                category={transaction.category}
-                                description={transaction.description}
-                                transactionDate={transaction.transactionDate}
-                                transactionAmount={transaction.transactionAmount}
-                                setSelectedTransactionItem={setSelectedTransactionItem}
-                                setIsExpandedOpen={setIsExpandedOpen}
-                            />
-                        )
-                    })
+                {isLoading? (
+                    <>
+                        {[...Array(5)].map((_, index) => {
+                            return (<TransactionItemLoading key={index} />)
+                        })}
+                    </>
                 ) : (
                     <>
-                        <p className="transaction-container__empty">
-                            No Data Availiable
-                        </p>
+                        {transactionData.length? (
+                            transactionData.map((transaction) => {
+                                return(
+                                    <TransactionItem 
+                                        key={transaction.transactionId}
+                                        transactionId={transaction.transactionId}
+                                        category={transaction.category}
+                                        description={transaction.description}
+                                        transactionDate={transaction.transactionDate}
+                                        transactionAmount={transaction.transactionAmount}
+                                        setSelectedTransactionItem={setSelectedTransactionItem}
+                                        setIsExpandedOpen={setIsExpandedOpen}
+                                    />
+                                )
+                            })
+                        ) : (
+                            <>
+                                <p className="transaction-container__empty">
+                                    No Data Availiable
+                                </p>
+                            </>
+                        )}
                     </>
                 )}
+
             </form>
         </>
     )

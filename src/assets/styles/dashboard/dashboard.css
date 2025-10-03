@@ -899,6 +899,26 @@
 
     }
 }
+
+.transaction-item__loading{
+    height: 2.3rem;
+    border-radius: .5rem;
+    background-color: rgb(182, 182, 182);
+    margin: 1rem;
+    animation: skeleton-loading 1s ease-in-out infinite;
+}
+
+@keyframes skeleton-loading {
+    0%{
+        opacity: 100%;
+    }
+    50%{
+        opacity: 0%;
+    }
+    100%{
+        opacity: 100%;
+    }
+}
 .transaction-container__header{
     border-bottom: .25rem solid var(--c-basic);
 }

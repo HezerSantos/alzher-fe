@@ -367,11 +367,7 @@
         width: 100%;
     }
 }
-@media (max-width: 420px) {
-    .do__chart-months{
-        min-width: auto;
-    }
-}
+
 
 /* .do__chart-months{
     min-width: 20rem;
@@ -389,12 +385,12 @@
     }
 
     .do__chart-months{
-        width: 85vw;
-        height: 12rem;
+        /* width: 85vw; */
+
         overflow-y:auto;
         display: grid;
         grid-auto-flow: column;
-        grid-auto-columns: calc(100% / 2.15 - 1rem);
+        grid-auto-columns: calc(100% / 3.25 - 1rem);
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
         scrollbar-width: none;
@@ -405,14 +401,27 @@
     }
 
     .do__chart-chart{
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 1 / .5;
     }
 }
 
 @media (max-width: 780px){
     .do__chart-months{
         width: 100%;
-        grid-auto-columns: calc(100% / 1.02 - 1rem);
+        grid-auto-columns: calc(100% / 2.1 - 1rem);
+    }
+}
+
+@media (max-width: 595px){
+    .do__chart-months{
+        width: 100%;
+        grid-auto-columns: calc(100% / 1.1 - 1rem);
+    }
+}
+
+@media (max-width: 420px) {
+    .do__chart-months{
+        min-width: auto;
     }
 }
 

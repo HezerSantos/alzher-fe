@@ -5,6 +5,7 @@ import { BsArrowsAngleExpand } from "react-icons/bs";
 import AuthContext from "../../../context/auth/authContext";
 import CsrfContext from "../../../context/csrf/csrfContext";
 import fetchDashboardData from "../../../functionHelpers/fetchDashboardData";
+import DashboardOverviewCategory from "./dashboardOverviewCategory";
 interface DashboardOverviewDetailsProps {
     header: string,
     price: number,
@@ -294,6 +295,7 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                                 />
                             </div>
                         </section>
+                        <DashboardOverviewCategory />
                     </>
                 )}
             </main>

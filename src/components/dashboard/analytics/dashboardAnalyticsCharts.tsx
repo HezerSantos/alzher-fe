@@ -2,6 +2,7 @@ import OverviewChart from "../overview/charts/overviewChart";
 import CategoryDomainChart from "./charts/categoryDomainChart"
 import DailyScatterChart from "./charts/dailyScatterChart";
 import YearlyLineChart from "./charts/yearlyLineChart"
+import DashboardAnalyticsChartLoading from "./dashboardAnalyticsChartLoading";
 
 interface CategoryDataType {
     category: string | undefined,
@@ -45,40 +46,65 @@ interface DashboardAnalyticsType {
 
 
 interface DashboardAnalyticsChartsProps {
-    dashboardData: DashboardAnalyticsType | null
+    dashboardData: DashboardAnalyticsType | null,
+    isLoading: boolean
 }
-const DashboardAnalyticsCharts: React.FC<DashboardAnalyticsChartsProps> = ({dashboardData}) => {
+const DashboardAnalyticsCharts: React.FC<DashboardAnalyticsChartsProps> = ({dashboardData, isLoading}) => {
     return(
         <>
             <section className="analytics-charts">
                 <div className="analytics-charts__container">
                     <div>
                         <h2>Yearly</h2>
-                        <YearlyLineChart 
-                            yearlyData={dashboardData?.yearlyData}
-                        />
+                        {!isLoading? (
+                            <>
+                                <YearlyLineChart 
+                                    yearlyData={dashboardData?.yearlyData}
+                                />
+                            </>
+                        ) : (
+                            <DashboardAnalyticsChartLoading />
+                        )}
                     </div>
                     <div>
                         <h2>Category</h2>
-                        <CategoryDomainChart 
-                            categoryData={dashboardData?.categoryData}
-                        />
+                        {!isLoading? (
+                            <>
+                                <CategoryDomainChart 
+                                    categoryData={dashboardData?.categoryData}
+                                />
+                            </>
+                        ) : (
+                            <DashboardAnalyticsChartLoading />
+                        )}
                     </div>
                 </div>
                 <div className="analytics-charts__container">
                     <div>
                         <h2>Monthly</h2>
-                        <OverviewChart 
-                            overviewData={dashboardData?.overviewData}
-                            yearOne="2024"
-                            yearTwo="2025"
-                        />
+                        {!isLoading? (
+                            <>
+                                <OverviewChart 
+                                    overviewData={dashboardData?.overviewData}
+                                    yearOne="2024"
+                                    yearTwo="2025"
+                                />
+                            </>
+                        ) : (
+                            <DashboardAnalyticsChartLoading />
+                        )}
                     </div>
                     <div>
                         <h2>Daily</h2>
-                        <DailyScatterChart 
-                            scatterData={dashboardData?.scatterData}
-                        />
+                        {!isLoading? (
+                            <>
+                                <DailyScatterChart 
+                                    scatterData={dashboardData?.scatterData}
+                                />
+                            </>
+                        ) : (
+                            <DashboardAnalyticsChartLoading />
+                        )}
                     </div>
                 </div>
             </section>

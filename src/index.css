@@ -10,28 +10,6 @@
 
 
 :root{
-  --c-main: #1E2A1E;       
-  --c-secondary: #3A2E46; 
-  /* --c-basic: #121212;       */
-  --c-basic: white;
-  --c-highlight: #2F4F2F;  
-  
-  --tc-basic: #EAEAEA;     
-  --tc-offset: #0A0A0A;    
-  --tc-main: #7ECF89;      
-  --tc-secondary: #CBAEE0; 
-  --tc-highlight: #AAAAAA; 
-
-  --c-background: rgb(0, 0, 0);
-  --f-main: "Noto Sans Thai", sans-serif;
-  --f-secondary: "Manrope", sans-serif;
-}
-
-body{
-  background-color: var(--c-background);
-}
-
-/*  
   --c-main: #4C9457;
   --c-secondary: #B59DC1;
   --c-basic: #E2E8F3;
@@ -42,7 +20,31 @@ body{
   --tc-secondary: #B59DC1;
   --tc-highlight: #999999;
   --c-background: #F6F9FF;
+  --loading: rgb(176, 176, 176);
+  --f-main: "Noto Sans Thai", sans-serif;
+  --f-secondary: "Manrope", sans-serif;
+}
+
+body{
+  background-color: var(--c-background);
+}
+
+/*  
+
   
+    --c-main: #1E2A1E;       
+  --c-secondary: #3A2E46; 
+--c-basic: #121212;      
+  --c-basic: white;
+  --c-highlight: #2F4F2F;  
+  
+  --tc-basic: #EAEAEA;     
+  --tc-offset: #0A0A0A;    
+  --tc-main: #7ECF89;      
+  --tc-secondary: #CBAEE0; 
+  --tc-highlight: #AAAAAA; 
+
+  --c-background: rgb(0, 0, 0);
 */
 
 button{

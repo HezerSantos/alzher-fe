@@ -69,17 +69,17 @@ const DashboardAnalytics: React.FC = () => {
                     <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                         <DashboardMiniNav />
                         <DashboardNav />
-                        {!isLoading && (
-                            <div className='dashboard__analytics-container'>
-                                <DashboardAnalyticsHeader />
-                                <DashboardAnalyticsInfo 
-                                    dashboardAnalytics={dashboardData?.dashboardAnalyticsInfo}
-                                />
-                                <DashboardAnalyticsCharts 
-                                    dashboardData={dashboardData}   
-                                />
-                            </div>
-                        )}
+                        <div className='dashboard__analytics-container'>
+                            <DashboardAnalyticsHeader />
+                            <DashboardAnalyticsInfo 
+                                dashboardAnalytics={dashboardData?.dashboardAnalyticsInfo}
+                                isLoading={isLoading}
+                            />
+                            <DashboardAnalyticsCharts 
+                                dashboardData={dashboardData}  
+                                isLoading={isLoading}
+                            />
+                        </div>
                     </div>
                 </div>
             ) : (

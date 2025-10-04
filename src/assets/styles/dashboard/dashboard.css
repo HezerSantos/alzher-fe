@@ -552,6 +552,13 @@
 
 }
 
+.ai-loading__item{
+    height: 9rem;
+    background-color: var(--loading);
+    border: none;
+    animation: skeleton-loading 1s ease-in-out infinite;
+}
+
 @media (max-width: 780px){
     .dashboard__analytics-container{
         margin-top: 5rem;
@@ -612,6 +619,13 @@
     }
 }
 
+.ac-loading{
+    width: 100%;
+    height: 100%;
+    background-color: var(--loading);
+    border-radius: 2rem;
+    animation: skeleton-loading 1s ease-in-out infinite;
+}
 @media (max-width: 750px){
     .analytics-charts__container{
         grid-auto-flow: column;

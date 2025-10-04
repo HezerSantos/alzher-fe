@@ -1,4 +1,5 @@
 import React from "react"
+import DashboardAnalyticsInfoLoading from "./dashboardAnalyticsInfoLoading"
 
 
 
@@ -45,30 +46,40 @@ interface DashboardAnalyticsInfoType {
     primarySubHeader: string | null | undefined,
     primarySubValue: string | null | undefined,
     secondarySubHeader: string | null | undefined,
-    secondarySubValue: string | null | undefined
+    secondarySubValue: string | null | undefined,
 }
 
 interface DashboardAnalyticsInfoProps {
-    dashboardAnalytics: DashboardAnalyticsInfoType[] | undefined
+    dashboardAnalytics: DashboardAnalyticsInfoType[] | undefined,
+    isLoading: boolean
 }
 
-const DashboardAnalyticsInfo: React.FC<DashboardAnalyticsInfoProps> = ({dashboardAnalytics}) => {
+const DashboardAnalyticsInfo: React.FC<DashboardAnalyticsInfoProps> = ({dashboardAnalytics, isLoading}) => {
     return(
         <>
             <section className="analytics-info">
-                {dashboardAnalytics?.map((item, index) => {
-                    return(
-                        <DashboardAnalyticsInfoItem 
-                            key={index}
-                            header={item.header}
-                            amountSpent={item.amountSpent}
-                            primarySubHeader={item.primarySubHeader}
-                            primarySubValue={item.primarySubValue}
-                            secondarySubHeader={item.secondarySubHeader}
-                            secondarySubValue={item.secondarySubValue}
-                        />
-                    )
-                })}
+                {isLoading? (
+                    [...Array(4)].map((_, i) => {
+                        return <DashboardAnalyticsInfoLoading key={i}/>
+                    })
+                ) : (
+                    <>
+                    {dashboardAnalytics?.map((item, index) => {
+                            return(
+                                <DashboardAnalyticsInfoItem 
+                                    key={index}
+                                    header={item.header}
+                                    amountSpent={item.amountSpent}
+                                    primarySubHeader={item.primarySubHeader}
+                                    primarySubValue={item.primarySubValue}
+                                    secondarySubHeader={item.secondarySubHeader}
+                                    secondarySubValue={item.secondarySubValue}
+                                />
+                            )
+                        })}
+                    </>
+                )}
+                
             </section>
         </>
     )

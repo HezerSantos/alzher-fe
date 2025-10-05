@@ -1,4 +1,5 @@
 import React from "react"
+import CategoryOverviewType from "../types/categoryOverviewType"
 
 
 const categoryColor = new Map([
@@ -11,7 +12,7 @@ const categoryColor = new Map([
 ])
 
 interface CategoryChartProps {
-    data: CategoryOverview[] | undefined
+    data: CategoryOverviewType[] | undefined
 }
 
 const CategoryChartBar: React.FC<CategoryChartProps> = ({data}) => {

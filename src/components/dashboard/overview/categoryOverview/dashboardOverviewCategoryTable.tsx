@@ -1,5 +1,6 @@
 import React from "react"
 import DashboardOverviewCategoryItem from "./dashboardOverviewCategoryItem"
+import CategoryOverviewType from "../types/categoryOverviewType"
 const categoryColor = new Map([
     ['Dining', '19183B'],
     ['Leisure', '708993'],
@@ -36,15 +37,9 @@ const CategoryTable: React.FC<CategoryTableProps> = ({children}) => {
     )
 }
 
-interface CategoryOverview {
-    name: string,
-    amount: number,
-    totalTransactions: number,
-    percent: number
-}
 
 interface DashboardOverviewCategoryTableProps {
-    categoryOverview: CategoryOverview[] | undefined
+    categoryOverview: CategoryOverviewType[] | undefined
 }
 
 const DashboardOverviewCategoryTable: React.FC<DashboardOverviewCategoryTableProps> = ({categoryOverview}) => {

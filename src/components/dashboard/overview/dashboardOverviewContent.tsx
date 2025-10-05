@@ -5,7 +5,8 @@ import { BsArrowsAngleExpand } from "react-icons/bs";
 import AuthContext from "../../../context/auth/authContext";
 import CsrfContext from "../../../context/csrf/csrfContext";
 import fetchDashboardData from "../../../functionHelpers/fetchDashboardData";
-import DashboardOverviewCategory from "./dashboardOverviewCategory";
+import DashboardOverviewCategory from "./categoryOverview/dashboardOverviewCategory";
+import CategoryOverviewType from "./types/categoryOverviewType";
 interface DashboardOverviewDetailsProps {
     header: string,
     price: number,
@@ -213,12 +214,7 @@ interface MonthItemsType {
 }
 
 
-interface CategoryOverview {
-    name: string,
-    amount: number,
-    totalTransactions: number,
-    percent: number
-}
+
 
 interface DashboardOverviewContentType {
     year: string | undefined,
@@ -227,7 +223,7 @@ interface DashboardOverviewContentType {
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
     yearList: string[] | undefined,
-    categoryOverview: CategoryOverview[] | undefined
+    categoryOverview: CategoryOverviewType[] | undefined
 }
 
 interface DashboardOverviewContentProps {
@@ -237,7 +233,7 @@ interface DashboardOverviewContentProps {
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
     yearList: string[] | undefined,
-    categoryOverview: CategoryOverview[] | undefined
+    categoryOverview: CategoryOverviewType[] | undefined
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     isLoading: boolean

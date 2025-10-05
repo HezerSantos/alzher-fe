@@ -453,7 +453,7 @@
     border-radius: 1rem;
     color: var(--text-color-bright);
     & th, & td {
-        padding: 8px 12px;      
+        padding: .5rem .6rem; 
         text-align: left;
     }
 
@@ -480,6 +480,27 @@
         .do__category-chart-item-content{
             width: 100%;
         }
+    }
+}
+
+@media (max-width: 450px){
+    .do__category{
+        padding: .5rem;
+    }
+    .do__category-table-container{
+        & th, & td {
+            padding: 0;
+        }
+
+        & td > div {
+            width: .45rem;
+            height: .435rem;
+            border-radius: 100%;
+        }
+    }
+
+    .do__category-table-category{
+        gap: .25rem;
     }
 }
 @media (max-width: 710px){

@@ -212,6 +212,14 @@ interface MonthItemsType {
     totalSpent: number
 }
 
+
+interface CategoryOverview {
+    name: string,
+    amount: number,
+    totalTransactions: number,
+    percent: number
+}
+
 interface DashboardOverviewContentType {
     year: string | undefined,
     semester: number | undefined,
@@ -219,6 +227,7 @@ interface DashboardOverviewContentType {
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
     yearList: string[] | undefined,
+    categoryOverview: CategoryOverview[] | undefined
 }
 
 interface DashboardOverviewContentProps {
@@ -228,6 +237,7 @@ interface DashboardOverviewContentProps {
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
     yearList: string[] | undefined,
+    categoryOverview: CategoryOverview[] | undefined
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     isLoading: boolean
@@ -235,7 +245,7 @@ interface DashboardOverviewContentProps {
 
 
 
-const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, semester, overviewDetailsItems, chartData, monthItems, yearList, setDashboardData, setIsLoading, isLoading}) => {
+const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, semester, overviewDetailsItems, chartData, monthItems, yearList, categoryOverview, setDashboardData, setIsLoading, isLoading}) => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     return(
@@ -295,7 +305,9 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                                 />
                             </div>
                         </section>
-                        <DashboardOverviewCategory />
+                        <DashboardOverviewCategory 
+                            categoryOverview={categoryOverview}
+                        />
                     </>
                 )}
             </main>

@@ -2,26 +2,23 @@ import React from "react"
 
 
 const categoryColor = new Map([
-    ['dining', '19183B'],
-    ['leisure', '708993'],
-    ['subscriptions', 'A1C2BD'],
-    ['grocery', 'E7F2EF'],
-    ['transportation', 'EEEEEE'],
+    ['Dining', '19183B'],
+    ['Leisure', '708993'],
+    ['Subscriptions', 'A1C2BD'],
+    ['Grocery', 'E7F2EF'],
+    ['Transportation', 'EEEEEE'],
+    ['Living Expenses', 'FFFFFF'],
 ])
 
 interface CategoryChartProps {
-    data: {
-        name: string,
-        percent: number,
-        transactions: number
-    }[]
+    data: CategoryOverview[] | undefined
 }
 
 const CategoryChartBar: React.FC<CategoryChartProps> = ({data}) => {
     return(
         <>
             <div className="do__category-bar">
-                {data.map((category, i) => {
+                {data?.map((category, i) => {
                     return(
                         <div key={i} style={{width: `${category.percent}%`, backgroundColor: `#${categoryColor.get(category.name)}`}}></div>
                     )
@@ -35,7 +32,7 @@ const CategoryChartData: React.FC<CategoryChartProps> = ({data}) => {
     return(
         <>
             <div className="do__category-chart-item-container">
-                {data.map((category, i) => {
+                {data?.map((category, i) => {
                     return(
                         <div className="do__category-chart-item" key={i}>
                             <div className="do__category-chart-item-header">
@@ -44,10 +41,10 @@ const CategoryChartData: React.FC<CategoryChartProps> = ({data}) => {
                             </div>
                             <div className="do__category-chart-item-content">
                                 <p>
-                                    {category.transactions} transactions
+                                    {category.totalTransactions} transactions
                                 </p>
                                 <p>
-                                    {category.percent}%
+                                    {category.percent.toFixed(2)}%
                                 </p>
                             </div>
                         </div>
@@ -58,31 +55,26 @@ const CategoryChartData: React.FC<CategoryChartProps> = ({data}) => {
     )
 }
 
-const DashboardOverviewCategoryChart: React.FC = () => {
-    const total = 500
-    const category = [
-    { name: 'dining', total: 120, transactions: 20 },
-    { name: 'leisure', total: 85, transactions: 20 },
-    { name: 'subscriptions', total: 70, transactions: 20 },
-    { name: 'grocery', total: 95, transactions: 20 },
-    { name: 'transportation', total: 130, transactions: 20 }
-    ];
 
-    const percentages = category.map((category) => {
-        return {
-            name: category.name,
-            percent: Math.floor((category.total / total) * 100),
-            transactions: category.transactions
-        }
-    }).sort((a, b) => b.percent - a.percent)
+interface CategoryOverview {
+    name: string,
+    amount: number,
+    totalTransactions: number,
+    percent: number
+}
+
+interface DashboardOverviewCategoryChartProps {
+    categoryOverview: CategoryOverview[] | undefined
+}
+const DashboardOverviewCategoryChart: React.FC<DashboardOverviewCategoryChartProps> = ({categoryOverview}) => {
     return(
         <>
             <div className="do__category-chart">
                 <CategoryChartBar 
-                    data={percentages}
+                    data={categoryOverview}
                 />
                 <CategoryChartData 
-                    data={percentages}
+                    data={categoryOverview}
                 />
             </div>
         </>

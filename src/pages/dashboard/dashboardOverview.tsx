@@ -33,6 +33,12 @@ interface MonthItemsType {
     totalSpent: number
 }
 
+interface CategoryOverview {
+    name: string,
+    amount: number,
+    totalTransactions: number,
+    percent: number
+}
 
 interface DashboardOverviewContentProps {
     year: string | undefined,
@@ -40,7 +46,8 @@ interface DashboardOverviewContentProps {
     overviewDetailsItems: OverviewDetailsItemsType[] | undefined,
     chartData: ChartDataType[] | undefined,
     monthItems: MonthItemsType[] | undefined,
-    yearList: string[] | undefined
+    yearList: string[] | undefined,
+    categoryOverview: CategoryOverview[] | undefined
 }
 
 
@@ -75,6 +82,7 @@ const DashboardOverview: React.FC = () => {
                             chartData={dashboardData?.chartData}
                             monthItems={dashboardData?.monthItems}
                             yearList={dashboardData?.yearList}
+                            categoryOverview={dashboardData?.categoryOverview}
                             setDashboardData={setDashboardData}
                             setIsLoading={setIsLoading}
                             isLoading={isLoading}

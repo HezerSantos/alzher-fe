@@ -13,7 +13,7 @@
         position: absolute;
         content: '';
         inset: 0;
-        background-color: black;
+        background-color: var(--background-after);
         opacity: 10%;
     }
 }
@@ -34,6 +34,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    color: var(--text-color-basic);
     & > * {
         position: relative;
         z-index: 2;
@@ -54,10 +55,10 @@
     }
 
     & > a{
-        color: white;
+        color: var(--text-color-bright);
         font-weight: bold;
         padding: 1rem 1.8rem 1rem 1.8rem;
-        background-color: var(--c-main);
+        background-color: var(--background-primary);
         width: max-content;
 
     }
@@ -65,7 +66,7 @@
         position: absolute;
         content: '';
         inset: 0;
-        background-color: var(--c-basic);
+        background-color: var(--background-basic);
         opacity: 95%;
     }
 }
@@ -109,10 +110,10 @@
     align-items: center;
     justify-content: center;
     gap: 2rem;
-    border-bottom: 1px solid var(--c-secondary);
+    border-bottom: 1px solid var(--background-secondary);
     & > h1{
         font-family: var(--f-main);
-        color: var(--tc-secondary);
+        color: var(--text-color-secondary);
         font-size: 2rem;
     }
 }
@@ -124,8 +125,8 @@
     gap: clamp(1rem, 5vw, 5rem);
     & > div:nth-of-type(2){
         padding-inline: clamp(1rem, 5vw, 5rem);
-        border-left: 1px solid var(--c-secondary);
-        border-right: 1px solid var(--c-secondary);
+        border-left: 1px solid var(--background-secondary);
+        border-right: 1px solid var(--background-secondary);
     }
 }
 
@@ -138,11 +139,11 @@
     & > svg{
         width: 4rem;
         height: 4rem;
-        fill: var(--c-secondary);
+        fill: var(--background-secondary);
     }
 
     & > p{
-        color: var(--tc-secondary);
+        color: var(--text-color-secondary);
         font-family: var(--f-secondary);
         font-weight: 500;
         font-size: clamp(.8rem, 2.5vw, 1.5rem);
@@ -177,7 +178,7 @@
         gap: 3rem;
         align-items: center;
         justify-content: center;
-        background-color: var(--c-main);
+        background-color: var(--background-primary);
         padding: clamp(2rem, 5vw, 5rem);
 
         & > h1{
@@ -207,7 +208,7 @@
         }
         & > * {
             text-align: center;
-            color: white;
+            color: var(--text-color-secondary);
             fill: white;
         }
     }
@@ -259,7 +260,7 @@
     position: absolute;
     content: '';
     inset: 0;
-    background-color: black;
+    background-color: var(--background-after);
     opacity: 75%;
 }
 
@@ -292,7 +293,7 @@
     .responsive-chart-image{
         z-index: 3;
         display: block;
-        background-color: #F6F9FF;
+        background-color: var(--background-body);
         padding: .5rem;
     }
     .home-information__element-image{

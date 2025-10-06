@@ -6,6 +6,8 @@ import DashboardActivity from "./pages/dashboard/dashboardActivity";
 import DashboardScan from "./pages/dashboard/dashboardScan";
 import Login from "./pages/auth/loginPage";
 import Signup from "./pages/auth/signupPage";
+import TermsAndPrivacy from "./pages/termsandPrivacy/termsAndPrivacy";
+
 const routes = [
     {
         path: "/",
@@ -39,7 +41,11 @@ const routes = [
             {
                 path: "/signup",
                 element: <Signup />
-            }
+            },
+            {
+                path: "/terms-and-privacy",
+                element: <TermsAndPrivacy />
+            },
         ]
     }
 ]

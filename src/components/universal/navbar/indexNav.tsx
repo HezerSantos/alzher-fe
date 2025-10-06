@@ -28,15 +28,15 @@ const IndexNav: React.FC = () => {
                         <img src="/favicon.svg" alt="alzher logo" />
                         <ul>
                             <li>
+                                <Link to={"/"}>Home</Link>
+                            </li>
+                            <li>
                                 {authContext?.isAuthState.isAuth && (
                                     <Link to={"/dashboard"}>My Dashboard</Link>
                                 )}
                             </li>
                             <li>
-                                <Link to={""}>Terms and Service</Link>
-                            </li>
-                            <li>
-                                <Link to={""}>Privacy Policy</Link>
+                                <Link to={"/terms-and-privacy"}>Terms and Privacy</Link>
                             </li>
                             <li>
                                 <Link to={""}>About Us</Link>
@@ -53,15 +53,15 @@ const IndexNav: React.FC = () => {
                 <div ref={miniNav} className="page-section__child index-mini-nav">
                     <ul>
                         <li>
+                            <Link to={"/"}>Home</Link>
+                        </li>
+                        <li>
                                 {authContext?.isAuthState.isAuth && (
                                     <Link to={"/dashboard"}>My Dashboard</Link>
                                 )}
                         </li>
                         <li>
-                            <Link to={""}>Terms and Service</Link>
-                        </li>
-                        <li>
-                            <Link to={""}>Privacy Policy</Link>
+                            <Link to={""}>Terms and Privacy</Link>
                         </li>
                         <li>
                             <Link to={""}>About Us</Link>

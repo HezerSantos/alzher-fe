@@ -152,7 +152,7 @@
 .dashboard-overview__details{
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: calc(100% / 4.5 - 1rem);
+    grid-auto-columns: calc(100% / 4 - .75rem);
     column-gap: 1rem;
     overflow: auto;
     scroll-snap-type: x mandatory;
@@ -160,12 +160,6 @@
     scrollbar-width: none;
     & > div{
         scroll-snap-align: start;
-    }
-}
-
-@media (max-width: 1500px){
-    .dashboard-overview__details{
-        grid-auto-columns: calc(100% / 4.15 - 1rem);
     }
 }
 

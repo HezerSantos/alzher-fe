@@ -12,7 +12,7 @@ const DashboardOverviewDetails: React.FC<DashboardOverviewDetailsProps> = ({head
         <>
             <div className="dashboard-overview__details-item">
                 <h1>{header}</h1>
-                <p className="do__details-item__price">$ {price}</p>
+                <p className="do__details-item__price">{header === "Total Transactions"? " " : "$"}{price}</p>
                 {details?.map((detail, index) => {
                     return(
                         <p

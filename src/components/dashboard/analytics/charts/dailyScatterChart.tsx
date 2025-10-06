@@ -34,7 +34,7 @@ const DailyScatterChart: React.FC<DailyScatterChartProps> = ({scatterData}) => {
             <YAxis type="number" dataKey="dailyAverage" name="average" unit=" USD" />
             <XAxis type="number" dataKey="dateOfMonth" name="dateOfMonth" />
             <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-            <Scatter name="A school" data={scatterData} fill="#8884d8" />
+            <Scatter name="A school" data={scatterData} fill="#2e473b" />
         </ScatterChart>
         </ResponsiveContainer>
     );

@@ -42,7 +42,7 @@ const YearlyLineChart: React.FC<YearlyLineChartProps> = ({yearlyData}) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="total" stroke="#4C9457" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="total" stroke="#2e473b" activeDot={{ r: 8 }} />
       </LineChart>
     </ResponsiveContainer>
   );

@@ -37,15 +37,16 @@ const OverviewChart: React.FC<OverviewChartProps> = ({overviewData, yearOne, yea
           bottom: 5,
         }}
         maxBarSize={50}
+
       >
-        <CartesianGrid strokeDasharray="3 " />
+        <CartesianGrid strokeDasharray="10" />
         <XAxis dataKey="month"/>
         <YAxis />
-        <Tooltip />
+        <Tooltip/>
         <Legend />
-        <Bar dataKey={yearOne} fill="#4C9457" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+        <Bar dataKey={yearOne} fill="#2e473b"/>
         {(yearTwo && typeof yearTwo === 'string') && (
-            <Bar dataKey={yearTwo} fill="#B59DC1" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+            <Bar dataKey={yearTwo} fill="#488c9a" />
         )}
       </BarChart>
     </ResponsiveContainer>

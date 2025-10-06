@@ -39,8 +39,8 @@ const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData})
         <Radar
           name="Total Spending"
           dataKey="total"
-          stroke="#4C9457"
-          fill="#4C9457"
+          stroke="#0c2519ff"
+          fill="#0c2519ff"
           fillOpacity={0.6}
         />
         
@@ -48,8 +48,8 @@ const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData})
         <Radar
           name="Yearly Average"
           dataKey="Yearly Average"
-          stroke="#ff7300"
-          fill="#ff7300"
+          stroke="#afe5f0ff"
+          fill="#afe5f0ff"
           fillOpacity={0.6}
         />
 
@@ -57,8 +57,8 @@ const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData})
         <Radar
           name="Monthly Average"
           dataKey="Monthly Average"
-          stroke="#387908"
-          fill="#387908"
+          stroke="#0de49cff"
+          fill="#0de49cff"
           fillOpacity={0.6}
         />
 
@@ -66,8 +66,8 @@ const CategoryDomainChart: React.FC<CategoryDomainChartProps> = ({categoryData})
         <Radar
           name="Daily Average"
           dataKey="Daily Average"
-          stroke="#B59DC1"
-          fill="#B59DC1"
+          stroke="#06134eff"
+          fill="#06134eff"
           fillOpacity={0.6}
         />
 

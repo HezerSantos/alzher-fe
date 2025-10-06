@@ -14,21 +14,20 @@
   
 
 
-  --f-main: "Noto Sans Thai", sans-serif;
+  --f-main: 'Inter', system-ui, sans-serif;
   --f-secondary: "Manrope", sans-serif;
-
-  --loading: rgb(44, 44, 44);
-  --background-primary: #fe8c53;
-  --background-secondary: #183D3D;
-  --background-basic: #362434;
-  --background-highlight: #386152;
-  --background-body: #111312;
+  --loading: rgb(175, 175, 175);
+  --background-primary: #2e473b;
+  --background-secondary: #2e473b;
+  --background-basic: #fffaf3;
+  --background-highlight: #34855d;
+  --background-body: #e7e5dd;
   --background-after: black;
 
-  --text-color-primary: #ffffff;
-  --text-color-secondary: #183D3D;
-  --text-color-highlight: #199568;
-  --text-color-basic: white;
+  --text-color-primary: #000000;
+  --text-color-secondary: #ffffff;
+  --text-color-highlight: #208767;
+  --text-color-basic: black;
   --text-color-bright: white;
 
 
@@ -115,7 +114,7 @@ a{
 .index-nav{
   position: fixed;
   z-index: 11;
-  background-color: var(--background-body);
+  background-color: var(--background-basic);
   height: 5rem;
   padding-block: .5rem;
   padding-inline: clamp(1rem, 15vw, 20rem);
@@ -136,6 +135,11 @@ a{
         color: var(--text-color-basic);
         font-family: var(--f-secondary);
       }
+    }
+
+    & > img{
+      width: 3rem;
+      height: 3rem;
     }
   }
     & > div:nth-of-type(2){
@@ -172,14 +176,14 @@ a{
   padding-right: .5rem;
   & > div:nth-of-type(1){
     width: 3rem;
-    background-color: black;
+    background-color: var(--text-color-basic);
     height: .25rem;
     border-radius: .5rem;
   }
 
   & > div:nth-child(2){
     width: 1.5rem;
-    background-color: black;
+    background-color: var(--text-color-basic);
     height: .25rem;
     border-radius: .5rem;
   }

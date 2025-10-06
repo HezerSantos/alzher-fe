@@ -3,7 +3,7 @@ import logo from '/favicon.svg'
 import { IoChevronBackCircleOutline } from "react-icons/io5";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { TbActivityHeartbeat } from "react-icons/tb";
-import { FaHome } from "react-icons/fa";
+import { MdOutlineDashboard } from "react-icons/md";
 import { FaFolderPlus } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { Location } from 'react-router-dom';
@@ -29,6 +29,7 @@ const DNavHeader: React.FC<DNavHeaderProps> = ({dashboardContext}) => {
         <>
             <div className={`d-nav__header d-nav__child ${dashboardContext?.isHidden? "d-nav__padding-reset" : ""}`}>
                 <img src={logo} alt="" className={`${dashboardContext?.isHidden? "d-nav__hidden" : ""}`} />
+                <p className={`${dashboardContext?.isHidden? "d-nav__hidden" : ""}`} >Alzher</p>
                 <button 
                     onClick={() => toggleDashboardNav(dashboardContext)} 
                     className={`d-nav__button ${dashboardContext?.isHidden? "d-nav__padding-reset d-nav__rotate" : ""}`}
@@ -82,7 +83,7 @@ const DNavSection: React.FC<DNavSectionProps> = ({header, sectionChildren, locat
 
 const dashboardTabs = [
     {
-        image: <FaHome />,
+        image: <MdOutlineDashboard />,
         path: "/dashboard",
         name: "Overview"
     },
@@ -93,7 +94,7 @@ const dashboardTabs = [
     },
         {
         image: <TbActivityHeartbeat />,
-        path: "/dashboard/activity?page=1&pageSize=10",
+        path: "/dashboard/activity",
         name: "Activity"
     },
         {

@@ -13,21 +13,23 @@
 
   
 
-  --f-main: 'Inter', system-ui, sans-serif;
-  --f-secondary: 'JetBrains Mono', monospace;
 
-  --loading: #666666;
-  --background-primary: #E43636;
-  --background-secondary: #F6EFD2;
-  --background-basic: #F6EFD2;
-  --background-highlight: #E2DDB4;
-  --background-body: #000000;
-  --background-after: rgba(0, 0, 0, 0.5);
-  --text-color-primary: #E43636;
-  --text-color-secondary: #F6EFD2;
-  --text-color-highlight: #FFFFFF;
-  --text-color-basic: #E43636;
-  --text-color-bright: rgb(74, 1, 1);
+  --f-main: "Noto Sans Thai", sans-serif;
+  --f-secondary: "Manrope", sans-serif;
+
+  --loading: rgb(44, 44, 44);
+  --background-primary: #fe8c53;
+  --background-secondary: #183D3D;
+  --background-basic: #362434;
+  --background-highlight: #386152;
+  --background-body: #111312;
+  --background-after: black;
+
+  --text-color-primary: #ffffff;
+  --text-color-secondary: #183D3D;
+  --text-color-highlight: #199568;
+  --text-color-basic: white;
+  --text-color-bright: white;
 
 
   
@@ -38,6 +40,8 @@ body{
 }
 
 /* NORMAL
+  --f-main: "Noto Sans Thai", sans-serif;
+  --f-secondary: "Manrope", sans-serif;
   --loading: rgb(175, 175, 175);
   --background-primary: #4C9457;
   --background-secondary: #B59DC1;
@@ -54,6 +58,8 @@ body{
 */
 
 /* DARK SUNSET
+  --f-main: "Noto Sans Thai", sans-serif;
+  --f-secondary: "Manrope", sans-serif;
   --loading: rgb(44, 44, 44);
   --background-primary: #fe8c53;
   --background-secondary: #183D3D;
@@ -70,7 +76,8 @@ body{
 */
 
 /* SCARLET PAPER
-
+  --f-main: 'Inter', system-ui, sans-serif;
+  --f-secondary: 'JetBrains Mono', monospace;
   --loading: #666666;
   --background-primary: #E43636;
   --background-secondary: #F6EFD2;

@@ -395,3 +395,36 @@ a{
   color: red;
   font-family: var(--f-secondary);
 }
+
+.error-page{
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  height: calc(100svh - 5rem);
+  max-height: 62.5rem;
+
+  & > h1{
+    font-family: var(--f-main);
+    font-size: 4rem;
+  }
+
+  & > p{
+    font-family: var(--f-secondary);
+  }
+
+  & > a{
+    font-family: var(--f-secondary);
+    color: var(--text-color-basic);
+    background-color: var(--background-basic);
+    padding: 1rem;
+    border-radius: .5rem;
+  }
+
+  & > svg{
+    width: 5rem;
+    height: 5rem;
+  }
+}

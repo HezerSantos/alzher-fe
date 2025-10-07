@@ -4,9 +4,12 @@ import CsrfContext from './context/csrf/csrfContext'
 import api from './app.config'
 import DashboardProvider from './context/dashboard/dashboardProvider'
 import AuthProvider from './context/auth/authProvider'
+import ErrorContext from './context/error/errorContext'
+import Error500 from './pages/errors/error500'
 
 function App() {
   const csrfContext = useContext(CsrfContext)
+  const errorContext = useContext(ErrorContext)
   const [ isLoading, setIsLoading ] = useState(true)
   useEffect(() => {
     if (import.meta.env.MODE === 'production') {
@@ -31,6 +34,9 @@ function App() {
     getCredentials()
   }, [])
 
+  if(errorContext?.isError){
+    return <Error500 />
+  }
   
   return (
     <>

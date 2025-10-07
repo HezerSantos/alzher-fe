@@ -41,10 +41,17 @@ const IndexNav: React.FC = () => {
                         </ul>
                     </div>
                     <div>
-                        <Link to={"/login"}> 
-                            <CiUser />
-                            <p>Log In</p>
-                        </Link>
+                        {authContext?.isAuthState.isAuth? (
+                            <Link to={"/logout"}> 
+                                <CiUser />
+                                <p>Logout</p>
+                            </Link>
+                        ) : (
+                            <Link to={"/login"}> 
+                                <CiUser />
+                                <p>Login</p>
+                            </Link>
+                        )}
                     </div>
                 </div>
                 <div ref={miniNav} className="page-section__child index-mini-nav">

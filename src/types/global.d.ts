@@ -32,4 +32,9 @@ declare global {
         code: string,
         validationErrors?: ValidationErrorType[]
     }
+
+    interface ErrorContextType {
+        isError: boolean,
+        setIsError: React.Dispatch<SetStateAction<boolean>>
+    }
 }

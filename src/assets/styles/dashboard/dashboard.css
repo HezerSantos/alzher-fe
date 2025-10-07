@@ -10,7 +10,8 @@
     height: 100svh;
     background-color: var(--background-basic);
     /* box-shadow: 5px 0 10px rgb(185, 185, 185); */
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 

@@ -8,11 +8,12 @@ import Login from "./pages/auth/loginPage";
 import Signup from "./pages/auth/signupPage";
 import TermsAndPrivacy from "./pages/termsandPrivacy/termsAndPrivacy";
 import Logout from "./pages/auth/logoutPage";
+import Error404 from "./pages/errors/error404";
 const routes = [
     {
         path: "/",
         element: <App/>,
-        errorElement: null,
+        errorElement: <Error404 />,
         children: [
             {
                 index: true,

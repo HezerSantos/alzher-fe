@@ -7,7 +7,7 @@ import DashboardScan from "./pages/dashboard/dashboardScan";
 import Login from "./pages/auth/loginPage";
 import Signup from "./pages/auth/signupPage";
 import TermsAndPrivacy from "./pages/termsandPrivacy/termsAndPrivacy";
-
+import Logout from "./pages/auth/logoutPage";
 const routes = [
     {
         path: "/",
@@ -46,6 +46,10 @@ const routes = [
                 path: "/terms-and-privacy",
                 element: <TermsAndPrivacy />
             },
+            {
+                path: "/logout",
+                element: <Logout />
+            }
         ]
     }
 ]

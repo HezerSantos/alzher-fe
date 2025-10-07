@@ -9,7 +9,7 @@
 }
 
 .auth-form{
-    border: 1px solid var(--c-main);
+    border: 1px solid var(--background-primary);
     padding: 4rem 2rem;
     width: clamp(18rem, 35vw, 25rem);
     display: flex;
@@ -28,7 +28,7 @@
     }
 
     & > p{
-        color: var(--tc-main);
+        color: var(--text-color-basic);
     }
 
     & > h1{
@@ -43,18 +43,18 @@
         padding: 1rem;
         font-family: var(--f-secondary);
         background-color: #F6F9FF;
-        border: 1px solid var(--c-main);
+        border: 1px solid var(--background-primary);
         border-radius: .5rem;
         font-size: 1rem;
         &:focus{
-            outline: 2px solid var(--c-main);
+            outline: 2px solid var(--background-primary);
             border: none !important;
         }
     }
 }
 
 .auth-form__button{
-    background-color: var(--c-main);
+    background-color: var(--background-primary);
     color: white;
     font-family: var(--f-main);
     border: none;

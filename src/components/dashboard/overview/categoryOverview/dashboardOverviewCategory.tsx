@@ -7,13 +7,14 @@ import DashboardOverviewCategoryTable from "./dashboardOverviewCategoryTable"
 
 
 interface DashboardOverviewCategoryProps {
+    year: string | undefined,
     categoryOverview: CategoryOverviewType[] | undefined
 }
-const DashboardOverviewCategory: React.FC<DashboardOverviewCategoryProps> = ({categoryOverview}) => {
+const DashboardOverviewCategory: React.FC<DashboardOverviewCategoryProps> = ({year, categoryOverview}) => {
     return(
         <>
             <div className="do__category">
-                <h1> 2024 Category Overview</h1>
+                <h1> {year} Category Overview</h1>
                 <div>
                     <DashboardOverviewCategoryChart  
                         categoryOverview={categoryOverview}

@@ -4,12 +4,11 @@ import { IoChevronBackCircleOutline } from "react-icons/io5";
 import { MdOutlineAnalytics } from "react-icons/md";
 import { TbActivityHeartbeat } from "react-icons/tb";
 import { MdOutlineDashboard } from "react-icons/md";
-import { FaFolderPlus } from "react-icons/fa";
+import { FaRegFilePdf } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { Location } from 'react-router-dom';
-import { FaDoorOpen } from "react-icons/fa";
-import { FaClipboardList } from "react-icons/fa";
-import { HiInformationCircle } from "react-icons/hi";
+import { MdOutlineMapsHomeWork } from "react-icons/md";
+import { TiClipboard } from "react-icons/ti";
 import { IoIosLogOut } from "react-icons/io";
 import { FaGear } from "react-icons/fa6";
 import DashboardContext from "../../../context/dashboard/dashboardContext";
@@ -98,7 +97,7 @@ const dashboardTabs = [
         name: "Activity"
     },
         {
-        image: <FaFolderPlus />,
+        image: <FaRegFilePdf />,
         path: "/dashboard/scan",
         name: "Scan"
     }
@@ -106,20 +105,15 @@ const dashboardTabs = [
 
 const generalTabs = [
     {
-        image: <FaDoorOpen />,
+        image: <MdOutlineMapsHomeWork />,
         path: "/",
         name: "Welcome"
     },
     {
-        image: <FaClipboardList />,
+        image: <TiClipboard />,
         path: "/terms-and-privacy",
         name: "Terms and Privacy"
-    },
-        {
-        image: <HiInformationCircle />,
-        path: "/about-us",
-        name: "About Us"
-    },
+    }
 ]
 
 const systemTabs = [
@@ -130,7 +124,7 @@ const systemTabs = [
     },
     {
         image: <IoIosLogOut />,
-        path: "/dashboard/log-out",
+        path: "/logout",
         name: "Log Out"
     }, 
 ]

@@ -87,6 +87,7 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                             </div>
                         </section>
                         <DashboardOverviewCategory 
+                            year={year}
                             categoryOverview={categoryOverview}
                         />
                     </>

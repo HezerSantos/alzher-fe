@@ -123,6 +123,9 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                         }
                     })
                     break
+                case "INVALID_SESSION":
+                    parameters.authContext?.setIsAuthState({isAuth: false, isAuthLoading: false})
+                    break
             }
             break
         case 403:

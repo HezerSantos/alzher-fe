@@ -59,7 +59,6 @@
 .d-nav__section{
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
     padding-bottom: 1rem;
     gap: 1rem;
     & > h1{

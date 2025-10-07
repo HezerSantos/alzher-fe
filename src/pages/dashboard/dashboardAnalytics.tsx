@@ -11,6 +11,7 @@ import fetchDashboardData from '../../functionHelpers/fetchDashboardData'
 import CsrfContext from '../../context/csrf/csrfContext'
 import LoadingScreen from '../helpers/loadingScreen'
 import NotLoggedIn from '../helpers/notLoggedIn'
+import ErrorContext from '../../context/error/errorContext'
 
 interface DashboardAnalyticsInfoType {
     header: string | undefined,
@@ -54,10 +55,11 @@ const DashboardAnalytics: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
+    const errorContext = useContext(ErrorContext)
     const [ dashboardData, setDashboardData ] = useState<DashboardAnalyticsType | null>(null)
     const [ isLoading, setIsLoading ] = useState(false)
     useEffect(() => {
-        fetchDashboardData(csrfContext, authContext, setDashboardData, "analytics", null, null, setIsLoading)
+        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "analytics", null, null, setIsLoading)
     }, [])
     return(
         <>

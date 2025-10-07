@@ -24,6 +24,7 @@ type HandleApiErrorType =  (
         status: number | undefined,
         csrfContext: CsrfContextType | null,
         authContext: AuthContextType | null,
+        errorContext: ErrorContextType | null,
         callbacks: ApiCallbackType,
         setStateErrors?: SetStateErrorsType[],
         setFlashMessage?: React.Dispatch<SetStateAction<{error: boolean, ok: boolean}>>
@@ -133,7 +134,16 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                 case "INVALID_PERMISSIONS":
                     const newCsrf = await parameters.csrfContext?.getCsrf()
                     return await parameters.callbacks.handleCsrfRetry(newCsrf)
+                    break
             }
+            break
+        case 500:
+            switch (res.code) {
+                case "INVALID_SERVER":
+                    parameters.errorContext?.setIsError(true)
+                    break
+            }
+            break
     }
 }
 

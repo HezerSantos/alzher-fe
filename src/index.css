@@ -415,12 +415,13 @@ a{
     font-family: var(--f-secondary);
   }
 
-  & > a{
+  & > button{
     font-family: var(--f-secondary);
     color: var(--text-color-basic);
     background-color: var(--background-basic);
     padding: 1rem;
     border-radius: .5rem;
+    border: none;
   }
 
   & > svg{

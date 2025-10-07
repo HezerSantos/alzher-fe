@@ -6,6 +6,7 @@ import handleApiError from "../app.config.error"
 type FetchDashboardDataType = (
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
+    errorContext: ErrorContextType | null,
     setData: React.Dispatch<SetStateAction<any>>,
     path: string,
     body?: any | null,
@@ -14,7 +15,7 @@ type FetchDashboardDataType = (
 ) => void
 
 
-const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, setData, path, body, newCsrf, setIsLoading) => {
+const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContext, errorContext, setData, path, body, newCsrf, setIsLoading) => {
     try{
         if(setIsLoading){
             setIsLoading(true)
@@ -36,10 +37,11 @@ const fetchDashboardData: FetchDashboardDataType = async(csrfContext, authContex
             status: axiosError.status,
             csrfContext: csrfContext,
             authContext: authContext,
+            errorContext: errorContext,
             callbacks: {
-                handlePublicAuthRetry: () => fetchDashboardData(csrfContext, authContext, setData, path, body, null, setIsLoading),
-                handleCsrfRetry: (newCsrf) => fetchDashboardData(csrfContext, authContext, setData, path, body, newCsrf, setIsLoading),
-                handleSecureAuthRetry: () => fetchDashboardData(csrfContext, authContext, setData, path, body, null, setIsLoading)
+                handlePublicAuthRetry: () => fetchDashboardData(csrfContext, authContext, errorContext, setData, path, body, null, setIsLoading),
+                handleCsrfRetry: (newCsrf) => fetchDashboardData(csrfContext, authContext, errorContext, setData, path, body, newCsrf, setIsLoading),
+                handleSecureAuthRetry: () => fetchDashboardData(csrfContext, authContext, errorContext, setData, path, body, null, setIsLoading)
             }
         })
     } finally {

@@ -1,8 +1,18 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FaRegFaceSadTear } from "react-icons/fa6";
 import IndexNav from "../../components/universal/navbar/indexNav"
+import { useContext } from "react";
+import ErrorContext from "../../context/error/errorContext";
 
 const Error500: React.FC = () => {
+    const errorContext = useContext(ErrorContext)
+    const navigate = useNavigate()
+    const handleNavigate = () => {
+        navigate("/")
+        setTimeout(() => {
+            errorContext?.setIsError(false);
+        }, 0); 
+    }
     return(
         <>
             <div className="page-section">
@@ -14,9 +24,9 @@ const Error500: React.FC = () => {
                         500 Internal Server Error
                         </h1>
                         <p>Opps! Something went wrong</p>
-                        <Link to={"/"}>
+                        <button onClick={() => handleNavigate()}>
                             Back to Home
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>

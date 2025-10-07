@@ -4,6 +4,7 @@ import api from "../../app.config"
 import CsrfContext from "../csrf/csrfContext"
 import { AxiosError } from "axios"
 import handleApiError from "../../app.config.error"
+import ErrorContext from "../error/errorContext"
 
 interface AuthProviderProps {
     children: ReactNode
@@ -16,6 +17,7 @@ type RefreshType = (newCsrf?: string | null) => Promise<boolean | void>
 
 const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     const csrfContext = useContext(CsrfContext)
+    const errorContext = useContext(ErrorContext)
     const [ isAuthState, setIsAuthState ] = useState({isAuth: false, isAuthLoading: true})
 
     const logout = useCallback(() => {
@@ -41,6 +43,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
                 axiosError: axiosError,
                 status: axiosError.status,
                 csrfContext: csrfContext,
+                errorContext: errorContext,
                 authContext: { refresh, isAuthState, setIsAuthState, logout },
                 callbacks: {
                     handlePublicAuthRetry: () => refresh(),

@@ -12,6 +12,7 @@ import ExpandedTransactionForm from '../../components/dashboard/activity/expande
 import TransactionContainer from '../../components/dashboard/activity/transactionContainer';
 import LoadingScreen from '../helpers/loadingScreen';
 import NotLoggedIn from '../helpers/notLoggedIn'
+import ErrorContext from '../../context/error/errorContext';
 //Interface for the basis of the transaction object
 interface SelectedTransactionItemType {
     transactionId: string,
@@ -79,6 +80,7 @@ const DashboardActivity: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     const csrfContext = useContext(CsrfContext)
     const authContext = useContext(AuthContext)
+    const errorContext = useContext(ErrorContext)
 
     const [ filterToggle, setFilterToggle ] = useState(false)
     const [ selectedTransactionItem, setSelectedTransactionItem ] = useState<SelectedTransactionItemType | null>(null)
@@ -115,7 +117,7 @@ const DashboardActivity: React.FC = () => {
             keyWord
         }
 
-        fetchDashboardData(csrfContext, authContext, setDashboardData, "/activity", body, null, setIsLoading)
+        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "/activity", body, null, setIsLoading)
     }, [searchParams])
 
     return(

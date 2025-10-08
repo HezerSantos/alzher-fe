@@ -1,4 +1,4 @@
-import React, { SetStateAction, useContext, useEffect } from "react"
+import React, { SetStateAction, useContext } from "react"
 import OverviewChart from "./charts/overviewChart";
 import AuthContext from "../../../context/auth/authContext";
 import CsrfContext from "../../../context/csrf/csrfContext";
@@ -20,13 +20,12 @@ interface DashboardOverviewContentProps {
     yearList: string[] | undefined,
     categoryOverview: CategoryOverviewType[] | undefined
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
-    setIsLoading: React.Dispatch<SetStateAction<boolean>>,
-    isLoading: boolean
+    isLoading: boolean | undefined
 }
 
 
 
-const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, semester, overviewDetailsItems, chartData, monthItems, yearList, categoryOverview, setDashboardData, setIsLoading, isLoading}) => {
+const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, semester, overviewDetailsItems, chartData, monthItems, yearList, categoryOverview, setDashboardData, isLoading}) => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     return(
@@ -37,53 +36,74 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                         <h1>Overview</h1>
                     </div>
                 </header>
-                {!isLoading && (
                     <>
                         <section className="dashboard-overview__details">
-                            <DashboardOverviewControl 
-                                selectedYear={year}
-                                selectedSemester={semester}
-                                yearList={yearList}
-                                authContext={authContext}
-                                csrfContext={csrfContext}
-                                setDashboardData={setDashboardData}
-                                setIsLoading={setIsLoading}
-                            />
-                            {overviewDetailsItems?.map((item, index) => {
-                                return(
-                                    <DashboardOverviewDetails
-                                        header={item.header}
-                                        price={item.price}
-                                        details={item.details}
-                                        key={index}
-                                    />
-                                )
-                            })}
+                            {!isLoading? (
+                                <>
+                                <DashboardOverviewControl 
+                                    selectedYear={year}
+                                    selectedSemester={semester}
+                                    yearList={yearList}
+                                    authContext={authContext}
+                                    csrfContext={csrfContext}
+                                    setDashboardData={setDashboardData}
+                                />
+                                {overviewDetailsItems?.map((item, index) => {
+                                    return(
+                                        <DashboardOverviewDetails
+                                            header={item.header}
+                                            price={item.price}
+                                            details={item.details}
+                                            key={index}
+                                        />
+                                    )
+                                })}
+                                </>
+                            ) : (
+                                [...Array(4)].map((_, i) => {
+                                    return(
+                                        <div className="do-header-loading" key={i}></div>
+                                    )
+                                })
+                            )}
+
                         </section>     
                         <section className="dashboard-overview__chart-container">
                             <div className="do__chart-months">
-                                {monthItems? (monthItems.map((monthItem, index) => {
-                                    return(
-                                        <MonthItem 
-                                            key={index}
-                                            month={monthItem.month}
-                                            year={monthItem.year}
-                                            lowestCategory={monthItem.lowestCategory}
-                                            highestCategory={monthItem.highestCategory}
-                                            totalSpent={monthItem.totalSpent}
-                                        />
+                                {!isLoading? (
+                                    monthItems? (monthItems.map((monthItem, index) => {
+                                        return(
+                                            <MonthItem 
+                                                key={index}
+                                                month={monthItem.month}
+                                                year={monthItem.year}
+                                                lowestCategory={monthItem.lowestCategory}
+                                                highestCategory={monthItem.highestCategory}
+                                                totalSpent={monthItem.totalSpent}
+                                            />
+                                        )
+                                    })) : (
+                                        <EmptyMonthItem />
                                     )
-                                })) : (
-                                    <EmptyMonthItem />
+                                ) : (
+                                    [...Array(6)].map((_, i) => {
+                                        return(
+                                            <div className="do-month-item-loading" key={i}></div>
+                                        )
+                                    })
                                 )}
                             </div>
                             <div className="do__chart-chart">
-                                <h1>{year} Overview</h1>
-                                <OverviewChart 
-                                    overviewData={chartData? chartData : null}
-                                    yearOne={year? year : ""}
-                                    yearTwo={false}
-                                />
+                                <h1> {year} Overview</h1>
+                                {!isLoading? (
+                                    <OverviewChart 
+                                        overviewData={chartData? chartData : null}
+                                        yearOne={year? year : ""}
+                                        yearTwo={false}
+                                    />
+                                ) : (
+                                    <div className="do-chart-loading"></div>
+                                )}
                             </div>
                         </section>
                         <DashboardOverviewCategory 
@@ -91,7 +111,6 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                             categoryOverview={categoryOverview}
                         />
                     </>
-                )}
             </main>
         </>
     )

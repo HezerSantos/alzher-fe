@@ -387,7 +387,6 @@
     }
     & > div{
         display: grid;
-        grid-template-columns: 1fr;
         row-gap: 1rem;
     }
 }
@@ -1292,4 +1291,42 @@
 
 .filter-selected{
     background-color: var(--background-highlight) !important;
+}
+
+.do-header-loading{
+    height: 8rem;
+    background-color: var(--loading);
+    border-radius: 1rem;
+    animation: skeleton-loading 1s ease-in-out infinite;
+}
+
+.do-month-item-loading{
+    height: 5rem;
+    background-color: var(--loading);
+    border-radius: 1rem;
+    animation: skeleton-loading 1s ease-in-out infinite;
+}
+
+.do-chart-loading{
+    width: 100%;
+    height: 100%;
+    background-color: var(--loading);
+    border-radius: 1rem;
+    animation: skeleton-loading 1s ease-in-out infinite;
+}
+
+.do-cc-loading{
+    width: 100%;
+    height: 20.62rem;
+    background-color: var(--loading);
+    border-radius: 1rem;
+    animation: skeleton-loading 1s ease-in-out infinite;
+}
+
+.do-ct-loading{
+    width: 17.81rem;
+    height: 19.12rem;
+    background-color: var(--loading);
+    border-radius: 1rem;
+    animation: skeleton-loading 1s ease-in-out infinite;
 }

@@ -8,18 +8,19 @@ type HandleDashboardOverviewType = (
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
-    setIsLoading: React.Dispatch<SetStateAction<boolean>>
+    setIsLoading: React.Dispatch<SetStateAction<boolean>> | undefined,
+    errorContext: ErrorContextType | null
 ) => void
 
 
-const handleDashboardOverview: HandleDashboardOverviewType = async(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading) => {
+const handleDashboardOverview: HandleDashboardOverviewType = async(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading, errorContext) => {
     const newYear = e.target.value
     const body = {
         year: newYear,
         semester: queryDetails.semester
     }
 
-    await fetchDashboardData(csrfContext, authContext, setDashboardData, "overview", body, null, setIsLoading)
+    await fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "overview", body, null, setIsLoading)
     setQueryDetails(body)
 }
 

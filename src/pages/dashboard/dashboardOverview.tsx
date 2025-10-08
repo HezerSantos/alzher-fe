@@ -10,6 +10,7 @@ import NotLoggedIn from '../helpers/notLoggedIn'
 import fetchDashboardData from '../../functionHelpers/fetchDashboardData'
 import CsrfContext from '../../context/csrf/csrfContext'
 import ErrorContext from '../../context/error/errorContext'
+import { useLoading } from '../../context/loading/loadingProvider'
 
 
 interface OverviewDetailsItemsType {
@@ -57,14 +58,14 @@ const DashboardOverview: React.FC = () => {
     const authContext = useContext(AuthContext)
     const csrfContext = useContext(CsrfContext)
     const errorContext = useContext(ErrorContext)
+    const loading = useLoading()
     const [ dashboardData, setDashboardData ] = useState<DashboardOverviewContentProps | null>(null)
-    const [ isLoading, setIsLoading ] = useState(false)
     useEffect(() => {
         const body = {
             year: 2024,
             semester: 1
         }
-        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "overview", body, null, setIsLoading)
+        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "overview", body, null, loading?.setIsLoading)
     }, [])
 
 
@@ -87,8 +88,7 @@ const DashboardOverview: React.FC = () => {
                             yearList={dashboardData?.yearList}
                             categoryOverview={dashboardData?.categoryOverview}
                             setDashboardData={setDashboardData}
-                            setIsLoading={setIsLoading}
-                            isLoading={isLoading}
+                            isLoading={loading?.isLoading}
                         />
                     </div>
                 </div>

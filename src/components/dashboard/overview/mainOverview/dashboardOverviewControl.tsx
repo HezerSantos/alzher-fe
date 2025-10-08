@@ -1,7 +1,9 @@
-import React, { SetStateAction, useState} from 'react'
+import React, { SetStateAction, useContext, useState} from 'react'
 import { DashboardOverviewContentType } from '../types/mainOverviewTypes'
 import handleDashboardOverview from './helpers/handleDashboardOverview'
 import handleDashboardOverviewClick from './helpers/handleDashboardOverviewClick'
+import { useLoading } from '../../../../context/loading/loadingProvider'
+import ErrorContext from '../../../../context/error/errorContext'
 handleDashboardOverviewClick
 
 interface DashboardOverviewControlProps {
@@ -11,20 +13,19 @@ interface DashboardOverviewControlProps {
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
     setDashboardData: React.Dispatch<SetStateAction<DashboardOverviewContentType | null>>,
-    setIsLoading: React.Dispatch<SetStateAction<boolean>>
 }
 
 
-const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({selectedYear, selectedSemester, yearList, csrfContext, authContext, setDashboardData, setIsLoading}) => {
-    
+const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({selectedYear, selectedSemester, yearList, csrfContext, authContext, setDashboardData}) => {
     const [ queryDetails, setQueryDetails ] = useState({year: selectedYear, semester: 1})
-
+    const errorContext = useContext(ErrorContext)
+    const loading = useLoading()
     return(
         <>
             {yearList&& (
                 <div className="dashboard-overview__control">
                     <select 
-                        onChange={(e) => handleDashboardOverview(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}
+                        onChange={(e) => handleDashboardOverview(e, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, loading?.setIsLoading, errorContext)}
                         value={selectedYear}
                     >
                         {yearList.map((year, index) => {
@@ -37,14 +38,14 @@ const DashboardOverviewControl: React.FC<DashboardOverviewControlProps> = ({sele
                         })}
                     </select>
                     <button 
-                        onClick={() => handleDashboardOverviewClick(1, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}
+                        onClick={() => handleDashboardOverviewClick(1, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, loading?.setIsLoading, errorContext)}
                         className={selectedSemester === 1? "selected-semester" : ""}
                         disabled={selectedSemester === 1}
                     >
                         First Six Months
                     </button>
                     <button 
-                        onClick={() => handleDashboardOverviewClick(2, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, setIsLoading)}
+                        onClick={() => handleDashboardOverviewClick(2, queryDetails, setQueryDetails, csrfContext, authContext, setDashboardData, loading?.setIsLoading, errorContext)}
                         className={selectedSemester === 2? "selected-semester" : ""}
                         disabled={selectedSemester === 2}
                     >

@@ -9,6 +9,7 @@ import Signup from "./pages/auth/signupPage";
 import TermsAndPrivacy from "./pages/termsandPrivacy/termsAndPrivacy";
 import Logout from "./pages/auth/logoutPage";
 import Error404 from "./pages/errors/error404";
+import {LoadingProvider} from "./context/loading/loadingProvider";
 const routes = [
     {
         path: "/",
@@ -21,7 +22,9 @@ const routes = [
             },
             {
                 path: "/dashboard",
-                element: <DashboardOverview />
+                element: <LoadingProvider>
+                            <DashboardOverview />
+                        </LoadingProvider>
             },
             {
                 path: "/dashboard/analytics",

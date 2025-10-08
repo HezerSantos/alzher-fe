@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { FaRegFaceSadTear } from "react-icons/fa6";
 import IndexNav from "../../components/universal/navbar/indexNav"
 import { useContext } from "react";
@@ -17,8 +17,7 @@ const Error500: React.FC = () => {
         <>
             <div className="page-section">
                 <div className="page-section__child">
-                    <IndexNav />
-                    <div className="error-page">
+                    <div className="error-page error-500">
                         <FaRegFaceSadTear />
                         <h1>
                         500 Internal Server Error

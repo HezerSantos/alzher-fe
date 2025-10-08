@@ -46,7 +46,9 @@ const Home: React.FC = () => {
             }
         }
 
-        checkAuth()
+        if(!authContext?.isAuthState.isAuth){
+            checkAuth()
+        }
     }, [])
     return(
         <>

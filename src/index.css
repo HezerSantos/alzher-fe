@@ -405,10 +405,10 @@ a{
   gap: 1rem;
   height: calc(100svh - 5rem);
   max-height: 62.5rem;
-
+  text-align: center;
   & > h1{
     font-family: var(--f-main);
-    font-size: 4rem;
+    font-size: clamp(2rem, 8vw, 4rem);
   }
 
   & > p{
@@ -428,4 +428,10 @@ a{
     width: 5rem;
     height: 5rem;
   }
+}
+
+.error-500{
+  margin: 0;
+  height: 100svh;
+  max-height: none;
 }

@@ -1,7 +1,8 @@
-import React, { SetStateAction } from 'react'
+import React, { SetStateAction, useContext } from 'react'
 import { AiOutlineLoading } from "react-icons/ai";
 import submitFiles from './helpers/submitFiles';
 import FileItem from './fileItem';
+import ErrorContext from '../../../context/error/errorContext';
 interface FileContainerProps {
     fileList: Map<string, File>,
     setFileList: React.Dispatch<SetStateAction<Map<string, File>>>,
@@ -13,6 +14,7 @@ interface FileContainerProps {
 }
 
 const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csrfContext, authContext, setIsMessage, setIsLoading, isLoading}) => {
+    const errorContext = useContext(ErrorContext)
     return(
         <div className='file-container'>
             {[...fileList.values()].map((file, index) => {
@@ -30,7 +32,7 @@ const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csr
                     <button 
                         disabled={isLoading}
                         className='file-submit' 
-                        onClick={() => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading)}>
+                        onClick={() => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading)}>
                         {isLoading? <AiOutlineLoading className="button-loading"/> : "Scan Files"}
                     </button>
                 </>

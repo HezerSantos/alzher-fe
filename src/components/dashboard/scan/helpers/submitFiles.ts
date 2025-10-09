@@ -6,12 +6,13 @@ type SubmitFilesType = (
     fileList: Map<string, File>, 
     csrfContext: CsrfContextType | null, 
     authContext: AuthContextType | null, 
+    erroContext: ErrorContextType | null,
     setIsMessage: React.Dispatch<SetStateAction<{error: boolean, ok: boolean}>>,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string
 ) => void
 
-const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, setIsMessage, setIsLoading, newCsrf) => {
+const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading, newCsrf) => {
     const formData = new FormData()
 
 
@@ -37,10 +38,11 @@ const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, s
             status: axiosError.status,
             csrfContext: csrfContext,
             authContext: authContext,
+            errorContext: errorContext,
             callbacks: {
-                handlePublicAuthRetry: () => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading),
-                handleCsrfRetry: (newCsrf) => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading, newCsrf),
-                handleSecureAuthRetry: () => submitFiles(fileList, csrfContext, authContext, setIsMessage, setIsLoading),
+                handlePublicAuthRetry: () => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading),
+                handleCsrfRetry: (newCsrf) => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading, newCsrf),
+                handleSecureAuthRetry: () => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading),
             },
             setFlashMessage: setIsMessage
             

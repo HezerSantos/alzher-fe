@@ -1,7 +1,7 @@
 import IndexNav from "../../components/universal/navbar/indexNav"
 import '../../assets/styles/termsandPrivacy/termsandPrivacy.css'
 import termItems from "./helpers/terms"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import api from "../../app.config"
 import handleApiError from "../../app.config.error"
 import { AxiosError } from "axios"

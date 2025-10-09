@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom"
 import { FaRegFaceSadTear } from "react-icons/fa6";
-import IndexNav from "../../components/universal/navbar/indexNav"
 import { useContext } from "react";
 import ErrorContext from "../../context/error/errorContext";
 

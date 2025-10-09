@@ -8,6 +8,7 @@ type UpdateTransactionItemType = (
     setTransactionData: React.Dispatch<SetStateAction<Map<string, SelectedTransactionItemType> | null>>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
+    errorContext: ErrorContextType | null,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     setCategoryError: React.Dispatch<SetStateAction<{msg: string, isError: boolean} | null>>,
     setDescriptionError: React.Dispatch<SetStateAction<{msg: string, isError: boolean} | null>>,
@@ -28,7 +29,7 @@ interface SelectedTransactionItemType {
 
 
 //Update transaction Function
-const updateTransactionItem: UpdateTransactionItemType = async(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError, newCsrf) => {
+const updateTransactionItem: UpdateTransactionItemType = async(e, setTransactionData, csrfContext, authContext, errorContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError, newCsrf) => {
     try{
         e.preventDefault()
         setIsLoading(true)
@@ -88,10 +89,11 @@ const updateTransactionItem: UpdateTransactionItemType = async(e, setTransaction
             status: axiosError.status,
             csrfContext: csrfContext,
             authContext: authContext,
+            errorContext: errorContext,
             callbacks: {
-                handlePublicAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError,),
-                handleCsrfRetry: (newCsrf) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError, newCsrf),
-                handleSecureAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError,)
+                handlePublicAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, errorContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError,),
+                handleCsrfRetry: (newCsrf) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, errorContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError, newCsrf),
+                handleSecureAuthRetry: () => updateTransactionItem(e, setTransactionData, csrfContext, authContext, errorContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError,)
             },
             setStateErrors: [
                 {

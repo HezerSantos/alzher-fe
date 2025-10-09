@@ -18,12 +18,13 @@ type DeleteTransactionType = (
     e: React.MouseEvent<HTMLButtonElement>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
+    errorContext: ErrorContextType | null,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string
 ) => void
 
 //function to delete transaction for client
-const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext,setIsLoading, newCsrf) => {
+const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading, newCsrf) => {
     try{
         setIsLoading(true)
         e.preventDefault()
@@ -48,10 +49,11 @@ const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, 
             status: axiosError?.status,
             csrfContext: csrfContext,
             authContext: authContext,
+            errorContext: errorContext,
             callbacks: {
-                handlePublicAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading),
-                handleCsrfRetry: (newCsrf) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading, newCsrf),
-                handleSecureAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, setIsLoading)
+                handlePublicAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading),
+                handleCsrfRetry: (newCsrf) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading, newCsrf),
+                handleSecureAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading)
             }
         })
     } finally {

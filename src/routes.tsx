@@ -10,6 +10,7 @@ import TermsAndPrivacy from "./pages/termsandPrivacy/termsAndPrivacy";
 import Logout from "./pages/auth/logoutPage";
 import Error404 from "./pages/errors/error404";
 import {LoadingProvider} from "./context/loading/loadingProvider";
+import Settings from "./pages/settings/setting";
 const routes = [
     {
         path: "/",
@@ -53,6 +54,10 @@ const routes = [
             {
                 path: "/logout",
                 element: <Logout />
+            },
+            {
+                path: "/dashboard/settings",
+                element: <Settings />
             }
         ]
     }

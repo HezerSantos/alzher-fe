@@ -6,6 +6,7 @@ import DashboardProvider from './context/dashboard/dashboardProvider'
 import AuthProvider from './context/auth/authProvider'
 import ErrorContext from './context/error/errorContext'
 import Error500 from './pages/errors/error500'
+import { AxiosError } from 'axios'
 
 function App() {
   const csrfContext = useContext(CsrfContext)
@@ -28,11 +29,16 @@ function App() {
         csrfContext?.decodeCookie("__Secure-auth.csrf")
         setIsLoading(false)
       } catch(e){
-        console.error(e)
+        const axiosError = e as AxiosError
+        if(axiosError.code === "ERR_NETWORK"){
+          errorContext?.setIsError(true)
+        }
       }
     }
-    getCredentials()
-  }, [])
+    if(!errorContext?.isError){
+      getCredentials()
+    }
+  }, [errorContext?.isError])
 
   if(errorContext?.isError){
     return <Error500 />

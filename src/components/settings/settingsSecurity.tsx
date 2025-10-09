@@ -17,7 +17,7 @@ const SettingsSecurity: React.FC<SettingsSecurityProps> = ({email, setIsOpen}) =
                     </div>
                     <div>
                         <p>{email}</p>
-                        <button onClick={() => setIsOpen(true)}>
+                        <button>
                             Edit
                             <MdOutlineEdit />
                         </button>
@@ -33,7 +33,7 @@ const SettingsSecurity: React.FC<SettingsSecurityProps> = ({email, setIsOpen}) =
                         </p>
                     </div>
                     <div>
-                        <button>
+                        <button  onClick={() => setIsOpen(true)}>
                             Change Password
                         </button>
                     </div>

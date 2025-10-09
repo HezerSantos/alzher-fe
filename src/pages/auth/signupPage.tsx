@@ -11,6 +11,7 @@ import handleRequestError from "../../app.config.error"
 import AuthFooter from "../../components/auth/authFooter"
 import AuthErrors from "../../components/auth/authErrors"
 import AlzherMessage from "../../components/universal/alzherMessage"
+import ErrorContext from "../../context/error/errorContext"
 
 interface ErrorType {
     msg: string,
@@ -19,6 +20,7 @@ interface ErrorType {
 type HandleSignupType = (
     e: React.FormEvent<HTMLFormElement>,
     csrfContext: CsrfContextType | null,
+    errorContext: ErrorContextType | null,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     setIsSuccess: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
@@ -27,7 +29,7 @@ type HandleSignupType = (
     setConfirmPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>
 ) => void
 
-const handleSignup: HandleSignupType = async(e, csrfContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
+const handleSignup: HandleSignupType = async(e, csrfContext, errorContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
     e.preventDefault()
     setIsLoading(true)
     try{
@@ -72,9 +74,10 @@ const handleSignup: HandleSignupType = async(e, csrfContext, setIsLoading, setIs
             status: axiosError.status,
             csrfContext: csrfContext,
             authContext: null,
+            errorContext: errorContext,
             callbacks: {
-                handlePublicAuthRetry: () => handleSignup(e, csrfContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError),
-                handleCsrfRetry: (newCsrf) => handleSignup(e, csrfContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError)
+                handlePublicAuthRetry: () => handleSignup(e, csrfContext, errorContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError),
+                handleCsrfRetry: (newCsrf) => handleSignup(e, csrfContext, errorContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError)
             },
             setStateErrors: [
                 {
@@ -105,7 +108,7 @@ const Signup: React.FC = () => {
     const [ passwordError, setPasswordError ] = useState<ErrorType | null>(null)
     const [ confirmPasswordError, setConfirmPasswordError ] = useState<ErrorType | null>(null)
     const [ isSuccess, setIsSuccess ] = useState(false)
-
+    const errorContext = useContext(ErrorContext)
     useEffect(() => {
         if(isSuccess){
             const inteveral = setTimeout(() => {
@@ -123,7 +126,7 @@ const Signup: React.FC = () => {
             <main className="page-section auth-section">
                 <form
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleSignup(e, csrfContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError)}
+                    onSubmit={(e) => handleSignup(e, csrfContext, errorContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError)}
                 >
                     {isSuccess && (
                         <AlzherMessage 

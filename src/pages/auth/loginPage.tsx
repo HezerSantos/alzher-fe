@@ -12,6 +12,7 @@ import CsrfContext from "../../context/csrf/csrfContext"
 import AuthErrors from "../../components/auth/authErrors"
 import AuthContext from "../../context/auth/authContext"
 import { NavigateFunction, useNavigate } from "react-router-dom"
+import ErrorContext from "../../context/error/errorContext"
 
 
 interface ErrorType {
@@ -24,13 +25,14 @@ type HandleLoginType = (
     navigate: NavigateFunction,
     authContext: AuthContextType | null,
     csrfContext: CsrfContextType | null,
+    errorContext: ErrorContextType | null,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
     setEmailError?: React.Dispatch<SetStateAction< ErrorType | null>>,
     setPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>,
 ) => void
 
-const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext, setIsLoading, newCsrf, setEmailError, setPasswordError) => {
+const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext, errorContext, setIsLoading, newCsrf, setEmailError, setPasswordError) => {
     e.preventDefault()
 
     try{
@@ -70,9 +72,10 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
             status: axiosError.status,
             csrfContext: csrfContext,
             authContext: authContext,
+            errorContext: errorContext,
             callbacks: {
-                handlePublicAuthRetry: () => handleLogin(e, navigate, authContext, csrfContext, setIsLoading, null, setEmailError, setPasswordError),
-                handleCsrfRetry: (newCsrf) => handleLogin(e, navigate, authContext, csrfContext, setIsLoading, newCsrf, setEmailError, setPasswordError)
+                handlePublicAuthRetry: () => handleLogin(e, navigate, authContext, csrfContext, errorContext, setIsLoading, null, setEmailError, setPasswordError),
+                handleCsrfRetry: (newCsrf) => handleLogin(e, navigate, authContext, csrfContext, errorContext, setIsLoading, newCsrf, setEmailError, setPasswordError)
             },
             setStateErrors: [
                 {
@@ -95,6 +98,7 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
 const Login: React.FC = () => {
     const csrfContext = useContext(CsrfContext)
     const authContext = useContext(AuthContext)
+    const errorContext = useContext(ErrorContext)
     const navigate = useNavigate()
     const [ isLoading, setIsLoading ] = useState(false)
     const [ emailError, setEmailError ] = useState<ErrorType | null>(null)
@@ -109,7 +113,7 @@ const Login: React.FC = () => {
             <main className="page-section auth-section">
                 <form 
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleLogin(e, navigate, authContext, csrfContext, setIsLoading, null, setEmailError, setPasswordError)}
+                    onSubmit={(e) => handleLogin(e, navigate, authContext, csrfContext, errorContext, setIsLoading, null, setEmailError, setPasswordError)}
                 >
                     <div className="auth-form">
                         <AuthHeader 

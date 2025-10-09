@@ -1429,22 +1429,14 @@
     }
 }
 
-.edit-modal-container{
-    position: fixed;
-    width: 100vw;
-    height: 100vw;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 10;
-}
-
 .edit-modal{
-    position: relative;
+    position: absolute;
     z-index: 13;
     width: clamp(18rem, 25vw, 22rem);
     padding: 1rem;
-    top: 20%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -50%);
     background-color: var(--background-basic);
     border: none;
     border-radius: 1rem;

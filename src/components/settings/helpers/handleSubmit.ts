@@ -6,6 +6,7 @@ type HandleSubmitType = (
     e: React.FormEvent<HTMLFormElement>,
     setIsError: React.Dispatch<SetStateAction<ErrorType | null>>,
     setIsOpen: React.Dispatch<SetStateAction<boolean>>,
+    setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
     errorContext: ErrorContextType | null,
@@ -20,8 +21,9 @@ interface ErrorType {
     isError: boolean
 }
 
-const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, csrfContext, authContext, errorContext, path, method, newCsrf, newBody) => {
+const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, newCsrf, newBody) => {
     e.preventDefault()
+    setIsLoading(true)
     let body
     const form = e.currentTarget
     if(!newBody){
@@ -54,9 +56,9 @@ const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, c
                 authContext: authContext,
                 errorContext: errorContext,
                 callbacks: {
-                    handlePublicAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, csrfContext, authContext, errorContext, path, method, undefined, newBody),
-                    handleCsrfRetry: (newCsrf) => handleSettingsSubmit(e, setIsError, setIsOpen, csrfContext, authContext, errorContext, path, method, newCsrf, newBody),
-                    handleSecureAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, csrfContext, authContext, errorContext, path, method, undefined, newBody)
+                    handlePublicAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, undefined, newBody),
+                    handleCsrfRetry: (newCsrf) => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, newCsrf, newBody),
+                    handleSecureAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, undefined, newBody)
                 },
                 setStateErrors: [
                     {
@@ -66,6 +68,8 @@ const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, c
                 ]
             }
         )
+    } finally {
+        setIsLoading(false)
     }
 }
 

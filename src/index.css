@@ -10,10 +10,6 @@
 
 
 :root{
-
-  
-
-
   --f-main: 'Inter', system-ui, sans-serif;
   --f-secondary: "Manrope", sans-serif;
   --loading: rgb(175, 175, 175);
@@ -93,6 +89,10 @@ body{
 
 button{
   cursor: pointer;
+
+  &:active{
+    opacity: 50%;
+  }
 }
 
 a{

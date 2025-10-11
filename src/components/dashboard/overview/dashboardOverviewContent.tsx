@@ -1,7 +1,5 @@
-import React, { SetStateAction, useContext } from "react"
+import React, { SetStateAction } from "react"
 import OverviewChart from "./charts/overviewChart";
-import AuthContext from "../../../context/auth/authContext";
-import CsrfContext from "../../../context/csrf/csrfContext";
 import DashboardOverviewCategory from "./categoryOverview/dashboardOverviewCategory";
 import CategoryOverviewType from "./types/categoryOverviewType";
 import { OverviewDetailsItemsType, ChartDataType, MonthItemsType, DashboardOverviewContentType } from "./types/mainOverviewTypes";
@@ -26,8 +24,6 @@ interface DashboardOverviewContentProps {
 
 
 const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year, semester, overviewDetailsItems, chartData, monthItems, yearList, categoryOverview, setDashboardData, isLoading}) => {
-    const authContext = useContext(AuthContext)
-    const csrfContext = useContext(CsrfContext)
     return(
         <>
             <main className="dashboard-content-container dashboard-content__overview">
@@ -44,8 +40,6 @@ const DashboardOverviewContent: React.FC<DashboardOverviewContentProps> = ({year
                                     selectedYear={year}
                                     selectedSemester={semester}
                                     yearList={yearList}
-                                    authContext={authContext}
-                                    csrfContext={csrfContext}
                                     setDashboardData={setDashboardData}
                                 />
                                 {overviewDetailsItems?.map((item, index) => {

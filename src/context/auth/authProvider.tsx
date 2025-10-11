@@ -1,10 +1,9 @@
-import React, { ReactNode, useCallback, useContext, useState } from "react"
+import React, { ReactNode, useCallback, useState } from "react"
 import AuthContext from "./authContext"
 import api from "../../app.config"
-import CsrfContext from "../csrf/csrfContext"
 import { AxiosError } from "axios"
 import handleApiError from "../../app.config.error"
-import ErrorContext from "../error/errorContext"
+import useGlobalContext from "../../customHooks/useContexts"
 
 interface AuthProviderProps {
     children: ReactNode
@@ -16,10 +15,9 @@ type RefreshType = (newCsrf?: string | null) => Promise<boolean | void>
 
 
 const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
-    const csrfContext = useContext(CsrfContext)
-    const errorContext = useContext(ErrorContext)
     const [ isAuthState, setIsAuthState ] = useState({isAuth: false, isAuthLoading: true})
-
+    let globalContext: ReturnType<typeof useGlobalContext>
+    // const globalContext = useGlobalContext()
     const logout = useCallback(() => {
         setIsAuthState({isAuth: false, isAuthLoading: false})
     }, [])
@@ -30,7 +28,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
             setIsAuthState({isAuth: false, isAuthLoading: true})
             await api.get("/api/auth/secure/refresh", {
                 headers: {
-                    csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+                    csrftoken: newCsrf? newCsrf : globalContext.csrf?.csrfToken
                 }
             });
             setIsAuthState({isAuth: true, isAuthLoading: false})
@@ -42,18 +40,16 @@ const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
             return handleApiError({
                 axiosError: axiosError,
                 status: axiosError.status,
-                csrfContext: csrfContext,
-                errorContext: errorContext,
-                authContext: { refresh, isAuthState, setIsAuthState, logout },
+                globalContext,
                 callbacks: {
                     handlePublicAuthRetry: () => refresh(),
                     handleCsrfRetry: (newCsrf) => refresh(newCsrf)
                 }
             })
         }
-    }, [csrfContext, logout]);
+    }, [logout]);
 
-
+    globalContext = useGlobalContext({refresh, isAuthState, setIsAuthState, logout})
     return(
         <AuthContext.Provider value={{refresh, isAuthState, setIsAuthState, logout}}>
             {children}

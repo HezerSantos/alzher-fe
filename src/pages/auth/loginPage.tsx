@@ -2,17 +2,15 @@ import IndexNav from "../../components/universal/navbar/indexNav"
 import '../../assets/styles/auth/auth.css'
 import AuthItem from "../../components/auth/authItem"
 import AuthHeader from "../../components/auth/authHeader"
-import React, { SetStateAction, useContext, useState } from "react"
+import React, { SetStateAction, useState } from "react"
 import AuthFooter from "../../components/auth/authFooter"
 import api from "../../app.config"
 import { AxiosError } from "axios"
 import { AiOutlineLoading } from "react-icons/ai";
 import handleApiError from "../../app.config.error"
-import CsrfContext from "../../context/csrf/csrfContext"
 import AuthErrors from "../../components/auth/authErrors"
-import AuthContext from "../../context/auth/authContext"
 import { NavigateFunction, useNavigate } from "react-router-dom"
-import ErrorContext from "../../context/error/errorContext"
+import useGlobalContext from "../../customHooks/useContexts"
 
 
 interface ErrorType {
@@ -23,16 +21,14 @@ interface ErrorType {
 type HandleLoginType = (
     e: React.FormEvent<HTMLFormElement>,
     navigate: NavigateFunction,
-    authContext: AuthContextType | null,
-    csrfContext: CsrfContextType | null,
-    errorContext: ErrorContextType | null,
+    globalContext: GlobalContextType,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
     setEmailError?: React.Dispatch<SetStateAction< ErrorType | null>>,
     setPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>,
 ) => void
 
-const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext, errorContext, setIsLoading, newCsrf, setEmailError, setPasswordError) => {
+const handleLogin: HandleLoginType = async(e, navigate, globalContext, setIsLoading, newCsrf, setEmailError, setPasswordError) => {
     e.preventDefault()
 
     try{
@@ -51,7 +47,7 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
             password
         }, {
             headers: {
-                csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+                csrftoken: newCsrf? newCsrf : globalContext.csrf?.csrfToken
             }
         })
 
@@ -62,7 +58,7 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
             setPasswordError(null)
         }
         form.reset()
-        authContext?.setIsAuthState({isAuth: true, isAuthLoading: false})
+        globalContext.auth?.setIsAuthState({isAuth: true, isAuthLoading: false})
         navigate("/dashboard")
     } catch (error) {
         const axiosError = error as AxiosError
@@ -70,12 +66,10 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
         await handleApiError({
             axiosError: axiosError,
             status: axiosError.status,
-            csrfContext: csrfContext,
-            authContext: authContext,
-            errorContext: errorContext,
+            globalContext,
             callbacks: {
-                handlePublicAuthRetry: () => handleLogin(e, navigate, authContext, csrfContext, errorContext, setIsLoading, null, setEmailError, setPasswordError),
-                handleCsrfRetry: (newCsrf) => handleLogin(e, navigate, authContext, csrfContext, errorContext, setIsLoading, newCsrf, setEmailError, setPasswordError)
+                handlePublicAuthRetry: () => handleLogin(e, navigate, globalContext, setIsLoading, null, setEmailError, setPasswordError),
+                handleCsrfRetry: (newCsrf) => handleLogin(e, navigate, globalContext, setIsLoading, newCsrf, setEmailError, setPasswordError)
             },
             setStateErrors: [
                 {
@@ -96,9 +90,7 @@ const handleLogin: HandleLoginType = async(e, navigate, authContext, csrfContext
 }
 
 const Login: React.FC = () => {
-    const csrfContext = useContext(CsrfContext)
-    const authContext = useContext(AuthContext)
-    const errorContext = useContext(ErrorContext)
+    const globalContext = useGlobalContext()
     const navigate = useNavigate()
     const [ isLoading, setIsLoading ] = useState(false)
     const [ emailError, setEmailError ] = useState<ErrorType | null>(null)
@@ -113,7 +105,7 @@ const Login: React.FC = () => {
             <main className="page-section auth-section">
                 <form 
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleLogin(e, navigate, authContext, csrfContext, errorContext, setIsLoading, null, setEmailError, setPasswordError)}
+                    onSubmit={(e) => handleLogin(e, navigate, globalContext, setIsLoading, null, setEmailError, setPasswordError)}
                 >
                     <div className="auth-form">
                         <AuthHeader 

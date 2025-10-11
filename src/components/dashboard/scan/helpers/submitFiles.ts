@@ -4,15 +4,13 @@ import { AxiosError } from 'axios'
 import api from '../../../../app.config'
 type SubmitFilesType = (
     fileList: Map<string, File>, 
-    csrfContext: CsrfContextType | null, 
-    authContext: AuthContextType | null, 
-    erroContext: ErrorContextType | null,
+    globalContext: GlobalContextType,
     setIsMessage: React.Dispatch<SetStateAction<{error: boolean, ok: boolean}>>,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string
 ) => void
 
-const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading, newCsrf) => {
+const submitFiles: SubmitFilesType = async(fileList, globalContext, setIsMessage, setIsLoading, newCsrf) => {
     const formData = new FormData()
 
 
@@ -25,7 +23,7 @@ const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, e
         await api.post("/api/dashboard/scan", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+                csrftoken: newCsrf? newCsrf : globalContext.csrf?.csrfToken
             }
         })
         console.log("success")
@@ -36,13 +34,11 @@ const submitFiles: SubmitFilesType = async(fileList, csrfContext, authContext, e
         handleApiError({
             axiosError: axiosError,
             status: axiosError.status,
-            csrfContext: csrfContext,
-            authContext: authContext,
-            errorContext: errorContext,
+            globalContext,
             callbacks: {
-                handlePublicAuthRetry: () => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading),
-                handleCsrfRetry: (newCsrf) => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading, newCsrf),
-                handleSecureAuthRetry: () => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading),
+                handlePublicAuthRetry: () => submitFiles(fileList, globalContext, setIsMessage, setIsLoading),
+                handleCsrfRetry: (newCsrf) => submitFiles(fileList, globalContext, setIsMessage, setIsLoading, newCsrf),
+                handleSecureAuthRetry: () => submitFiles(fileList, globalContext, setIsMessage, setIsLoading),
             },
             setFlashMessage: setIsMessage
             

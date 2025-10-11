@@ -13,7 +13,7 @@ interface UpdateEmailSettingProps {
 const UpdateEmailSetting: React.FC<UpdateEmailSettingProps> = ({isError}) => {
     return(
         <>
-                        <SettingsInputElement type="text" inputName="newEmail" labelName="New Email" className={`${isError?.isError? 'input-error' : ""}`}/>
+            <SettingsInputElement type="text" inputName="newEmail" labelName="New Email" className={`${isError?.isError? 'input-error' : ""}`}/>
             <SettingsInputElement type="password" inputName="password" labelName="Password" className={`${isError?.isError? 'input-error' : ""}`} />
         </>
     )

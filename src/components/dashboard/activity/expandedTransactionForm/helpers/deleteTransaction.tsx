@@ -16,15 +16,13 @@ type DeleteTransactionType = (
     setTransactionData: React.Dispatch<SetStateAction<Map<string, SelectedTransactionItemType> | null>>,
     setIsExpandedOpen: React.Dispatch<SetStateAction<boolean>>,
     e: React.MouseEvent<HTMLButtonElement>,
-    csrfContext: CsrfContextType | null,
-    authContext: AuthContextType | null,
-    errorContext: ErrorContextType | null,
+    globalContext: GlobalContextType,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string
 ) => void
 
 //function to delete transaction for client
-const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading, newCsrf) => {
+const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, globalContext, setIsLoading, newCsrf) => {
     try{
         setIsLoading(true)
         e.preventDefault()
@@ -32,7 +30,7 @@ const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, 
 
         await api.delete(`/api/dashboard/activity/${selectedItemId}`, {
             headers: {
-                csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+                csrftoken: newCsrf? newCsrf : globalContext.csrf?.csrfToken
             }
         })
         setIsExpandedOpen(false)
@@ -47,13 +45,11 @@ const deleteTransaction: DeleteTransactionType = async(selectedTransactionItem, 
         handleApiError({
             axiosError: axiosError,
             status: axiosError?.status,
-            csrfContext: csrfContext,
-            authContext: authContext,
-            errorContext: errorContext,
+            globalContext: globalContext,
             callbacks: {
-                handlePublicAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading),
-                handleCsrfRetry: (newCsrf) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading, newCsrf),
-                handleSecureAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading)
+                handlePublicAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, globalContext, setIsLoading),
+                handleCsrfRetry: (newCsrf) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, globalContext, setIsLoading, newCsrf),
+                handleSecureAuthRetry: () => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, globalContext, setIsLoading)
             }
         })
     } finally {

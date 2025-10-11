@@ -3,26 +3,24 @@ import '../../assets/styles/dashboard/dashboard.css'
 import DashboardMiniNav from '../../components/universal/navbar/dashboardMiniNav'
 import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
-import AuthContext from '../../context/auth/authContext'
 import LoadingScreen from '../helpers/loadingScreen'
 import NotLoggedIn from '../helpers/notLoggedIn'
-import CsrfContext from '../../context/csrf/csrfContext'
 import AlzherMessage from '../../components/universal/alzherMessage'
 import ScanHeader from '../../components/dashboard/scan/scanHeader'
 import ScanForm from '../../components/dashboard/scan/scanForm'
 import FileContainer from '../../components/dashboard/scan/fileContainer'
+import useGlobalContext from '../../customHooks/useContexts'
 
 
 const DashboardScan: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
-    const authContext = useContext(AuthContext)
-    const csrfContext = useContext(CsrfContext)
+    const globalContext = useGlobalContext()
     const [ fileList, setFileList ] = useState<Map<string, File>>(new Map())
     const [ isMessage, setIsMessage ] = useState({error: false, ok: false})
     const [ isLoading, setIsLoading ] = useState(false)
     useEffect(() => {
         const fetchData = async() => {
-            await authContext?.refresh() 
+            await globalContext.auth?.refresh() 
         }
 
         fetchData()
@@ -48,12 +46,12 @@ const DashboardScan: React.FC = () => {
 
     return(
         <>
-            {authContext?.isAuthState.isAuthLoading? (
+            {globalContext.auth?.isAuthState.isAuthLoading? (
                 <>
                     <LoadingScreen />
                 </>
             ) : (
-                authContext?.isAuthState.isAuth? (
+                globalContext.auth?.isAuthState.isAuth? (
                     <div className="page-section">
                         <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                             {isMessage.error && (
@@ -70,8 +68,6 @@ const DashboardScan: React.FC = () => {
                                 <FileContainer 
                                     fileList={fileList}
                                     setFileList={setFileList}
-                                    csrfContext={csrfContext}
-                                    authContext={authContext}
                                     setIsMessage={setIsMessage}
                                     setIsLoading={setIsLoading}
                                     isLoading={isLoading}

@@ -5,10 +5,8 @@ import DashboardMiniNav from "../../components/universal/navbar/dashboardMiniNav
 import SettingsNav from "../../components/settings/settingsNav"
 import SettingsContent from "../../components/settings/settingsContent"
 import fetchDashboardData from "../../functionHelpers/fetchDashboardData"
-import CsrfContext from "../../context/csrf/csrfContext"
-import AuthContext from "../../context/auth/authContext"
-import ErrorContext from "../../context/error/errorContext"
 import SettingsDialog from "../../components/settings/settingsDialog"
+import useGlobalContext from "../../customHooks/useContexts"
 
 
 
@@ -25,14 +23,15 @@ interface IsOpenType {
 
 const Settings: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
-    const csrfContext = useContext(CsrfContext)
-    const authContext = useContext(AuthContext)
-    const errorContext = useContext(ErrorContext)
+    const globalContext = useGlobalContext()
     const [ selectedSetting, setSelectedSetting ] = useState("security")
     const [ dashboardData, setDashboardData ] = useState<DashboardDataType | null>(null)
     const [ isOpen, setIsOpen ] = useState<IsOpenType>({state: false, type: ""})
+
+
+
     useEffect(() => {
-        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, '/settings')
+        fetchDashboardData(globalContext, setDashboardData, '/settings')
     }, [])
     return(
         <>  

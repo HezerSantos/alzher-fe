@@ -1,8 +1,8 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import CsrfContext from "./csrfContext";
 import { jwtDecode } from 'jwt-decode'
 import api from "../../app.config";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import ErrorContext from "../error/errorContext";
 
 interface CsrfProviderProps {

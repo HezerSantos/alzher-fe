@@ -2,16 +2,15 @@ import IndexNav from "../../components/universal/navbar/indexNav"
 import '../../assets/styles/auth/auth.css'
 import AuthItem from "../../components/auth/authItem"
 import AuthHeader from "../../components/auth/authHeader"
-import React, { SetStateAction, useContext, useEffect, useState } from "react"
+import React, { SetStateAction, useEffect, useState } from "react"
 import api from "../../app.config"
-import CsrfContext from "../../context/csrf/csrfContext"
 import { AxiosError } from "axios"
 import { AiOutlineLoading } from "react-icons/ai";
 import handleRequestError from "../../app.config.error"
 import AuthFooter from "../../components/auth/authFooter"
 import AuthErrors from "../../components/auth/authErrors"
 import AlzherMessage from "../../components/universal/alzherMessage"
-import ErrorContext from "../../context/error/errorContext"
+import useGlobalContext from "../../customHooks/useContexts"
 
 interface ErrorType {
     msg: string,
@@ -19,8 +18,7 @@ interface ErrorType {
 }
 type HandleSignupType = (
     e: React.FormEvent<HTMLFormElement>,
-    csrfContext: CsrfContextType | null,
-    errorContext: ErrorContextType | null,
+    globalContext: GlobalContextType,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     setIsSuccess: React.Dispatch<SetStateAction<boolean>>,
     newCsrf?: string | null,
@@ -29,7 +27,7 @@ type HandleSignupType = (
     setConfirmPasswordError?: React.Dispatch<SetStateAction< ErrorType | null>>
 ) => void
 
-const handleSignup: HandleSignupType = async(e, csrfContext, errorContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
+const handleSignup: HandleSignupType = async(e, globalContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError) => {
     e.preventDefault()
     setIsLoading(true)
     try{
@@ -50,7 +48,7 @@ const handleSignup: HandleSignupType = async(e, csrfContext, errorContext, setIs
             confirmPassword: confirmPassword
         }, {
             headers: {
-                csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+                csrftoken: newCsrf? newCsrf : globalContext.csrf?.csrfToken
             }
         })
 
@@ -72,12 +70,10 @@ const handleSignup: HandleSignupType = async(e, csrfContext, errorContext, setIs
         await handleRequestError({
             axiosError: axiosError,
             status: axiosError.status,
-            csrfContext: csrfContext,
-            authContext: null,
-            errorContext: errorContext,
+            globalContext,
             callbacks: {
-                handlePublicAuthRetry: () => handleSignup(e, csrfContext, errorContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError),
-                handleCsrfRetry: (newCsrf) => handleSignup(e, csrfContext, errorContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError)
+                handlePublicAuthRetry: () => handleSignup(e, globalContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError),
+                handleCsrfRetry: (newCsrf) => handleSignup(e, globalContext, setIsLoading, setIsSuccess, newCsrf, setEmailError, setPasswordError, setConfirmPasswordError)
             },
             setStateErrors: [
                 {
@@ -102,13 +98,12 @@ const handleSignup: HandleSignupType = async(e, csrfContext, errorContext, setIs
 
 
 const Signup: React.FC = () => {
-    const csrfContext = useContext(CsrfContext)
     const [ isLoading, setIsLoading ] = useState(false)
     const [ emailError, setEmailError ] = useState<ErrorType | null>(null)
     const [ passwordError, setPasswordError ] = useState<ErrorType | null>(null)
     const [ confirmPasswordError, setConfirmPasswordError ] = useState<ErrorType | null>(null)
     const [ isSuccess, setIsSuccess ] = useState(false)
-    const errorContext = useContext(ErrorContext)
+    const globalContext = useGlobalContext()
     useEffect(() => {
         if(isSuccess){
             const inteveral = setTimeout(() => {
@@ -126,7 +121,7 @@ const Signup: React.FC = () => {
             <main className="page-section auth-section">
                 <form
                     className="page-section__child auth-container"
-                    onSubmit={(e) => handleSignup(e, csrfContext, errorContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError)}
+                    onSubmit={(e) => handleSignup(e, globalContext, setIsLoading, setIsSuccess, null, setEmailError, setPasswordError, setConfirmPasswordError)}
                 >
                     {isSuccess && (
                         <AlzherMessage 

@@ -1,12 +1,10 @@
-import React, { SetStateAction, useContext, useEffect, useRef, useState } from "react"
+import React, { SetStateAction, useEffect, useRef, useState } from "react"
 import handleSettingsSubmit from "./helpers/handleSubmit"
-import CsrfContext from "../../context/csrf/csrfContext"
-import AuthContext from "../../context/auth/authContext"
-import ErrorContext from "../../context/error/errorContext"
 import { IoMdClose } from "react-icons/io";
 import { AiOutlineLoading } from "react-icons/ai";
 import UpdatePasswordSetting from "./updatePasswordSetting"
 import UpdateEmailSetting from "./updateEmailSetting"
+import useGlobalContext from "../../customHooks/useContexts"
 interface ErrorType {
     msg: string,
     isError: boolean
@@ -24,9 +22,7 @@ interface IsOpenType {
 
 
 const SettingsDialog: React.FC<DialogProps> = ({isOpen, setIsOpen}) => {
-    const csrfContext = useContext(CsrfContext)
-    const authContext = useContext(AuthContext)
-    const errorContext = useContext(ErrorContext)
+   const globalContext = useGlobalContext()
     const [ isError, setIsError ] = useState<ErrorType | null>(null)
     const [ isLoading, setIsLoading ] = useState(false)
 
@@ -46,7 +42,7 @@ const SettingsDialog: React.FC<DialogProps> = ({isOpen, setIsOpen}) => {
                 <button onClick={() => {setIsOpen({state: false, type: ""}); setIsError(null)}}>
                     <IoMdClose />
                 </button>
-                <form onSubmit={(e) => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, isOpen.type, 'patch')}>
+                <form onSubmit={(e) => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, globalContext, isOpen.type, 'patch')}>
                     {isError?.isError && (
                         <p className="validation-error">{isError.msg}</p>
                     )}

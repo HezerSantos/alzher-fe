@@ -1,20 +1,18 @@
-import React, { SetStateAction, useContext } from 'react'
+import React, { SetStateAction } from 'react'
 import { AiOutlineLoading } from "react-icons/ai";
 import submitFiles from './helpers/submitFiles';
 import FileItem from './fileItem';
-import ErrorContext from '../../../context/error/errorContext';
+import useGlobalContext from '../../../customHooks/useContexts';
 interface FileContainerProps {
     fileList: Map<string, File>,
     setFileList: React.Dispatch<SetStateAction<Map<string, File>>>,
-    csrfContext: CsrfContextType | null,
-    authContext: AuthContextType,
     setIsMessage: React.Dispatch<SetStateAction<{error: boolean, ok: boolean}>>
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     isLoading: boolean
 }
 
-const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csrfContext, authContext, setIsMessage, setIsLoading, isLoading}) => {
-    const errorContext = useContext(ErrorContext)
+const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, setIsMessage, setIsLoading, isLoading}) => {
+    const globalContext = useGlobalContext()
     return(
         <div className='file-container'>
             {[...fileList.values()].map((file, index) => {
@@ -32,7 +30,7 @@ const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, csr
                     <button 
                         disabled={isLoading}
                         className='file-submit' 
-                        onClick={() => submitFiles(fileList, csrfContext, authContext, errorContext, setIsMessage, setIsLoading)}>
+                        onClick={() => submitFiles(fileList, globalContext, setIsMessage, setIsLoading)}>
                         {isLoading? <AiOutlineLoading className="button-loading"/> : "Scan Files"}
                     </button>
                 </>

@@ -4,13 +4,11 @@ import DashboardNav from '../../components/universal/navbar/dashboardNav'
 import DashboardContext from '../../context/dashboard/dashboardContext'
 import DashboardOverviewContent from '../../components/dashboard/overview/dashboardOverviewContent'
 import DashboardMiniNav from '../../components/universal/navbar/dashboardMiniNav'
-import AuthContext from '../../context/auth/authContext'
 import LoadingScreen from '../helpers/loadingScreen'
 import NotLoggedIn from '../helpers/notLoggedIn'
 import fetchDashboardData from '../../functionHelpers/fetchDashboardData'
-import CsrfContext from '../../context/csrf/csrfContext'
-import ErrorContext from '../../context/error/errorContext'
 import { useLoading } from '../../context/loading/loadingProvider'
+import useGlobalContext from '../../customHooks/useContexts'
 
 
 interface OverviewDetailsItemsType {
@@ -55,9 +53,7 @@ interface DashboardOverviewContentProps {
 
 const DashboardOverview: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
-    const authContext = useContext(AuthContext)
-    const csrfContext = useContext(CsrfContext)
-    const errorContext = useContext(ErrorContext)
+    const globalContext = useGlobalContext()
     const loading = useLoading()
     const [ dashboardData, setDashboardData ] = useState<DashboardOverviewContentProps | null>(null)
     useEffect(() => {
@@ -65,16 +61,16 @@ const DashboardOverview: React.FC = () => {
             year: 2024,
             semester: 1
         }
-        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "overview", body, null, loading?.setIsLoading)
+        fetchDashboardData(globalContext, setDashboardData, "overview", body, null, loading?.setIsLoading)
     }, [])
 
 
     return(
         <>
-        {authContext?.isAuthState.isAuthLoading? (
+        {globalContext.auth?.isAuthState.isAuthLoading? (
             <LoadingScreen />
         ) : (
-            authContext?.isAuthState.isAuth? (
+            globalContext.auth?.isAuthState.isAuth? (
                 <div className="page-section">
                     <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                         <DashboardMiniNav />

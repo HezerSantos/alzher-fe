@@ -37,4 +37,10 @@ declare global {
         isError: boolean,
         setIsError: React.Dispatch<SetStateAction<boolean>>
     }
+
+    interface GlobalContextType {
+        auth: AuthContextType | null,
+        csrf: CsrfContextType | null,
+        error: ErrorContextType | null
+    }
 }

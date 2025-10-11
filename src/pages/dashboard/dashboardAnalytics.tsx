@@ -6,12 +6,10 @@ import DashboardContext from '../../context/dashboard/dashboardContext'
 import DashboardAnalyticsHeader from '../../components/dashboard/analytics/dashboardAnalyticsHeader'
 import DashboardAnalyticsInfo from '../../components/dashboard/analytics/dashboardAnalyticsInfo'
 import DashboardAnalyticsCharts from '../../components/dashboard/analytics/dashboardAnalyticsCharts'
-import AuthContext from '../../context/auth/authContext'
 import fetchDashboardData from '../../functionHelpers/fetchDashboardData'
-import CsrfContext from '../../context/csrf/csrfContext'
 import LoadingScreen from '../helpers/loadingScreen'
 import NotLoggedIn from '../helpers/notLoggedIn'
-import ErrorContext from '../../context/error/errorContext'
+import useGlobalContext from '../../customHooks/useContexts'
 
 interface DashboardAnalyticsInfoType {
     header: string | undefined,
@@ -53,20 +51,18 @@ interface DashboardAnalyticsType {
 }
 const DashboardAnalytics: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
-    const authContext = useContext(AuthContext)
-    const csrfContext = useContext(CsrfContext)
-    const errorContext = useContext(ErrorContext)
+    const globalContext = useGlobalContext()
     const [ dashboardData, setDashboardData ] = useState<DashboardAnalyticsType | null>(null)
     const [ isLoading, setIsLoading ] = useState(false)
     useEffect(() => {
-        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "analytics", null, null, setIsLoading)
+        fetchDashboardData(globalContext, setDashboardData, "analytics", null, null, setIsLoading)
     }, [])
     return(
         <>
-        {authContext?.isAuthState.isAuthLoading? (
+        {globalContext.auth?.isAuthState.isAuthLoading? (
             <LoadingScreen />
         ) : (
-            authContext?.isAuthState.isAuth? (
+            globalContext.auth?.isAuthState.isAuth? (
                 <div className="page-section">
                     <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                         <DashboardMiniNav />

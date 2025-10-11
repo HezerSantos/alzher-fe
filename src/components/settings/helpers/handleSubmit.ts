@@ -14,9 +14,7 @@ type HandleSubmitType = (
     setIsError: React.Dispatch<SetStateAction<ErrorType | null>>,
     setIsOpen: React.Dispatch<SetStateAction<IsOpenType>>,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
-    csrfContext: CsrfContextType | null,
-    authContext: AuthContextType | null,
-    errorContext: ErrorContextType | null,
+    globalContext: GlobalContextType,
     path: string,
     method: 'get' | 'post' | 'patch' | 'delete',
     newCsrf?: string,
@@ -28,7 +26,7 @@ interface ErrorType {
     isError: boolean
 }
 
-const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, newCsrf, newBody) => {
+const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, setIsLoading, globalContext, path, method, newCsrf, newBody) => {
     e.preventDefault()
     setIsLoading(true)
     let body
@@ -47,7 +45,7 @@ const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, s
             newBody? newBody : body, 
             {
                 headers: {
-                    csrftoken: newCsrf? newCsrf : csrfContext?.csrfToken
+                    csrftoken: newCsrf? newCsrf : globalContext.csrf?.csrfToken
                 }
             }
         )
@@ -59,13 +57,11 @@ const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, s
             {
                 axiosError: axiosError,
                 status: axiosError.status,
-                csrfContext: csrfContext,
-                authContext: authContext,
-                errorContext: errorContext,
+                globalContext,
                 callbacks: {
-                    handlePublicAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, undefined, newBody),
-                    handleCsrfRetry: (newCsrf) => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, newCsrf, newBody),
-                    handleSecureAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, path, method, undefined, newBody)
+                    handlePublicAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, globalContext, path, method, undefined, newBody),
+                    handleCsrfRetry: (newCsrf) => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, globalContext, path, method, newCsrf, newBody),
+                    handleSecureAuthRetry: () => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, globalContext, path, method, undefined, newBody)
                 },
                 setStateErrors: [
                     {

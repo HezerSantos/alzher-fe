@@ -22,9 +22,7 @@ type HandleApiErrorType =  (
     parameters: {
         axiosError: AxiosError,
         status: number | undefined,
-        csrfContext: CsrfContextType | null,
-        authContext: AuthContextType | null,
-        errorContext: ErrorContextType | null,
+        globalContext: GlobalContextType,
         callbacks: ApiCallbackType,
         setStateErrors?: SetStateErrorsType[],
         setFlashMessage?: React.Dispatch<SetStateAction<{error: boolean, ok: boolean}>>
@@ -38,7 +36,7 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
     // console.log(parameters.axiosError.response)
     // console.log(res.code)
     if(parameters.axiosError.code === "ERR_NETWORK"){
-        parameters.errorContext?.setIsError(true)
+        parameters.globalContext.error?.setIsError(true)
         return
     }
     switch (parameters.status){
@@ -106,11 +104,11 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     await parameters.callbacks.handlePublicAuthRetry()
                     break
                 case "INVALID_REFRESH_TOKEN":
-                    parameters.authContext?.logout()
+                    parameters.globalContext.auth?.logout()
                     console.log("logged out")
                     return false
                 case "INVALID_ACCESS_TOKEN":
-                    const retry = await parameters.authContext?.refresh()
+                    const retry = await parameters.globalContext.auth?.refresh()
                     if(!retry){
                         break
                     }
@@ -129,22 +127,21 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     })
                     break
                 case "INVALID_SESSION":
-                    parameters.authContext?.setIsAuthState({isAuth: false, isAuthLoading: false})
+                    parameters.globalContext.auth?.setIsAuthState({isAuth: false, isAuthLoading: false})
                     break
             }
             break
         case 403:
             switch (res.code) {
                 case "INVALID_PERMISSIONS":
-                    const newCsrf = await parameters.csrfContext?.getCsrf()
+                    const newCsrf = await parameters.globalContext.csrf?.getCsrf()
                     return await parameters.callbacks.handleCsrfRetry(newCsrf)
-                    break
             }
             break
         case 500:
             switch (res.code) {
                 case "INVALID_SERVER":
-                    parameters.errorContext?.setIsError(true)
+                    parameters.globalContext.error?.setIsError(true)
                     break
             }
             break

@@ -1,11 +1,9 @@
-import React, { SetStateAction, useContext, useState } from "react"
+import React, { SetStateAction, useState } from "react"
 import updateTransactionItem from "./helpers/updateTransaction"
 import deleteTransaction from "./helpers/deleteTransaction"
 import ExpandedTransactionElement from "./expandedTransactionElement"
-import CsrfContext from "../../../../context/csrf/csrfContext"
-import AuthContext from "../../../../context/auth/authContext"
 import { AiOutlineLoading } from "react-icons/ai";
-import ErrorContext from "../../../../context/error/errorContext"
+import useGlobalContext from "../../../../customHooks/useContexts"
 interface SelectedTransactionItemType {
     transactionId: string,
     category: string,
@@ -33,16 +31,12 @@ interface ErrorType {
 }
 
 const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({selectedTransactionItem, isExpandedOpen, setIsExpandedOpen, setTransactionData}) => {
-    const csrfContext = useContext(CsrfContext)
-    const authContext = useContext(AuthContext)
-    const errorContext = useContext(ErrorContext)
     const [ isLoading, setIsLoading ] = useState(false)
-
     const [ categoryError, setCategoryError ] = useState<ErrorType | null>(null)
     const [ descriptionError, setDescriptionError ] = useState<ErrorType | null>(null)
     const [ transactionDateError, setTransactionDateError ] = useState<ErrorType | null>(null)
     const [ transactionAmountError, setTransactionAmountError ] = useState<ErrorType | null>(null)
-
+    const globalContext = useGlobalContext()
     return(
         <>
             <form className={`transaction-expanded-item ${isExpandedOpen? "open-expanded-container" : ""}`}>
@@ -83,10 +77,10 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                     keyName='transactionAmount'
                     error={transactionAmountError}
                 />
-                <button type='submit' onClick={(e) => updateTransactionItem(e, setTransactionData, csrfContext, authContext, errorContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError)}>
+                <button type='submit' onClick={(e) => updateTransactionItem(e, setTransactionData, globalContext, setIsLoading, setCategoryError, setDescriptionError, setTransactionDateError, setTransactionAmountError)}>
                     {!isLoading? "Save Changes" : <AiOutlineLoading className="button-loading"/>}
                 </button>
-                <button type="button" disabled={isLoading} onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, csrfContext, authContext, errorContext, setIsLoading)}>
+                <button type="button" disabled={isLoading} onClick={(e) => deleteTransaction(selectedTransactionItem, setTransactionData, setIsExpandedOpen, e, globalContext, setIsLoading)}>
                     {!isLoading? "Delete Transaction" : <AiOutlineLoading className="button-loading"/>}
                 </button>
             </form>

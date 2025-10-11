@@ -5,14 +5,12 @@ import DashboardContext from '../../context/dashboard/dashboardContext'
 import DashboardMiniNav from '../../components/universal/navbar/dashboardMiniNav';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import fetchDashboardData from '../../functionHelpers/fetchDashboardData';
-import CsrfContext from '../../context/csrf/csrfContext';
-import AuthContext from '../../context/auth/authContext';
 import ActivityInputHeader from '../../components/dashboard/activity/activityInputHeader';
 import ExpandedTransactionForm from '../../components/dashboard/activity/expandedTransactionForm/expandedTransactionForm';
 import TransactionContainer from '../../components/dashboard/activity/transactionContainer';
 import LoadingScreen from '../helpers/loadingScreen';
 import NotLoggedIn from '../helpers/notLoggedIn'
-import ErrorContext from '../../context/error/errorContext';
+import useGlobalContext from '../../customHooks/useContexts';
 //Interface for the basis of the transaction object
 interface SelectedTransactionItemType {
     transactionId: string,
@@ -78,9 +76,7 @@ const ActivityNavigationButton: React.FC<ActivityNavigationButtonProps> = ({type
 
 const DashboardActivity: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
-    const csrfContext = useContext(CsrfContext)
-    const authContext = useContext(AuthContext)
-    const errorContext = useContext(ErrorContext)
+    const globalContext = useGlobalContext()
 
     const [ filterToggle, setFilterToggle ] = useState(false)
     const [ selectedTransactionItem, setSelectedTransactionItem ] = useState<SelectedTransactionItemType | null>(null)
@@ -117,15 +113,15 @@ const DashboardActivity: React.FC = () => {
             keyWord
         }
 
-        fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, "/activity", body, null, setIsLoading)
+        fetchDashboardData(globalContext, setDashboardData, "/activity", body, null, setIsLoading)
     }, [searchParams])
 
     return(
-        authContext?.isAuthState.isAuthLoading? (
+        globalContext.auth?.isAuthState.isAuthLoading? (
             <LoadingScreen />
         ) : (
             <>
-                {authContext?.isAuthState.isAuth? (
+                {globalContext.auth?.isAuthState.isAuth? (
                     <div className="page-section">
                         <div className={`page-section__child dashboard-parent ${dashboardContext?.isHidden? "d-nav__grid-reset" : ""}`}>
                             <DashboardNav />

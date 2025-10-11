@@ -1,10 +1,16 @@
 import React, { SetStateAction, useMemo } from "react"
 import SettingsSecurity from "./settingsSecurity"
 
+interface IsOpenType {
+    state: boolean,
+    type: "email" | "password" | ""
+}
+
+
 interface SettingsContentProps {
     selectedSetting: string,
     email: string | undefined,
-    setIsOpen: React.Dispatch<SetStateAction<boolean>>
+    setIsOpen: React.Dispatch<SetStateAction<IsOpenType>>
 }
 
 

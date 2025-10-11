@@ -5,16 +5,23 @@ import AuthContext from "../../context/auth/authContext"
 import ErrorContext from "../../context/error/errorContext"
 import { IoMdClose } from "react-icons/io";
 import { AiOutlineLoading } from "react-icons/ai";
-import SettingsInputElement from "../../components/settings/settingsInputElement"
+import UpdatePasswordSetting from "./updatePasswordSetting"
+import UpdateEmailSetting from "./updateEmailSetting"
 interface ErrorType {
     msg: string,
     isError: boolean
 }
 
 interface DialogProps {
-    isOpen: boolean,
-    setIsOpen: React.Dispatch<SetStateAction<boolean>>
+    isOpen: IsOpenType,
+    setIsOpen: React.Dispatch<SetStateAction<IsOpenType>>
 }
+
+interface IsOpenType {
+    state: boolean,
+    type: "email" | "password" | ""
+}
+
 
 const SettingsDialog: React.FC<DialogProps> = ({isOpen, setIsOpen}) => {
     const csrfContext = useContext(CsrfContext)
@@ -26,25 +33,29 @@ const SettingsDialog: React.FC<DialogProps> = ({isOpen, setIsOpen}) => {
     const dialogRef = useRef<HTMLDialogElement | null>(null)
 
     useEffect(() => {
-        if(isOpen){
+        if(isOpen.state){
             dialogRef.current?.showModal()
         } else {
             dialogRef.current?.close()
         }
     }, [isOpen])
+
     return(
         <>
             <dialog className="edit-modal" ref={dialogRef}>
-                <button onClick={() => setIsOpen(false)}>
+                <button onClick={() => {setIsOpen({state: false, type: ""}); setIsError(null)}}>
                     <IoMdClose />
                 </button>
-                <form onSubmit={(e) => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, 'password', 'patch')}>
+                <form onSubmit={(e) => handleSettingsSubmit(e, setIsError, setIsOpen, setIsLoading, csrfContext, authContext, errorContext, isOpen.type, 'patch')}>
                     {isError?.isError && (
                         <p className="validation-error">{isError.msg}</p>
                     )}
-                    <SettingsInputElement type="password" inputName="currentPassword" labelName="Current Password" className={`${isError?.isError? 'input-error' : ""}`} />
-                    <SettingsInputElement type="password" inputName="password" labelName="New Password" className={`${isError?.isError? 'input-error' : ""}`}/>
-                    <SettingsInputElement type="password" inputName="confirmPassword" labelName="Confirm Password" className={`${isError?.isError? 'input-error' : ""}`}/>
+                    {(isOpen.state && (isOpen.type === "password")) && (
+                        <UpdatePasswordSetting isError={isError}/>
+                    )}
+                    {(isOpen.state && (isOpen.type === "email")) && (
+                        <UpdateEmailSetting isError={isError}/>
+                    )}
                     <button disabled={isLoading}>
                         {!isLoading? "Change Password" : <AiOutlineLoading  className="button-loading"/>}
                     </button>

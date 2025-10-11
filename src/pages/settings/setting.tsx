@@ -18,6 +18,11 @@ interface DashboardDataType {
     email: string
 }
 
+interface IsOpenType {
+    state: boolean,
+    type: "email" | "password" | "",
+}
+
 const Settings: React.FC = () => {
     const dashboardContext = useContext(DashboardContext)
     const csrfContext = useContext(CsrfContext)
@@ -25,7 +30,7 @@ const Settings: React.FC = () => {
     const errorContext = useContext(ErrorContext)
     const [ selectedSetting, setSelectedSetting ] = useState("security")
     const [ dashboardData, setDashboardData ] = useState<DashboardDataType | null>(null)
-    const [ isOpen, setIsOpen ] = useState(false)
+    const [ isOpen, setIsOpen ] = useState<IsOpenType>({state: false, type: ""})
     useEffect(() => {
         fetchDashboardData(csrfContext, authContext, errorContext, setDashboardData, '/settings')
     }, [])

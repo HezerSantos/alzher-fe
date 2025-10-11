@@ -37,6 +37,10 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
     const res = parameters.axiosError.response?.data as ApiErrorType
     // console.log(parameters.axiosError.response)
     // console.log(res.code)
+    if(parameters.axiosError.code === "ERR_NETWORK"){
+        parameters.errorContext?.setIsError(true)
+        return
+    }
     switch (parameters.status){
         case 400:
             switch (res.code){

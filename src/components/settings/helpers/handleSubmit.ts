@@ -2,10 +2,17 @@ import React, { SetStateAction} from "react"
 import api from "../../../app.config"
 import { AxiosError } from "axios"
 import handleApiError from "../../../app.config.error"
+
+interface IsOpenType {
+    state: boolean,
+    type: "email" | "password" | ""
+}
+
+
 type HandleSubmitType = (
     e: React.FormEvent<HTMLFormElement>,
     setIsError: React.Dispatch<SetStateAction<ErrorType | null>>,
-    setIsOpen: React.Dispatch<SetStateAction<boolean>>,
+    setIsOpen: React.Dispatch<SetStateAction<IsOpenType>>,
     setIsLoading: React.Dispatch<SetStateAction<boolean>>,
     csrfContext: CsrfContextType | null,
     authContext: AuthContextType | null,
@@ -45,7 +52,7 @@ const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, s
             }
         )
         setIsError({msg: "", isError: false})
-        setIsOpen(false)
+        setIsOpen({state: false, type: ""})
     } catch (error) {
         const axiosError = error as AxiosError
         handleApiError(
@@ -62,7 +69,7 @@ const handleSettingsSubmit: HandleSubmitType = async(e, setIsError, setIsOpen, s
                 },
                 setStateErrors: [
                     {
-                        errorName: "updatePassword",
+                        errorName: "updateCredentials",
                         setState: setIsError
                     }
                 ]

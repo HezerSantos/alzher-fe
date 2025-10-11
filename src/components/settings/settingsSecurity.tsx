@@ -4,8 +4,15 @@ import { MdOutlineEdit } from "react-icons/md";
 
 interface SettingsSecurityProps {
     email: string | undefined,
-    setIsOpen: React.Dispatch<SetStateAction<boolean>>
+    setIsOpen: React.Dispatch<SetStateAction<IsOpenType>>
 }
+
+
+interface IsOpenType {
+    state: boolean,
+    type: "email" | "password" | ""
+}
+
 const SettingsSecurity: React.FC<SettingsSecurityProps> = ({email, setIsOpen}) => {
     return(
         <>
@@ -17,7 +24,7 @@ const SettingsSecurity: React.FC<SettingsSecurityProps> = ({email, setIsOpen}) =
                     </div>
                     <div>
                         <p>{email}</p>
-                        <button>
+                        <button onClick={() => setIsOpen({state: true, type: "email"})}>
                             Edit
                             <MdOutlineEdit />
                         </button>
@@ -33,7 +40,7 @@ const SettingsSecurity: React.FC<SettingsSecurityProps> = ({email, setIsOpen}) =
                         </p>
                     </div>
                     <div>
-                        <button  onClick={() => setIsOpen(true)}>
+                        <button  onClick={() => setIsOpen({state: true, type: "password"})}>
                             Change Password
                         </button>
                     </div>

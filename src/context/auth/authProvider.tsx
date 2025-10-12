@@ -35,7 +35,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
             return true
         } catch (error) {
             const axiosError = error as AxiosError
-            setIsAuthState({isAuth: false, isAuthLoading: false})
             //SIDE NOTE: I PROBABLY HAD TO RETURN THE ERROR HELPER AND STATE THE RETURN VALUE SO THAT THERE IS A RETURN VALUE FOR REFRESH
             return handleApiError({
                 axiosError: axiosError,

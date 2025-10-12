@@ -36,7 +36,7 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
     // console.log(parameters.axiosError.response)
     // console.log(res.code)
     if(parameters.axiosError.code === "ERR_NETWORK"){
-        parameters.globalContext.error?.setIsError(true)
+        parameters.globalContext.error?.setError({isError: true, status: 500})
         return
     }
     switch (parameters.status){
@@ -138,10 +138,18 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     return await parameters.callbacks.handleCsrfRetry(newCsrf)
             }
             break
+        case 429:
+            switch (res.code){
+                case "INVALID_DASHBOARD_LIMIT":
+                    parameters.globalContext.error?.setError({isError: true, status: 429})
+                    parameters.globalContext.auth?.setIsAuthState({isAuth: true, isAuthLoading: false})
+                    break
+            }
+            break
         case 500:
             switch (res.code) {
                 case "INVALID_SERVER":
-                    parameters.globalContext.error?.setIsError(true)
+                    parameters.globalContext.error?.setError({isError: true, status: 500})
                     break
             }
             break

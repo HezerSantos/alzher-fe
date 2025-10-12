@@ -27,6 +27,9 @@ const fetchDashboardData: FetchDashboardDataType = async(globalContext, setData,
         globalContext.auth?.setIsAuthState({isAuth: true, isAuthLoading: false})
         setData(res.data)
         // console.log(res)
+        if(setIsLoading){
+            setIsLoading(false)
+        }
     } catch(error) {
         // console.error(error)
         const axiosError = error as AxiosError
@@ -41,9 +44,9 @@ const fetchDashboardData: FetchDashboardDataType = async(globalContext, setData,
             }
         })
     } finally {
-        if(setIsLoading){
-            setIsLoading(false)
-        }
+        // if(setIsLoading){
+        //     setIsLoading(false)
+        // }
     }
 }
 

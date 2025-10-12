@@ -9,7 +9,7 @@ const Error500: React.FC = () => {
     const handleNavigate = () => {
         navigate("/")
         setTimeout(() => {
-            errorContext?.setIsError(false);
+            errorContext?.setError({isError: false, status: null});
         }, 0); 
     }
     return(

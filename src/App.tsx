@@ -7,6 +7,7 @@ import AuthProvider from './context/auth/authProvider'
 import ErrorContext from './context/error/errorContext'
 import Error500 from './pages/errors/error500'
 import { AxiosError } from 'axios'
+import GlobalError from './components/universal/globalError'
 
 function App() {
   const csrfContext = useContext(CsrfContext)
@@ -31,16 +32,16 @@ function App() {
       } catch(e){
         const axiosError = e as AxiosError
         if(axiosError.code === "ERR_NETWORK"){
-          errorContext?.setIsError(true)
+          errorContext?.setError({isError: false, status: null})
         }
       }
     }
-    if(!errorContext?.isError){
+    if(!errorContext?.error.status){
       getCredentials()
     }
-  }, [errorContext?.isError])
+  }, [errorContext?.error])
 
-  if(errorContext?.isError){
+  if(errorContext?.error.isError && errorContext.error.status === 500){
     return <Error500 />
   }
   
@@ -49,6 +50,7 @@ function App() {
       {!isLoading && (
         <AuthProvider>
             <DashboardProvider>
+              {errorContext?.error.isError && <GlobalError />}
               <Outlet />
             </DashboardProvider>
         </AuthProvider>

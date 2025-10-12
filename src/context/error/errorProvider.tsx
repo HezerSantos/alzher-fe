@@ -7,9 +7,9 @@ interface ErrorProviderProps {
 
 
 const ErrorProvider: React.FC<ErrorProviderProps> = ({children}) => {
-    const [ isError, setIsError ] = useState(false)
+    const [ error, setError ] = useState<GlobalErrorType>({isError: false, status: null})
     return(
-        <ErrorContext.Provider value={{isError, setIsError}}>
+        <ErrorContext.Provider value={{error, setError}}>
             {children}
         </ErrorContext.Provider>
     )

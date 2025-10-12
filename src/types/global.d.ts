@@ -33,9 +33,14 @@ declare global {
         validationErrors?: ValidationErrorType[]
     }
 
-    interface ErrorContextType {
+
+    interface GlobalErrorType {
         isError: boolean,
-        setIsError: React.Dispatch<SetStateAction<boolean>>
+        status: number | null
+    }
+    interface ErrorContextType {
+        error: GlobalErrorType,
+        setError: React.Dispatch<SetStateAction<GlobalErrorType>>
     }
 
     interface GlobalContextType {

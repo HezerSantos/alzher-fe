@@ -8,6 +8,14 @@ const errorMap = new Map(
         [429, {msg: "Oops! Too many requests. Give it a moment and refresh the page.", icon: <IoMdSpeedometer />}]
     ]
 )
+
+type CloseGlobalErrorType = (
+    errorContext: ErrorContextType | null
+) => void
+
+const closeGlobalError: CloseGlobalErrorType = (errorContext) => {
+    errorContext?.setError({isError: false, status: null})
+}
 const GlobalError: React.FC = () => {
     const errorContext = useContext(ErrorContext)
     return(
@@ -18,7 +26,7 @@ const GlobalError: React.FC = () => {
                     <p>
                         {errorMap.get(Number(errorContext?.error.status))?.msg}
                     </p>
-                    <button>
+                    <button onClick={() => closeGlobalError(errorContext)}>
                         Close
                     </button>
                 </div>

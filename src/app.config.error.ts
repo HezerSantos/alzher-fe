@@ -144,6 +144,19 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     parameters.globalContext.error?.setError({isError: true, status: 429})
                     parameters.globalContext.auth?.setIsAuthState({isAuth: true, isAuthLoading: false})
                     break
+                case "INVALID_GLOBAL_LIMIT":
+                    try{
+                        parameters.globalContext.error?.setError({isError: true, status: 429})
+                        const newCsrf = await parameters.globalContext.csrf?.getCsrf()
+                        await api.get('/api/auth/secure/validate', {
+                            headers: {
+                                csrftoken: newCsrf
+                            }
+                        })
+                        parameters.globalContext.auth?.setIsAuthState({isAuth: true, isAuthLoading: false})
+                    } catch (error) {
+                        parameters.globalContext.auth?.setIsAuthState({isAuth: false, isAuthLoading: false})
+                    }
             }
             break
         case 500:

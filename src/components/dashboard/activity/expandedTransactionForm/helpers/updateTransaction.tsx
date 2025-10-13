@@ -47,6 +47,8 @@ const updateTransactionItem: UpdateTransactionItemType = async(e, setTransaction
             transactionDate: newDate,
             transactionAmount: newAmount
         }
+
+        console.log(updatedTransactionData)
         await api.patch(
             `/api/dashboard/activity/${transactionId}`,
             updatedTransactionData,

@@ -14,30 +14,52 @@ interface ExpandedTransactionElementProps {
     id: string,
     isText: boolean,
     keyName: keyof SelectedTransactionItemType,
-    error: {msg: string, isError:boolean} | null
+    error: {msg: string, isError:boolean} | null,
+    select?: boolean
 }
 
 //Component of expanded transaction
-const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({transactionProp, categoryName, id, isText, keyName, error}) => {
+const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({transactionProp, categoryName, id, isText, keyName, error, select}) => {
     const [transactionValue, setTransactionValue ] = useState("")
     useEffect(() => {
         if(transactionProp){
             setTransactionValue(String(transactionProp[keyName]))
         }
     }, [transactionProp])
+
     return(
         <div>
             <label htmlFor={id}>{categoryName[0].toUpperCase() + categoryName.slice(1)}</label>
             {!isText? (
                 <>
-                    <input 
-                        name={categoryName}
-                        type="text" 
-                        id={id} 
-                        value={transactionValue? transactionValue : ""}
-                        onChange={(e) => setTransactionValue(e.target.value)}
-                        className={error?.isError? "input-error" : ""}
-                    />
+                    {!select? (
+                            <input 
+                            name={categoryName}
+                            type="text" 
+                            id={id} 
+                            value={transactionValue? transactionValue : ""}
+                            onChange={(e) => setTransactionValue(e.target.value)}
+                            className={error?.isError? "input-error" : ""}
+                        />
+                    ) : (
+                        <select name={categoryName} id={id} value={transactionValue} onChange={(e) => setTransactionValue(e.target.value)}>
+                            <option value={"Leisure"}>
+                                Leisure
+                            </option>
+                            <option value={"Subscriptions"}>
+                                Subscriptions
+                            </option>
+                            <option value={"Dining"}>
+                                Dining
+                            </option>
+                            <option value={"Transportation"}>
+                                Transportation
+                            </option>
+                            <option value={"Grocery"}>
+                                Grocery
+                            </option>
+                        </select>
+                    )}
                     {error?.isError && (
                         <>
                             <p className="validation-error">{error.msg}</p>

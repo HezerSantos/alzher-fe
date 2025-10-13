@@ -1058,13 +1058,17 @@
             font-family: var(--f-main);
         }
 
-        & > input, textarea{
+        & > input, & > textarea, & > select{
             padding: .5rem;
             background-color: transparent;
             border: 1px solid white;
             color: white;
             font-family: var(--f-main);
             border-radius: .5rem;
+        }
+
+        & > select > option{
+            background-color: var(--background-primary);
         }
 
         & > textarea{

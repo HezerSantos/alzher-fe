@@ -52,6 +52,7 @@ const ExpandedTransactionForm: React.FC<ExpandedTransactionElementProps> = ({sel
                     isText={false}
                     keyName='category'
                     error={categoryError}
+                    select={true}
                 />
                 <ExpandedTransactionElement 
                     transactionProp={selectedTransactionItem}

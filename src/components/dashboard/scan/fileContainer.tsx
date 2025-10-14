@@ -15,11 +15,12 @@ const FileContainer: React.FC<FileContainerProps> = ({fileList, setFileList, set
     const globalContext = useGlobalContext()
     return(
         <div className='file-container'>
-            {[...fileList.values()].map((file, index) => {
+            {[...fileList.entries()].map(([hash, file]) => {
                 return(
                     <FileItem 
-                        key={index}
+                        key={hash}
                         fileName={file.name}
+                        fileHash={hash}
                         fileSize={Math.floor(file.size / 1024)}
                         setFileList={setFileList}
                     />

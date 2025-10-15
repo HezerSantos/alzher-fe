@@ -10,10 +10,11 @@ async function getFileHash(file: File) {
 
 type HandleDropType = (
     e: React.DragEvent<HTMLLabelElement>,
-        setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>,
+    globalContext: GlobalContextType
 ) => void
 
-const handleDrop: HandleDropType = async(e, setFileList) => {
+const handleDrop: HandleDropType = async(e, setFileList, globalContext) => {
     e.preventDefault()
     e.stopPropagation()
     const fileList = e.dataTransfer.files
@@ -26,7 +27,12 @@ const handleDrop: HandleDropType = async(e, setFileList) => {
     const resolvedFiles = await Promise.all(filePromises) as [string, File][]
     
     setFileList(prevMap => {
-        return new Map([...prevMap, ...resolvedFiles])
+        if (new Map([...prevMap, ...resolvedFiles]).size > 10){
+            globalContext.error?.setError({isError: true, status: 413})
+            return prevMap
+        } else {
+            return new Map([...prevMap, ...resolvedFiles])
+        }
     })
 }
 

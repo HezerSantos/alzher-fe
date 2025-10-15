@@ -1,11 +1,13 @@
 import { useContext } from "react";
 import { IoMdSpeedometer } from "react-icons/io";
+import { MdFileUploadOff } from "react-icons/md";
 import ErrorContext from "../../context/error/errorContext";
 
 
 const errorMap = new Map(
     [
-        [429, {msg: "Oops! Too many requests. Give it a moment and refresh the page.", icon: <IoMdSpeedometer />}]
+        [429, {msg: "Oops! Too many requests. Give it a moment and refresh the page.", icon: <IoMdSpeedometer />}],
+        [413, {msg: "Oops! Too many files. Maximum count is 10.", icon: <MdFileUploadOff />}]
     ]
 )
 

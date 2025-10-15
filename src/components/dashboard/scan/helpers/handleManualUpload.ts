@@ -8,9 +8,10 @@ async function getFileHash(file: File) {
 
 type HandleManualUploadType = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>
+    setFileList: React.Dispatch<SetStateAction<Map<string, File>>>,
+    globalContext: GlobalContextType
 ) => void
-const handleManualUpload: HandleManualUploadType = async(e, setFileList) => {
+const handleManualUpload: HandleManualUploadType = async(e, setFileList, globalContext) => {
     const inputFileList = e.target.files
 
     if(inputFileList){
@@ -23,8 +24,15 @@ const handleManualUpload: HandleManualUploadType = async(e, setFileList) => {
         setFileList(prevMap => {
             const newMap = new Map(prevMap)
             newMap.set(hash, newFile)
+            
+            if(newMap.size > 10){
+                globalContext.error?.setError({isError: true, status: 413})
+                return prevMap
+            } else {
+                return newMap
+            }
 
-            return newMap
+
         })
     }
 }

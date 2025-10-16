@@ -23,7 +23,9 @@ const DashboardScan: React.FC = () => {
             await globalContext.auth?.refresh() 
         }
 
-        fetchData()
+        if(!globalContext.auth?.isAuthState.isAuth){
+            fetchData()
+        }
     }, [])
 
     useEffect(() => {

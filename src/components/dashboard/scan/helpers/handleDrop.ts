@@ -33,7 +33,7 @@ const handleDrop: HandleDropType = async(e, setFileList, globalContext) => {
         const totalSize = [...newMap].reduce((acc, file) => {
             return acc += (file[1].size / (1024 * 1024))
         }, 0)
-        if(totalSize > 10 || newMap.size > 10){
+        if(totalSize > 20 || newMap.size > 10){
             shouldSetError = {isError: true, status: 413}
             return prevMap
         } else {

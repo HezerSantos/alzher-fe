@@ -138,6 +138,13 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     return await parameters.callbacks.handleCsrfRetry(newCsrf)
             }
             break
+        case 409:
+            switch (res.code) {
+                case "INVALID_DUPLICATE":
+                    parameters.globalContext.error?.setError({isError: true, status: 409})
+                    break
+            }
+            break
         case 413:
             switch (res.code) {
                 case "INVALID_UPLOAD":

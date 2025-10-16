@@ -26,14 +26,24 @@ const handleDrop: HandleDropType = async(e, setFileList, globalContext) => {
 
     const resolvedFiles = await Promise.all(filePromises) as [string, File][]
     
+    let shouldSetError: {isError: boolean, status: number | null} | null = null
+
     setFileList(prevMap => {
-        if (new Map([...prevMap, ...resolvedFiles]).size > 10){
-            globalContext.error?.setError({isError: true, status: 413})
+        const newMap = new Map([...prevMap, ...resolvedFiles])
+        const totalSize = [...newMap].reduce((acc, file) => {
+            return acc += (file[1].size / (1024 * 1024))
+        }, 0)
+        if(totalSize > 10 || newMap.size > 10){
+            shouldSetError = {isError: true, status: 413}
             return prevMap
         } else {
             return new Map([...prevMap, ...resolvedFiles])
         }
     })
+
+    if(shouldSetError){
+        globalContext.error?.setError({isError: true, status: 413})
+    }
 }
 
 export default handleDrop

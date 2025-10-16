@@ -138,6 +138,13 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
                     return await parameters.callbacks.handleCsrfRetry(newCsrf)
             }
             break
+        case 413:
+            switch (res.code) {
+                case "INVALID_UPLOAD":
+                    parameters.globalContext.error?.setError({isError: true, status: 413})
+                    break
+            }
+            break
         case 429:
             switch (res.code){
                 case "INVALID_DASHBOARD_LIMIT":

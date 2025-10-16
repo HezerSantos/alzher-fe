@@ -21,19 +21,25 @@ const handleManualUpload: HandleManualUploadType = async(e, setFileList, globalC
         }
         const hash = await getFileHash(newFile)
 
+        let shouldSetError: {isError: boolean, status: number | null} | null = null
+
         setFileList(prevMap => {
             const newMap = new Map(prevMap)
             newMap.set(hash, newFile)
-            
-            if(newMap.size > 10){
-                globalContext.error?.setError({isError: true, status: 413})
+            const totalSize = [...newMap].reduce((acc, file) => {
+                return acc += (file[1].size / (1024 * 1024))
+            }, 0)
+            if(totalSize > 10 || newMap.size > 10){
+                shouldSetError = {isError: true, status: 413}
                 return prevMap
             } else {
                 return newMap
             }
-
-
         })
+
+        if(shouldSetError){
+            globalContext.error?.setError({isError: true, status: 413})
+        }
     }
 }
 

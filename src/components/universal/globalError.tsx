@@ -7,7 +7,7 @@ import ErrorContext from "../../context/error/errorContext";
 const errorMap = new Map(
     [
         [429, {msg: "Oops! Too many requests. Give it a moment and refresh the page.", icon: <IoMdSpeedometer />}],
-        [413, {msg: "Oops! Too many files. Maximum count is 10.", icon: <MdFileUploadOff />}]
+        [413, {msg: "Oops! Too many files. Maximum count is 10 at 5MB total.", icon: <MdFileUploadOff />}]
     ]
 )
 

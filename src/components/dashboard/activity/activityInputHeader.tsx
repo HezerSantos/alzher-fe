@@ -92,11 +92,13 @@ const SearchBar: React.FC<SearchBarProps> = ({setIsLoading}) => {
 
 
 const categorySet = new Set([
-    "Leisure",
+    "Merchandise",
+    "Entertainment",
     "Dining",
     "Subscriptions",
     "Grocery",
-    "Transportation"
+    "Transportation",
+    "Bills"
 ])
 
 const ActivityInputHeader: React.FC<ActivityInputHeaderProps> = ({toggleFiltersButton, setFilterToggle, filterToggle, setIsLoading}) => {
@@ -108,7 +110,7 @@ const ActivityInputHeader: React.FC<ActivityInputHeaderProps> = ({toggleFiltersB
         searchParams.delete("categoryFilter")
         setSearchParams(searchParams)
         navigate(`/dashboard/activity?page=${searchParams.get('page')}&pageSize=${searchParams.get("pageSize")}${searchParams.get('keyWord')? `&keyWord=${searchParams.get('keyWord')}` : ``}`)
-    }, [])
+    }, [searchParams])
 
     return(
         <>
@@ -128,31 +130,15 @@ const ActivityInputHeader: React.FC<ActivityInputHeaderProps> = ({toggleFiltersB
                         {filterToggle && (
                             <div className='filter-container'>
                                 <ul>
-                                    <FilterButton 
-                                        name='Leisure'
-                                        selectedCategory={selectedCategory}
-                                        setSelectedCategory={setSelectedCategory}
-                                    />
-                                    <FilterButton 
-                                        name='Dining'
-                                        selectedCategory={selectedCategory}
-                                        setSelectedCategory={setSelectedCategory}
-                                    />
-                                    <FilterButton 
-                                        name='Subscriptions'
-                                        selectedCategory={selectedCategory}
-                                        setSelectedCategory={setSelectedCategory}
-                                    />
-                                    <FilterButton 
-                                        name='Grocery'
-                                        selectedCategory={selectedCategory}
-                                        setSelectedCategory={setSelectedCategory}
-                                    />
-                                    <FilterButton 
-                                        name='Transportation'
-                                        selectedCategory={selectedCategory}
-                                        setSelectedCategory={setSelectedCategory}
-                                    />
+                                    {[...categorySet].map((category, index) => {
+                                        return <FilterButton 
+                                            name={category}
+                                            selectedCategory={selectedCategory}
+                                            setSelectedCategory={setSelectedCategory}
+                                            key={index}
+                                        />
+                                    })}
+
                                 </ul>
                             </div>
                         )}

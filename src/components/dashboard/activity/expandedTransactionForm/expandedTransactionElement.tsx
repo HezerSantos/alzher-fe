@@ -43,8 +43,11 @@ const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({
                         />
                     ) : (
                         <select name={categoryName} id={id} value={transactionValue} onChange={(e) => setTransactionValue(e.target.value)}>
-                            <option value={"Leisure"}>
-                                Leisure
+                            <option value={"Merchandise"}>
+                                Merchandise
+                            </option>
+                            <option value={"Entertainment"}>
+                                Entertainment
                             </option>
                             <option value={"Subscriptions"}>
                                 Subscriptions
@@ -57,6 +60,9 @@ const ExpandedTransactionElement: React.FC<ExpandedTransactionElementProps> = ({
                             </option>
                             <option value={"Grocery"}>
                                 Grocery
+                            </option>
+                            <option value={"Bills"}>
+                                Bills
                             </option>
                         </select>
                     )}

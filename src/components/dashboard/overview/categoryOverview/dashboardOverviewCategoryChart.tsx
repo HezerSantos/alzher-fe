@@ -4,11 +4,12 @@ import CategoryOverviewType from "../types/categoryOverviewType"
 
 const categoryColor = new Map([
     ['Dining', '19183B'],
-    ['Leisure', '708993'],
+    ['Merchandise', '708993'],
+    ['Entertainment', '0d2229'],
     ['Subscriptions', 'A1C2BD'],
     ['Grocery', 'E7F2EF'],
     ['Transportation', 'EEEEEE'],
-    ['Living Expenses', 'FFFFFF'],
+    ['Bills', 'FFFFFF'],
 ])
 
 interface CategoryChartProps {

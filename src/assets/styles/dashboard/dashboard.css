@@ -859,6 +859,9 @@
     }
 
 }
+.dashboard__activity-container{
+    height: 100svh;
+}
 
 .dashboard__activity-container, .dashboard-settings{
     grid-column: 2 / 3;
@@ -996,6 +999,7 @@
 }
 
 .transaction-container{
+    overflow: auto;
     min-height: 10rem;
     border: .25rem solid var(--background-basic);
     border-radius: 1rem;

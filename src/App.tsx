@@ -31,8 +31,8 @@ function App() {
         setIsLoading(false)
       } catch(e){
         const axiosError = e as AxiosError
-        if(axiosError.code === "ERR_NETWORK"){
-          errorContext?.setError({isError: false, status: null})
+        if(axiosError.code === "ERR_NETWORK" || axiosError.code === "ERR_CONNECTION_REFUSED"){
+          errorContext?.setError({isError: true, status: 500})
         }
       }
     }

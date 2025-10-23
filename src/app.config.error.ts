@@ -35,7 +35,7 @@ const handleApiError: HandleApiErrorType = async(parameters) => {
     const res = parameters.axiosError.response?.data as ApiErrorType
     // console.log(parameters.axiosError.response)
     // console.log(res.code)
-    if(parameters.axiosError.code === "ERR_NETWORK"){
+    if(parameters.axiosError.code === "ERR_NETWORK" || parameters.axiosError.code === "ERR_CONNECTION_REFUSED"){
         parameters.globalContext.error?.setError({isError: true, status: 500})
         return
     }

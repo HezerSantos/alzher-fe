@@ -82,7 +82,7 @@ const CsrfProvider:React.FC<CsrfProviderProps> = ({children}) => {
             const axiosError = error as AxiosError
             const errorRes = axiosError.response?.data as ApiErrorType
             if (axiosError.status === 500 && errorRes.code === "INVALID_SERVER"){
-                errorContext?.setIsError(true)
+                errorContext?.setError({isError: true, status: 500})
             }
         }
     }

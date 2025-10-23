@@ -57,8 +57,10 @@ const DashboardOverview: React.FC = () => {
     const loading = useLoading()
     const [ dashboardData, setDashboardData ] = useState<DashboardOverviewContentProps | null>(null)
     useEffect(() => {
+        const now = new Date()
+        const year = now.getFullYear()
         const body = {
-            year: 2024,
+            year: year,
             semester: 1
         }
         fetchDashboardData(globalContext, setDashboardData, "overview", body, null, loading?.setIsLoading)

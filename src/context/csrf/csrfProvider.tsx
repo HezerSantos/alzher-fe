@@ -1,7 +1,9 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
 import CsrfContext from "./csrfContext";
 import { jwtDecode } from 'jwt-decode'
 import api from "../../app.config";
+import { AxiosError } from "axios";
+import ErrorContext from "../error/errorContext";
 
 interface CsrfProviderProps {
     children: ReactNode
@@ -50,14 +52,14 @@ const transformCookie: TransformCookieType = (csrfToken, key) => {
 
 const CsrfProvider:React.FC<CsrfProviderProps> = ({children}) => {
     const [ csrfToken, setCsrfToken ] = useState<string | null>(null)
-
+    const errorContext = useContext(ErrorContext)
     const getCookie: GetCookieType = (cookie) => {
         const cookies: string[] = document.cookie.split(";")
         const cookieMap: Map<string, string> = new Map(
         cookies
-            .map(cookie => cookie.split("=").map(str => str.trim())) // Split and trim
-            .filter(([key, value]) => key && value) // Ensure both key and value are present
-            .map(([key, value]) => [key, value] as [string, string]) // Type cast to [string, string] for safety
+            .map(cookie => cookie.split("=").map(str => str.trim()))
+            .filter(([key, value]) => key && value)
+            .map(([key, value]) => [key, value] as [string, string]) 
         );
         return cookieMap.get(cookie)
     }
@@ -77,7 +79,11 @@ const CsrfProvider:React.FC<CsrfProviderProps> = ({children}) => {
             const newCsrf = decodeCookie(atob(btoa))
             return newCsrf
         } catch(error){
-            console.error(error)
+            const axiosError = error as AxiosError
+            const errorRes = axiosError.response?.data as ApiErrorType
+            if (axiosError.status === 500 && errorRes.code === "INVALID_SERVER"){
+                errorContext?.setError({isError: true, status: 500})
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { CiUser } from "react-icons/ci";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import AuthContext from "../../../context/auth/authContext";
 
 type ToggleMiniNavType = (miniNav: HTMLDivElement | null) => void
 const toggleMiniNav: ToggleMiniNavType = (miniNav) => {
@@ -10,6 +11,7 @@ const toggleMiniNav: ToggleMiniNavType = (miniNav) => {
 }
 const IndexNav: React.FC = () => {
     const miniNav = useRef<HTMLDivElement | null>(null)
+    const authContext = useContext(AuthContext)
     return(
         <>
             <nav className="page-section index-nav-wrapper"> 
@@ -26,39 +28,44 @@ const IndexNav: React.FC = () => {
                         <img src="/favicon.svg" alt="alzher logo" />
                         <ul>
                             <li>
-                                <Link to={""}>My Dashboard</Link>
+                                <Link to={"/"}>Home</Link>
                             </li>
                             <li>
-                                <Link to={""}>Terms and Service</Link>
+                                {authContext?.isAuthState.isAuth && (
+                                    <Link to={"/dashboard"}>My Dashboard</Link>
+                                )}
                             </li>
                             <li>
-                                <Link to={""}>Privacy Policy</Link>
-                            </li>
-                            <li>
-                                <Link to={""}>About Us</Link>
+                                <Link to={"/terms-and-privacy"}>Terms and Privacy</Link>
                             </li>
                         </ul>
                     </div>
                     <div>
-                        <Link to={""}> 
-                            <CiUser />
-                            <p>Sign In</p>
-                        </Link>
+                        {authContext?.isAuthState.isAuth? (
+                            <Link to={"/logout"}> 
+                                <CiUser />
+                                <p>Logout</p>
+                            </Link>
+                        ) : (
+                            <Link to={"/login"}> 
+                                <CiUser />
+                                <p>Login</p>
+                            </Link>
+                        )}
                     </div>
                 </div>
                 <div ref={miniNav} className="page-section__child index-mini-nav">
                     <ul>
                         <li>
-                            <Link to={""}>My Dashboard</Link>
+                            <Link to={"/"}>Home</Link>
                         </li>
                         <li>
-                            <Link to={""}>Terms and Service</Link>
+                                {authContext?.isAuthState.isAuth && (
+                                    <Link to={"/dashboard"}>My Dashboard</Link>
+                                )}
                         </li>
                         <li>
-                            <Link to={""}>Privacy Policy</Link>
-                        </li>
-                        <li>
-                            <Link to={""}>About Us</Link>
+                            <Link to={""}>Terms and Privacy</Link>
                         </li>
                     </ul>
                 </div>

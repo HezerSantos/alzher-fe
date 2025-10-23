@@ -2,8 +2,16 @@ import { useContext, useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import CsrfContext from './context/csrf/csrfContext'
 import api from './app.config'
+import DashboardProvider from './context/dashboard/dashboardProvider'
+import AuthProvider from './context/auth/authProvider'
+import ErrorContext from './context/error/errorContext'
+import Error500 from './pages/errors/error500'
+import { AxiosError } from 'axios'
+import GlobalError from './components/universal/globalError'
+
 function App() {
   const csrfContext = useContext(CsrfContext)
+  const errorContext = useContext(ErrorContext)
   const [ isLoading, setIsLoading ] = useState(true)
   useEffect(() => {
     if (import.meta.env.MODE === 'production') {
@@ -22,17 +30,30 @@ function App() {
         csrfContext?.decodeCookie("__Secure-auth.csrf")
         setIsLoading(false)
       } catch(e){
-        console.error(e)
+        const axiosError = e as AxiosError
+        if(axiosError.code === "ERR_NETWORK" || axiosError.code === "ERR_CONNECTION_REFUSED"){
+          errorContext?.setError({isError: true, status: 500})
+        }
       }
     }
+    if(!errorContext?.error.status){
+      getCredentials()
+    }
+  }, [errorContext?.error])
 
-    getCredentials()
-  }, [])
-
+  if(errorContext?.error.isError && errorContext.error.status === 500){
+    return <Error500 />
+  }
+  
   return (
     <>
       {!isLoading && (
-        <Outlet />
+        <AuthProvider>
+            <DashboardProvider>
+              {errorContext?.error.isError && <GlobalError />}
+              <Outlet />
+            </DashboardProvider>
+        </AuthProvider>
       )}
     </>
   )

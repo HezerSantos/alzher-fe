@@ -65,7 +65,7 @@ const IndexNav: React.FC = () => {
                                 )}
                         </li>
                         <li>
-                            <Link to={""}>Terms and Privacy</Link>
+                            <Link to={"/terms-and-privacy"}>Terms and Privacy</Link>
                         </li>
                     </ul>
                 </div>

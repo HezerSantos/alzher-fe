@@ -35,25 +35,22 @@ const DashboardMiniNav: React.FC = () => {
                 <div ref={miniNav} className="page-section__child dashboard-mini-nav">
                     <ul>
                         <li>
-                            <Link to={""}>Overview</Link>
+                            <Link to={"/dashboard"}>Overview</Link>
                         </li>
                         <li>
-                            <Link to={""}>Analytics</Link>
+                            <Link to={"/dashboard/analytics"}>Analytics</Link>
                         </li>
                         <li>
-                            <Link to={""}>Activity</Link>
+                            <Link to={"/dashboard/activity"}>Activity</Link>
                         </li>
                         <li>
-                            <Link to={""}>Scan</Link>
+                            <Link to={"/dashboard/scan"}>Scan</Link>
                         </li>
                         <li>
-                            <Link to={""}>Terms and Service</Link>
+                            <Link to={"/"}>Home</Link>
                         </li>
                         <li>
-                            <Link to={""}>Privacy Policy</Link>
-                        </li>
-                        <li>
-                            <Link to={""}>About Us</Link>
+                            <Link to={"/terms-and-privacy"}>Terms and Privacy</Link>
                         </li>
                     </ul>
                 </div>
